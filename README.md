@@ -145,7 +145,7 @@ HP : Heteroplasmy Pipeline
     HP/scripts/run.sh in.3.txt out/ > filter.3.sh
     ...
 
-#### run pipeline  ####
+#### run pipeline script  ####
 
     nohup ./filter.all.sh &
     ... or
