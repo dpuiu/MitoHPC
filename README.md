@@ -161,10 +161,10 @@ HP : Heteroplasmy Pipeline
 
 #### use RSRS for realignment ####
 
-    HP/scripts/run.sh filter.all.txt filter.all/ hs38DH.fa RSRS.fa
+    HP/scripts/run.sh in.txt . hs38DH.fa RSRS.fa
 
 # EXAMPLE 3 #
 
 #### use rCRS for realignment, mutserve for SNP calling ####
 
-    HP/scripts/run.sh filter.all.txt filter.all/ hs38DH.fa rCRS.fa mutserve
+    HP/scripts/run.sh in.txt . hs38DH.fa rCRS.fa mutserve
