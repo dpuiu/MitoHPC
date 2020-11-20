@@ -2,9 +2,9 @@ HP : Heteroplasmy Pipeline
 
 # PREREQUISITES #
 
-### bwa, samtools, bcftools, htslib, samblaster, vcftools ###
-### picard, mutserve, gatk, haplogrep ###
-### hs38DH ###
+* bwa, samtools, bcftools, htslib, samblaster, vcftools
+* picard, mutserve, gatk, haplogre
+* hs38DH
 
 # INSTALLATION #
 
