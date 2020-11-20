@@ -27,7 +27,10 @@ HP : Heteroplasmy Pipeline
 ## SET PATHS & ENIRONMENTAL VARIABLES ##
 
     cd java
-    ln -s gatk-4.1.9.0.zip gatk.jar
+    ln -s gatk-4.1.9.0.zip    gatk.jar
+    ln -s haplogrep-2.2.9.jar haplogrepjar
+    ln -s mutserve-1.3.4.jar  mutserve.jar  
+    ln -s picard.jar        
     cd -
 
     cd scripts
@@ -73,24 +76,33 @@ HP : Heteroplasmy Pipeline
     |-- rCRS.fa
     `-- RSRS.fa
 
+## CHECK INSTALL ##
+
+    checkInstall.sh
+
 # LEGEND #
 
 ### metadata ###
+
     Run                           # SRR
     rdLen                         # AvgReadLength
     ...
 
 ### read counts ###
+
     chrM                          # number of reads aligned to chrM
 
 ### computed coverage ####
+
     Gcvg                          # recomputed genome coverage: Bases/3217346917
     Mcvg                          # mitochondrion covearge: chrM*rdLen/16569
 
 ### mtDNA copy number ###
+
     M                             # Gcvg based:  2*Mcvg/Gcvg
 
 ### mutect2 results ###
+
     haplogroup                    # mutect2 haploroup
     03%S                          # homozygous SNPs, 3% heteroplasmy rate
     03%S                          # heterozygous
@@ -103,22 +115,27 @@ HP : Heteroplasmy Pipeline
 # EXAMPLE 1 #
 
 ### init (could be added to ~/.bash_profile) ###
+
     source HP/scripts/init.sh
     ... or (MARCC)
     source HP/scripts/init_marcc.sh
 
 #### check install (once; if successfull => "Success message!") ####
+
     HP/scripts/checkInstall.sh
 
 #### generate input file  ####
+
     find bams/ -name "*bam" > in.txt
     ... or
     find crams/ -name "*cram" > in.txt
 
 #### split input file (optional; Ex: sets of 100) ####
+
     split -d -a 1 --numeric=1 -l 100 in.txt  in. --additional-suffix=.txt
 
 #### generate pipeline script ####
+
     HP/scripts/run.sh in.txt out > filter.all.sh
     ... or
     HP/scripts/run.sh in.1.txt out/ > filter.1.sh
@@ -127,6 +144,7 @@ HP : Heteroplasmy Pipeline
     ...
 
 #### run pipeline  ####
+
     nohup ./filter.all.sh &
     ... or
     nohup ./filter.1.sh &
@@ -140,8 +158,11 @@ HP : Heteroplasmy Pipeline
 # EXAMPLE 2 #
 
 #### use RSRS for realignment ####
+
     HP/scripts/run.sh filter.all.txt filter.all/ hs38DH.fa RSRS.fa
 
 # EXAMPLE 3 #
+
 #### use rCRS for realignment, mutserve for SNP calling ####
+
     HP/scripts/run.sh filter.all.txt filter.all/ hs38DH.fa rCRS.fa mutserve
