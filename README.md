@@ -1,25 +1,46 @@
+HP : Heteroplasmy Pipeline
+
 # PREREQUISITES #
 
-### executables: bwa, samtools, bcftools, htslib, samblaster, vcftools ###
+### bwa, samtools, bcftools, htslib, samblaster, vcftools ###
+### picard, mutserve, gatk, haplogrep ###
+### hs38DH ###
+
+# INSTALLATION #
+
+## INSTALL PREREQUISITES ##
+
     wget https://netactuate.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2
     wget https://github.com/samtools/samtools/releases/download/1.11/samtools-1.11.tar.bz2
     wget https://github.com/samtools/bcftools/releases/download/1.11/bcftools-1.11.tar.bz2
     wget https://github.com/samtools/htslib/releases/download/1.11/htslib-1.11.tar.bz2
     git clone git://github.com/GregoryFaust/samblaster.git
     git clone https://github.com/vcftools/vcftools.git
-
-### java: picard, mutserve, gatk, haplogrep ###
     wget https://github.com/broadinstitute/picard/releases/download/2.23.8/picard.jar
     wget https://github.com/broadinstitute/gatk/releases/download/4.1.9.0/gatk-4.1.9.0.zip
     wget https://github.com/seppinho/haplogrep-cmd/releases/download/v2.2.9/haplogrep.zip
 
-### RefSeq: hs38DH ###
-    wget ftp://ftp.ccb.jhu.edu/pub/dpuiu/Homo_sapiens/hs38DH/hs38DH.fa
+## DOWNLOAD PIPELINE ##
 
-# FILES #
+    git clone https://github.com/dpuiu/HP.git
 
-    $ tree <br>
-    scripts/<br>
+## SET PATHS & ENIRONMENTAL VARIABLES ##
+
+    cd java
+    ln -s gatk-4.1.9.0.zip gatk.jar
+    cd -
+
+    cd scripts
+    export SDIR=`dirname $0`        # script directory
+    export JDIR=$SDIR/../java/      # java jar directory
+    export RDIR=$SDIR/../RefSeq/    # RefSeq directory ; should contain chrM.fa, rCRS.fa, RSRS.fa; link hs38DH.fa here
+    export H=hs38DH.fa              # human reference
+    export R=rCRS.fa                # or RSRS.fa
+    export M=mutect2                # or mutserve
+    export PATH=$SDIR:$PATH
+
+    tree
+    scripts
     |-- run.sh                    # main executable, calls "filter.sh" on multiple .bam/.cram files provided in an input file;
     |-- checkInstall.sh           # check prerequisites
     |-- init.sh                   # set environment variables
@@ -44,10 +65,10 @@
     |-- gatk.jar
     |-- haplogrep.jar
     |-- mutserve.jar
-    bin/                          # executables (in case they have not been already installed)<br>
+    bin/                          # executables (in case they have not been already installed)
     |-- ...
     RefSeq/                       # references: chrM, hs38DH, rCRS
-    |-- hs38DH.fa                 # to be downloaded separately
+    |-- hs38DH.fa                
     |-- chrM.fa
     |-- rCRS.fa
     `-- RSRS.fa
