@@ -84,15 +84,15 @@ HP : Heteroplasmy Pipeline
 
 # LEGEND #
 
-* metadata 
+### metadata 
     Run                           # SRR
     rdLen                         # AvgReadLength
     ...
-* read counts 
+
+### read counts 
     chrM                          # number of reads aligned to chrM
 
 ### computed coverage ####
-
     Gcvg                          # recomputed genome coverage: Bases/3217346917
     Mcvg                          # mitochondrion covearge: chrM*rdLen/16569
 
