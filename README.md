@@ -83,8 +83,8 @@ RefSeq/                                 # references: chrM, hs38DH, rCRS<br>
 # EXAMPLE 1
 
 ### init ; could add content to ~/.bash_profile ###
-    source HP/scripts/init.sh<br>		
-    source HP/scripts/init_marcc.sh      # MARCC<br>
+    source HP/scripts/init.sh		
+    source HP/scripts/init_marcc.sh      # MARCC
 
 #### check install; if successfull => "Success message!" at the end ####
     HP/scripts/checkInstall.sh<br>
