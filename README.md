@@ -68,11 +68,11 @@
     M                             # Gcvg based:  2*Mcvg/Gcvg
 
 ### mutect2 results ###
-    haplogroup	                  # mutect2 haploroup
-    03%S		          # homozygous SNPs, 3% heteroplasmy rate
-    03%S		          # heterozygous
-    03%I		          # homozygous INDELs
-    03%i		          # heterozygous INDELs
+    haplogroup                    # mutect2 haploroup
+    03%S                          # homozygous SNPs, 3% heteroplasmy rate
+    03%S                          # heterozygous
+    03%I                          # homozygous INDELs
+    03%i                          # heterozygous INDELs
     ...
     05%
     10%
