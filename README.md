@@ -84,14 +84,11 @@ HP : Heteroplasmy Pipeline
 
 # LEGEND #
 
-### metadata ###
-
+* metadata 
     Run                           # SRR
     rdLen                         # AvgReadLength
     ...
-
-### read counts ###
-
+* read counts 
     chrM                          # number of reads aligned to chrM
 
 ### computed coverage ####
