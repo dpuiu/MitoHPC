@@ -27,8 +27,8 @@ scripts/<br>
 |-- init_marcc.sh                       # specific to MARCC<br>
 |-- filter.sh				# filter/realign reads, calls SNP/INDELs, filter SNP/INDELs at multiple heteroplamsy levels<br>
 |-- readCount.sh			# count reads: all, mapped, chrM, filtered<br>
-|-- snpCount.sh				# merge, count SNP/INDELs, HOMOZYGOUS/HETEROZYGOUS(AF=) at multiple heteroplamsy levels<br>
-|-- snpCount1.sh			$ merge, count SNP/INDELs, HOMOZYGOUS/HETEROZYGOUS(AF=) for a given heteroplamsy level<br>
+|-- snpCount.sh				# merge, count SNP/INDELs, HOM/HET(AF=) at multiple heteroplamsy levels<br>
+|-- snpCount1.sh			$ merge, count SNP/INDELs, HOM/HET(AF=) for a given heteroplamsy level<br>
 |-- circSam.pl				# "circularizes" SAM alignments; extend reference, align & split reads spanning circ. point<br>
 |-- count.pl				# count values in a certain column (-i; 0 based)<br>
 |-- fa2Vcf.pl				# creates "##reference" & "##contig" VCF headers<br>
@@ -40,7 +40,7 @@ scripts/<br>
 |-- maxVcf.pl				# get the major allele<br>
 |-- mutect2.vcf				# mutect2 VCF header<br>
 |-- mutserve.vcf			# mutserve VCF header<br>
-`-- uniq2.pl				# filters unique lines based on 2 columns (-i 0 -j 1)<br>
+|-- uniq2.pl				# filters unique lines based on 2 columns (-i 0 -j 1)<br>
 java/					# jars<br>
 |-- gatk.jar<br>
 |-- haplogrep.jar<br>
@@ -51,7 +51,7 @@ RefSeq/                                 # references: chrM, hs38DH, rCRS<br>
 |-- hs38DH.fa        	                # to be	downloaded separately<br>
 |-- chrM.fa<br>
 |-- rCRS.fa<br>
-`-- RSRS.fa<br>
+|-- RSRS.fa<br>
 
 # LEGEND
 
