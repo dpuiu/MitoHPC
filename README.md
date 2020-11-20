@@ -1,4 +1,4 @@
-# PREREQUISEITES #
+# PREREQUISITES #
 
 ### executables: bwa, samtools, bcftools, htslib, samblaster, vcftools ###
     wget https://netactuate.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2
