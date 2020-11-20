@@ -1,7 +1,7 @@
 # PREREQUISEITES
 
 <br>
-* executables: bwa, samtools, bcftools, htslib, samblaster, vcftools<br>
+* **executables: bwa, samtools, bcftools, htslib, samblaster, vcftools**<br>
     wget https://netactuate.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2<br>
     wget https://github.com/samtools/samtools/releases/download/1.11/samtools-1.11.tar.bz2<br>
     wget https://github.com/samtools/bcftools/releases/download/1.11/bcftools-1.11.tar.bz2<br>
@@ -9,12 +9,12 @@
     git clone git://github.com/GregoryFaust/samblaster.git<br>
     git clone https://github.com/vcftools/vcftools.git<br>
 <br>
-* java: picard, mutserve, gatk (Mutect2), haplogrep<br>
+* **java: picard, mutserve, gatk (Mutect2), haplogrep**<br>
     wget https://github.com/broadinstitute/picard/releases/download/2.23.8/picard.jar<br>
     wget https://github.com/broadinstitute/gatk/releases/download/4.1.9.0/gatk-4.1.9.0.zip<br>
     wget https://github.com/seppinho/haplogrep-cmd/releases/download/v2.2.9/haplogrep.zip<br>
 <br>
-* RefSeq: hs38DH<br>
+* **RefSeq: hs38DH**<br>
     wget ftp://ftp.ccb.jhu.edu/pub/dpuiu/Homo_sapiens/hs38DH/hs38DH.fa<br>
 
 # FILES
