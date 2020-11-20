@@ -1,4 +1,4 @@
-PREREQUISEITES
+# PREREQUISEITES
 
 * executables: bwa, samtools, bcftools, htslib, samblaster, vcftools
   wget https://netactuate.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2
@@ -17,7 +17,7 @@ PREREQUISEITES
   wget ftp://ftp.ccb.jhu.edu/pub/dpuiu/Homo_sapiens/hs38DH/hs38DH.fa
 
 ################################################################################################
-FILES
+# FILES
 
 $ tree 
 scripts/
@@ -54,7 +54,7 @@ RefSeq/                                 # references: chrM, hs38DH, rCRS
 `-- RSRS.fa
 
 ############################################################################################
-LEGEND
+# LEGEND
 
 * metadata
   Run   	: SRR
@@ -79,7 +79,7 @@ LEGEND
   10%
 ############################################################################################
 
-EXAMPLE 1
+# EXAMPLE 1
 1. init ; could add content to ~/.bash_profile
   $ source HP/scripts/init.sh		
   # source HP/scripts/init_marcc.sh      # MARCC
@@ -110,13 +110,13 @@ EXAMPLE 1
 
 ##############################################################################################
 
-EXAMPLE 2
+# EXAMPLE 2
 4. use RSRS.fa for realignment
   HP/scripts/run.sh filter.1.txt filter.1/ hs38DH.fa RSRS.fa 
 
 ##############################################################################################
 
-EXAMPLE	3
+# EXAMPLE 3
 4. use rCRS.fa for realignment, mutserve for SNP calling
   HP/scripts/run.sh filter.1.txt filter.1/ hs38DH.fa rCRS.fa  mutserve
 
