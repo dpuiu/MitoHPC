@@ -33,20 +33,27 @@ MAIN:
 	{
 		if(/^#/)
 		{
-			print; next;
+			print;
+			next;
 		}
 
 		chomp;
 		my @F=split /\t/;
 		if(@P and $P[1]==$F[1] and $P[4] eq $F[4] and $P[7]=~/AF=/ and $F[7]=~/AF=/)
 		{
-			my $sum=$PAF+$2;
-			$sum=1 if($sum>1);
-			$P[7]=~/AF=(\S+)/; $PAF=$1; $F[7]=~/(.*AF=)(\S+)/; $F[7]="$1$sum";
+			$P[7]=~/AF=(\S+)/;
+			my $PAF=$1;
+
+			$F[7]=~/(.*AF=)(\S+)/;
+			$PAF+=$2;
+			$PAF=1 if($PAF>1);
+
+			$F[7]="$1$PAF";
 		}
 		elsif(@P)
 		{
-			print join "\t",@P; print "\n"
+			print join "\t",@P; 
+			print "\n"
 		}
 
 		@P=@F

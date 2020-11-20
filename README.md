@@ -82,16 +82,16 @@
 # EXAMPLE 1 #
 
 ### init (could be added to ~/.bash_profile) ###
-    source HP/scripts/init.sh	
-    ... or (MARCC)	
-    source HP/scripts/init_marcc.sh  
+    source HP/scripts/init.sh
+    ... or (MARCC)
+    source HP/scripts/init_marcc.sh
 
 #### check install (once; if successfull => "Success message!") ####
     HP/scripts/checkInstall.sh
 
 #### generate input file  ####
     find bams/ -name "*bam" > in.txt
-    ... or 
+    ... or
     find crams/ -name "*cram" > in.txt
 
 #### split input file (optional; Ex: sets of 100) ####
@@ -99,7 +99,7 @@
 
 #### generate pipeline script ####
     HP/scripts/run.sh in.txt out > filter.all.sh
-    ... or 
+    ... or
     HP/scripts/run.sh in.1.txt out/ > filter.1.sh
     HP/scripts/run.sh in.2.txt out/ > filter.2.sh
     HP/scripts/run.sh in.3.txt out/ > filter.3.sh
@@ -120,7 +120,7 @@
 
 #### use RSRS for realignment ####
     HP/scripts/run.sh filter.all.txt filter.all/ hs38DH.fa RSRS.fa
-   
+
 # EXAMPLE 3 #
 #### use rCRS for realignment, mutserve for SNP calling ####
     HP/scripts/run.sh filter.all.txt filter.all/ hs38DH.fa rCRS.fa mutserve

@@ -27,7 +27,6 @@ MAIN:
 		"sample=s"	=> \$opt{sample},
 		"source=s"	=> \$opt{source},
                 "percent=s"     => \$opt{percent},
-                "50"            => \$opt{percent50},
         );
         die "ERROR: $! " if (!$result);
 
@@ -66,10 +65,6 @@ MAIN:
 			{
 				next;
 			}
-			elsif($opt{percent50} and $AF>0.5)
-			{
-				 $F[7].=";DP=$DP";
-			}
 			elsif($AF>=$opt{percent} or $AF>=1-$opt{percent})
 			{
 				$F[7].=";DP=$DP;AF=$AF";
@@ -86,14 +81,14 @@ MAIN:
 			$F[7]=($F[4] eq "*" or length($F[3]) ne length($F[4]))?"INDEL":"SNP";
 			$F[7].=";DP=$DP";
 		}
-		elsif($F[7]=~/(.+);AF=(0\.\d+)(.*)/)
+		elsif($F[7]=~/(.+);AF=(\d\.\d+)(.*)/ or $F[7]=~/(.+);AF=(\d)(.*)/)
                 {
 			my $AF=$2;
 			if($AF<$opt{percent})
 			{
 				next;
                         }
-			elsif($AF>1-$opt{percent} or $opt{percent50} and $AF>0.5)
+			elsif($AF>1-$opt{percent})
 			{
 				$F[7]="$1$3";
 			}

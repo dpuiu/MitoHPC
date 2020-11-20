@@ -87,8 +87,8 @@ fi
 
 if [ ! -s $O.$M.vcf ] ; then
   if [  "$M" == "mutect2" ] ; then
-    java -jar $JDIR/gatk.jar Mutect2           -R $F -I $O.bam                             -O $O.$M.vcf    
-    java -jar $JDIR/gatk.jar FilterMutectCalls -R $F -V $O.$M.vcf --min-reads-per-strand 2 -O $O.${M}F.vcf 
+    java -jar $JDIR/gatk.jar Mutect2           -R $F -I $O.bam                             -O $O.$M.vcf
+    java -jar $JDIR/gatk.jar FilterMutectCalls -R $F -V $O.$M.vcf --min-reads-per-strand 2 -O $O.${M}F.vcf # --min-allele-fraction 0.03 --unique 2
     mv $O.${M}F.vcf  $O.$M.vcf
     rm $O.${M}F.vcf* $O.$M.vcf.*
   elif [ "$M" == "mutserve" ] ; then
@@ -104,13 +104,16 @@ if [ ! -s $O.$M.vcf ] ; then exit 1 ; fi
 
 #########################################################################################################################################
 #filter SNP/INDELs at 1,3,5,10% heteroplasmy
+##slippage|weak_evidence|strand_bias|germline|strict_strand|base_qual  ... germline|fragment|position
 
 if  [ ! -s $O.$M.10.vcf ] ; then
   cat $SDIR/$M.vcf > $O.$M.00.vcf
   fa2Vcf.pl $F >> $O.$M.00.vcf
-  cat $O.$M.vcf | bcftools norm -m -  | egrep -v 'strict_strand|weak_evidence' | filterVcf.pl -sample $N -source $M | grep -v ^# | sort -k2,2n -k4,4 -k5,5 | fix${M}Vcf.pl -file $F | labelVcf.pl >> $O.$M.00.vcf  
+  cat $O.$M.vcf | bcftools norm -m -  | egrep -v 'strict_strand|weak_evidence|base_qual' | filterVcf.pl -sample $N -source $M | grep -v ^# | sort -k2,2n -k4,4 -k5,5 | fix${M}Vcf.pl -file $F | labelVcf.pl  >> $O.$M.00.vcf
+  cat $O.$M.00.vcf | bcftools norm -m +  | perl -ane 'if(/^#/) {print} else { chomp; @F=split /\t/; $F[6]=~s/multiallelic// unless($F[4]=~/,/); $F[6]="." unless($F[6]); print join "\t",@F;print "\n"}' | bcftools norm -m - > $O.$M.00.vcf2
+  mv $O.$M.00.vcf2 $O.$M.00.vcf
   vcf-validator $O.$M.00.vcf
-  cat $O.$M.00.vcf | filterVcf.pl -p 0.01 -50  | tee $O.$M.01.vcf | filterVcf.pl -p 0.03  | tee $O.$M.03.vcf | filterVcf.pl -p 0.05  | tee $O.$M.05.vcf | filterVcf.pl -p 0.10  > $O.$M.10.vcf
+  cat $O.$M.00.vcf | filterVcf.pl -p 0.03  | tee $O.$M.03.vcf | filterVcf.pl -p 0.05  | tee $O.$M.05.vcf | filterVcf.pl -p 0.10  > $O.$M.10.vcf
 fi
 
 #########################################################################################################################################
