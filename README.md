@@ -81,38 +81,39 @@ RefSeq/                                 # references: chrM, hs38DH, rCRS<br>
   10%<br>
 
 # EXAMPLE 1
-<br>
-1. init ; could add content to ~/.bash_profile<br>
-    $ source HP/scripts/init.sh<br>		
-    # source HP/scripts/init_marcc.sh      # MARCC<br>
-<br>
-2. check install (once) ; if successfull => "Success message!" at the end<br>
-  $ HP/scripts/checkInstall.sh<br>
-<br>
-3. generate input file list (.bam or .cram)<br>
-  $ find bams/ -name "*bam" > in.txt  <br>
-<br>
-3o. split input file (optional; sets of 100)<br>
-  split -d -a 1 --numeric=3  -l 100 in.txt  in. --additional-suffix=.txt<br>
-<br>
-4. run "run.sh" script ; if successful  generates "filter.all.sh"<br>
-  $ HP/scripts/run.sh in.txt out > filter.all.sh<br>
-<br>
-4o. on multiple files<br>
-  $ HP/scripts/run.sh in.000.txt out/ > filter.1.sh<br>
-  $ HP/scripts/run.sh in.001.txt out/ > filter.2.sh<br>
-  ...<br>
-5. check filter.all.sh<br>
-  $ cat filter.*.sh<br>
-6. execute filter.all.sh<br>
-  $ nohup ./filter.all.sh <br>
-  # sbatch --time=24:0:0 ./filter.all.sh   # MARCC<br>
+
+### init ; could add content to ~/.bash_profile ###
+    source HP/scripts/init.sh<br>		
+    source HP/scripts/init_marcc.sh      # MARCC<br>
+
+#### check install; if successfull => "Success message!" at the end ####
+    HP/scripts/checkInstall.sh<br>
+
+#### generate input file list (.bam or .cram) ####
+    find bams/ -name "*bam" > in.txt  <br>
+
+#### split input file (optional; sets of 100) ####
+    split -d -a 1 --numeric=3  -l 100 in.txt  in. --additional-suffix=.txt<br>
+
+#### run "run.sh" script ; if successful  generates "filter.all.sh" ####
+    HP/scripts/run.sh in.txt out > filter.all.sh<br>
+    ...<br>
+    HP/scripts/run.sh in.000.txt out/ > filter.1.sh<br>
+    HP/scripts/run.sh in.001.txt out/ > filter.2.sh<br>
+    ...<br>
+
+#### check filter.all.sh ####
+    cat filter.*.sh<br>
+
+#### execute filter.all.sh ####
+    nohup ./filter.all.sh<br>
+    sbatch --time=24:0:0 ./filter.all.sh   # MARCC<br>
 
 # EXAMPLE 2
-4. use RSRS.fa for realignment<br>
-  HP/scripts/run.sh filter.1.txt filter.1/ hs38DH.fa RSRS.fa <br>
+#### use RSRS.fa for realignment ####
+    HP/scripts/run.sh filter.1.txt filter.1/ hs38DH.fa RSRS.fa<br>
 
 # EXAMPLE 3
-4. use rCRS.fa for realignment, mutserve for SNP calling<br>
-  HP/scripts/run.sh filter.1.txt filter.1/ hs38DH.fa rCRS.fa mutserve<br>
+#### use rCRS.fa for realignment, mutserve for SNP calling ####
+    HP/scripts/run.sh filter.1.txt filter.1/ hs38DH.fa rCRS.fa mutserve<br>
 
