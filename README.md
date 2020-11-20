@@ -1,8 +1,9 @@
 # PREREQUISEITES
 
 * executables: bwa, samtools, bcftools, htslib, samblaster, vcftools
-  wget https://netactuate.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2
-  wget https://github.com/samtools/samtools/releases/download/1.11/samtools-1.11.tar.bz2
+<br>
+  wget https://netactuate.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2<br>
+  wget https://github.com/samtools/samtools/releases/download/1.11/samtools-1.11.tar.bz2<br>
   wget https://github.com/samtools/bcftools/releases/download/1.11/bcftools-1.11.tar.bz2
   wget https://github.com/samtools/htslib/releases/download/1.11/htslib-1.11.tar.bz2
   git  clone git://github.com/GregoryFaust/samblaster.git
@@ -16,7 +17,6 @@
 * RefSeq: hs38DH
   wget ftp://ftp.ccb.jhu.edu/pub/dpuiu/Homo_sapiens/hs38DH/hs38DH.fa
 
-################################################################################################
 # FILES
 
 $ tree 
@@ -53,7 +53,6 @@ RefSeq/                                 # references: chrM, hs38DH, rCRS
 |-- rCRS.fa
 `-- RSRS.fa
 
-############################################################################################
 # LEGEND
 
 * metadata
@@ -69,15 +68,13 @@ RefSeq/                                 # references: chrM, hs38DH, rCRS
   M		: Gcvg based:  2*Mcvg/Gcvg
 * mutect2 results
   haplogroup	: mutect2 haploroup
-  01%S		: homozygous SNPs, 3% heteroplasmy rate
-  01%S		: heterozygous
-  01%I		: homozygous INDELs
-  01%i		: heterozygous INDELs
+  03%S		: homozygous SNPs, 3% heteroplasmy rate
+  03%S		: heterozygous
+  03%I		: homozygous INDELs
+  03%i		: heterozygous INDELs
   ...
-  03%
   05%
   10%
-############################################################################################
 
 # EXAMPLE 1
 1. init ; could add content to ~/.bash_profile
@@ -108,13 +105,9 @@ RefSeq/                                 # references: chrM, hs38DH, rCRS
   $ nohup ./filter.all.sh 
   # sbatch --time=24:0:0 ./filter.all.sh   # MARCC
 
-##############################################################################################
-
 # EXAMPLE 2
 4. use RSRS.fa for realignment
   HP/scripts/run.sh filter.1.txt filter.1/ hs38DH.fa RSRS.fa 
-
-##############################################################################################
 
 # EXAMPLE 3
 4. use rCRS.fa for realignment, mutserve for SNP calling
