@@ -54,31 +54,30 @@ RefSeq/                                 # references: chrM, hs38DH, rCRS<br>
 
 # LEGEND
 
-<br>
 ### metadata ###
-  Run   	: SRR<br>
-  rdLen		: AvgReadLength (run)<br>
-  ...<br>
+    Run   	: SRR<br>
+    rdLen		: AvgReadLength (run)<br>
+    ...
 
 ### read counts ###
-  chrM		: number of reads aligned to chrM <br>
+  chrM		: number of reads aligned to chrM
 
 ### computed coverage ####
-  Gcvg		: recomputed genome coverage: Bases/3217346917 <br>
-  Mcvg		: mitochondrion covearge: chrM*rdLen/16569<br>
+    Gcvg		: recomputed genome coverage: Bases/3217346917
+    Mcvg		: mitochondrion covearge: chrM*rdLen/16569
 
 ### mtDNA copy number ###
-  M		: Gcvg based:  2*Mcvg/Gcvg<br>
+    M		: Gcvg based:  2*Mcvg/Gcvg
 
 ### mutect2 results ###
-  haplogroup	: mutect2 haploroup<br>
-  03%S		: homozygous SNPs, 3% heteroplasmy rate<br>
-  03%S		: heterozygous<br>
-  03%I		: homozygous INDELs<br>
-  03%i		: heterozygous INDELs<br>
-  ...<br>
-  05%<br>
-  10%<br>
+    haplogroup	: mutect2 haploroup
+    03%S		: homozygous SNPs, 3% heteroplasmy rate
+    03%S		: heterozygous
+    03%I		: homozygous INDELs
+    03%i		: heterozygous INDELs
+    ...
+    05%
+    10%
 
 # EXAMPLE 1
 
@@ -97,7 +96,7 @@ RefSeq/                                 # references: chrM, hs38DH, rCRS<br>
 
 #### run "run.sh" script ; if successful  generates "filter.all.sh" ####
     HP/scripts/run.sh in.txt out > filter.all.sh
-    ...<br>
+    ... or
     HP/scripts/run.sh in.000.txt out/ > filter.1.sh
     HP/scripts/run.sh in.001.txt out/ > filter.2.sh
     ...
@@ -106,7 +105,7 @@ RefSeq/                                 # references: chrM, hs38DH, rCRS<br>
     cat filter.*.sh
 
 #### execute filter.all.sh ####
-    nohup ./filter.all.sh
+    nohup ./filter.all.sh &
     sbatch --time=24:0:0 ./filter.all.sh   # MARCC
 
 # EXAMPLE 2
