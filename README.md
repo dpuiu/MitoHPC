@@ -61,8 +61,8 @@
     chrM                          # number of reads aligned to chrM
 
 ### computed coverage ####
-    Gcvg		          # recomputed genome coverage: Bases/3217346917
-    Mcvg		          # mitochondrion covearge: chrM*rdLen/16569
+    Gcvg                          # recomputed genome coverage: Bases/3217346917
+    Mcvg                          # mitochondrion covearge: chrM*rdLen/16569
 
 ### mtDNA copy number ###
     M                             # Gcvg based:  2*Mcvg/Gcvg
