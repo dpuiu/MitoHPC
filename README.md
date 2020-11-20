@@ -138,11 +138,11 @@ HP : Heteroplasmy Pipeline
 
 #### generate pipeline script ####
 
-    HP/scripts/run.sh in.txt out > filter.all.sh
+    HP/scripts/run.sh in.txt   > filter.all.sh
     ... or
-    HP/scripts/run.sh in.1.txt out/ > filter.1.sh
-    HP/scripts/run.sh in.2.txt out/ > filter.2.sh
-    HP/scripts/run.sh in.3.txt out/ > filter.3.sh
+    HP/scripts/run.sh in.1.txt > filter.1.sh
+    HP/scripts/run.sh in.2.txt > filter.2.sh
+    HP/scripts/run.sh in.3.txt > filter.3.sh
     ...
 
 #### run pipeline script  ####
