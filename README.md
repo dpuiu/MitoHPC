@@ -1,14 +1,15 @@
 # PREREQUISEITES
 
 * executables: bwa, samtools, bcftools, htslib, samblaster, vcftools
+<blink>
     wget https://netactuate.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2
     wget https://github.com/samtools/samtools/releases/download/1.11/samtools-1.11.tar.bz2
     wget https://github.com/samtools/bcftools/releases/download/1.11/bcftools-1.11.tar.bz2
     wget https://github.com/samtools/htslib/releases/download/1.11/htslib-1.11.tar.bz2
     git clone git://github.com/GregoryFaust/samblaster.git
     git clone https://github.com/vcftools/vcftools.git
+</blink>
 
-<br>
 * java: picard, mutserve, gatk (Mutect2), haplogrep
   wget https://github.com/broadinstitute/picard/releases/download/2.23.8/picard.jar<br>
   wget https://github.com/broadinstitute/gatk/releases/download/4.1.9.0/gatk-4.1.9.0.zip<br>
