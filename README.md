@@ -143,6 +143,37 @@ HP : Heteroplasmy Pipeline
 
     HP/scripts/run.sh in.txt . hs38DH.fa rCRS.fa mutserve
 
+#### output ; simulated haplogroup A,B,C datasets ####
+
+    head mutect2.03.vcf 
+
+    ##fileformat=VCFv4.2
+    ##source=Mutect2
+    ##reference=file://../..//RefSeq//rCRS.fa>
+    ##contig=<ID=rCRS,length=16569>
+    #CHROM	POS	ID	REF	ALT	QUAL	FILTER	                        INFO	                FORMAT	SAMPLE
+    rCRS	64	.	C	T	.	clustered_events;haplotype	SNP;DP=69	        SM	chrM.A
+    rCRS	73	.	A	G	.	clustered_events;haplotype	SNP;DP=72	        SM	chrM.A
+    rCRS	73	.	A	G	.	PASS	                        SNP;DP=50	        SM	chrM.B
+    rCRS	73	.	A	G	.	PASS	                        SNP;DP=43	        SM	chrM.C
+    rCRS	146	.	T	C	.	clustered_events;haplotype	SNP;DP=88	        SM	chrM.A
+    rCRS	153	.	A	G	.	clustered_events;haplotype	SNP;DP=89	        SM	chrM.A
+    ...
+    rCRS	310	.	T	TC	.	clustered_events	        INDEL;DP=71;HP	        SM	chrM.A
+    rCRS	310	.	T	TC	.	clustered_events	        INDEL;DP=62;HP	        SM	chrM.B
+    rCRS	310	.	T	TC	.	clustered_events	        INDEL;DP=57;HP	        SM	chrM.C
+    ...
+    rCRS	374	.	A	G	.	clustered_events	        SNP;DP=76;AF=0.139	SM	chrM.A
+    rCRS	375	.	C	T	.	clustered_events;strand_bias	SNP;DP=65;AF=0.162	SM	chrM.B
+    rCRS	378	.	C	T	.	clustered_events	        SNP;DP=81;AF=0.13	SM	chrM.C
+    ...
+ 
+    head mutect2.tab
+    Run     haplogroup  03%S  03%s  03%I  03%i  05%S  05%s  05%I  05%i  10%S  10%s  10%I  10%i
+    chrM.A  A2+(64)     28    35    3     8     28    35    3     8     28    34    3     8
+    chrM.B  B2          25    34    2     8     25    34    2     8     25    34    2     8
+    chrM.C  C           35    35    4     8     35    35    4     8     35    35    4     8
+
 # LEGEND #
 
 ### metadata
