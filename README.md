@@ -81,40 +81,43 @@
 
 # EXAMPLE 1 #
 
-### init ; could add content to ~/.bash_profile ###
+### init (could be added to ~/.bash_profile) ###
     source HP/scripts/init.sh	
     ... or (MARCC)	
     source HP/scripts/init_marcc.sh  
 
-#### check install; if successfull => "Success message!" at the end ####
+#### check install (once; if successfull => "Success message!") ####
     HP/scripts/checkInstall.sh
 
-#### generate input file list (.bam or .cram) ####
+#### generate input file  ####
     find bams/ -name "*bam" > in.txt
 
-#### split input file (optional; sets of 100) ####
-    split -d -a 1 --numeric=3  -l 100 in.txt  in. --additional-suffix=.txt
+#### split input file (optional; Ex: sets of 100) ####
+    split -d -a 1 --numeric=1 -l 100 in.txt  in. --additional-suffix=.txt
 
-#### run "run.sh" script ; if successful  generates "filter.all.sh" ####
+#### generate pipeline script ####
     HP/scripts/run.sh in.txt out > filter.all.sh
-    ... or
-    HP/scripts/run.sh in.000.txt out/ > filter.1.sh
-    HP/scripts/run.sh in.001.txt out/ > filter.2.sh
+    ... or 
+    HP/scripts/run.sh in.1.txt out/ > filter.1.sh
+    HP/scripts/run.sh in.2.txt out/ > filter.2.sh
+    HP/scripts/run.sh in.3.txt out/ > filter.3.sh
     ...
 
-#### check filter.all.sh ####
-    cat filter.*.sh
-
-#### execute filter.all.sh ####
+#### run pipeline  ####
     nohup ./filter.all.sh &
+    ... or
+    nohup ./filter.1.sh &
+    nohup ./filter.2.sh &
+    nohup ./filter.3.sh &
     ... or (MARCC)
     sbatch --time=24:0:0 ./filter.all.sh
 
 # EXAMPLE 2 #
-#### use RSRS.fa for realignment ####
-    HP/scripts/run.sh filter.1.txt filter.1/ hs38DH.fa RSRS.fa
 
+#### use RSRS for realignment ####
+    HP/scripts/run.sh filter.1.txt filter.1/ hs38DH.fa RSRS.fa
+   
 # EXAMPLE 3 #
-#### use rCRS.fa for realignment, mutserve for SNP calling ####
+#### use rCRS for realignment, mutserve for SNP calling ####
     HP/scripts/run.sh filter.1.txt filter.1/ hs38DH.fa rCRS.fa mutserve
 
