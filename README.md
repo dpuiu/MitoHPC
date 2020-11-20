@@ -16,7 +16,8 @@
 ### RefSeq: hs38DH ###
     wget ftp://ftp.ccb.jhu.edu/pub/dpuiu/Homo_sapiens/hs38DH/hs38DH.fa
 
-# FILES
+# FILES #
+
     $ tree <br>
     scripts/<br>
     |-- run.sh                    # main executable, calls "filter.sh" on multiple .bam/.cram files provided in an input file;
@@ -50,7 +51,8 @@
     |-- chrM.fa
     |-- rCRS.fa
     `-- RSRS.fa
-# LEGEND
+
+# LEGEND #
 
 ### metadata ###
     Run                           # SRR
@@ -77,11 +79,12 @@
     05%
     10%
 
-# EXAMPLE 1
+# EXAMPLE 1 #
 
 ### init ; could add content to ~/.bash_profile ###
-    source HP/scripts/init.sh		
-    source HP/scripts/init_marcc.sh      # MARCC
+    source HP/scripts/init.sh	
+    ... or (MARCC)	
+    source HP/scripts/init_marcc.sh  
 
 #### check install; if successfull => "Success message!" at the end ####
     HP/scripts/checkInstall.sh
@@ -104,13 +107,14 @@
 
 #### execute filter.all.sh ####
     nohup ./filter.all.sh &
-    sbatch --time=24:0:0 ./filter.all.sh   # MARCC
+    ... or (MARCC)
+    sbatch --time=24:0:0 ./filter.all.sh
 
-# EXAMPLE 2
+# EXAMPLE 2 #
 #### use RSRS.fa for realignment ####
     HP/scripts/run.sh filter.1.txt filter.1/ hs38DH.fa RSRS.fa
 
-# EXAMPLE 3
+# EXAMPLE 3 #
 #### use rCRS.fa for realignment, mutserve for SNP calling ####
     HP/scripts/run.sh filter.1.txt filter.1/ hs38DH.fa rCRS.fa mutserve
 
