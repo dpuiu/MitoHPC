@@ -14,8 +14,10 @@ HP : Heteroplasmy Pipeline
     wget https://github.com/samtools/samtools/releases/download/1.11/samtools-1.11.tar.bz2
     wget https://github.com/samtools/bcftools/releases/download/1.11/bcftools-1.11.tar.bz2
     wget https://github.com/samtools/htslib/releases/download/1.11/htslib-1.11.tar.bz2
+
     git clone git://github.com/GregoryFaust/samblaster.git
     git clone https://github.com/vcftools/vcftools.git
+
     wget https://github.com/broadinstitute/picard/releases/download/2.23.8/picard.jar
     wget https://github.com/broadinstitute/gatk/releases/download/4.1.9.0/gatk-4.1.9.0.zip
     wget https://github.com/seppinho/haplogrep-cmd/releases/download/v2.2.9/haplogrep.zip
@@ -26,14 +28,14 @@ HP : Heteroplasmy Pipeline
 
 ## SET PATHS & ENIRONMENTAL VARIABLES ##
 
-    cd java
+    cd java/
     ln -s gatk-4.1.9.0.zip    gatk.jar
     ln -s haplogrep-2.2.9.jar haplogrepjar
     ln -s mutserve-1.3.4.jar  mutserve.jar  
     ln -s picard.jar        
     cd -
 
-    cd scripts
+    cd scripts/
     export SDIR=`dirname $0`        # script directory
     export JDIR=$SDIR/../java/      # java jar directory
     export RDIR=$SDIR/../RefSeq/    # RefSeq directory ; should contain chrM.fa, rCRS.fa, RSRS.fa; link hs38DH.fa here
