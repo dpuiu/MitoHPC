@@ -21,7 +21,7 @@
     scripts/<br>
     |-- run.sh                    # main executable, calls "filter.sh" on multiple .bam/.cram files provided in an input file;
     |-- checkInstall.sh           # check prerequisites
-    |-- init.sh	                  # set environment variables
+    |-- init.sh                   # set environment variables
     |-- init_marcc.sh             # specific to MARCC
     |-- filter.sh                 # filter/realign reads, calls SNP/INDELs, filter SNP/INDELs at multiple heteroplamsy levels
     |-- readCount.sh              # count reads: all, mapped, chrM, filtered
@@ -43,36 +43,36 @@
     |-- gatk.jar
     |-- haplogrep.jar
     |-- mutserve.jar
-    bin/                                # executables (in case they have not been already installed)<br>
+    bin/                          # executables (in case they have not been already installed)<br>
     |-- ...
-    RefSeq/                             # references: chrM, hs38DH, rCRS
-    |-- hs38DH.fa        	        # to be downloaded separately
+    RefSeq/                       # references: chrM, hs38DH, rCRS
+    |-- hs38DH.fa        	  # to be downloaded separately
     |-- chrM.fa
     |-- rCRS.fa
     `-- RSRS.fa
 # LEGEND
 
 ### metadata ###
-    Run                                 # SRR
-    rdLen                               # AvgReadLength
+    Run                           # SRR
+    rdLen                         # AvgReadLength
     ...
 
 ### read counts ###
-    chrM                               # number of reads aligned to chrM
+    chrM                          # number of reads aligned to chrM
 
 ### computed coverage ####
-    Gcvg		: recomputed genome coverage: Bases/3217346917
-    Mcvg		: mitochondrion covearge: chrM*rdLen/16569
+    Gcvg		          # recomputed genome coverage: Bases/3217346917
+    Mcvg		          # mitochondrion covearge: chrM*rdLen/16569
 
 ### mtDNA copy number ###
-    M		: Gcvg based:  2*Mcvg/Gcvg
+    M		                  # Gcvg based:  2*Mcvg/Gcvg
 
 ### mutect2 results ###
-    haplogroup	: mutect2 haploroup
-    03%S		: homozygous SNPs, 3% heteroplasmy rate
-    03%S		: heterozygous
-    03%I		: homozygous INDELs
-    03%i		: heterozygous INDELs
+    haplogroup	                  # mutect2 haploroup
+    03%S		          # homozygous SNPs, 3% heteroplasmy rate
+    03%S		          # heterozygous
+    03%I		          # homozygous INDELs
+    03%i		          # heterozygous INDELs
     ...
     05%
     10%
