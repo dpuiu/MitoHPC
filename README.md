@@ -25,11 +25,11 @@ scripts/<br>
 |-- checkInstall.sh			# check prerequisites<br>
 |-- init.sh				# set environment variables<br>
 |-- init_marcc.sh                       # specific to MARCC<br>
-|-- filter.sh				# filter/realign reads, calls SNP/INDELs, filter SNP/INDELs at multiple heteroplamsy levels (AF=0.03,0.05,0.10)<br>
+|-- filter.sh				# filter/realign reads, calls SNP/INDELs, filter SNP/INDELs at multiple heteroplamsy levels<br>
 |-- readCount.sh			# count reads: all, mapped, chrM, filtered<br>
 |-- snpCount.sh				# merge, count SNP/INDELs, HOMOZYGOUS/HETEROZYGOUS(AF=) at multiple heteroplamsy levels<br>
 |-- snpCount1.sh			$ merge, count SNP/INDELs, HOMOZYGOUS/HETEROZYGOUS(AF=) for a given heteroplamsy level<br>
-|-- circSam.pl				# "circularizes" SAM alignments; extend reference, align reads using bwa, split reads spanning the "circularization" point<br>
+|-- circSam.pl				# "circularizes" SAM alignments; extend reference, align & split reads spanning circ. point<br>
 |-- count.pl				# count values in a certain column (-i; 0 based)<br>
 |-- fa2Vcf.pl				# creates "##reference" & "##contig" VCF headers<br>
 |-- filterVcf.pl			# filter VCF files; discard HETEROZYGOUS SNP/INDELs with AF less than a THOLD<br>
