@@ -82,36 +82,7 @@ HP : Heteroplasmy Pipeline
 
     checkInstall.sh
 
-# LEGEND #
-
-### metadata 
-    Run                           # SRR
-    rdLen                         # AvgReadLength
-    ...
-
-### read counts 
-    chrM                          # number of reads aligned to chrM
-
-### computed coverage ####
-    Gcvg                          # recomputed genome coverage: Bases/3217346917
-    Mcvg                          # mitochondrion covearge: chrM*rdLen/16569
-
-### mtDNA copy number ###
-
-    M                             # Gcvg based:  2*Mcvg/Gcvg
-
-### mutect2 results ###
-
-    haplogroup                    # mutect2 haploroup
-    03%S                          # homozygous SNPs, 3% heteroplasmy rate
-    03%S                          # heterozygous
-    03%I                          # homozygous INDELs
-    03%i                          # heterozygous INDELs
-    ...
-    05%
-    10%
-
-# EXAMPLE 1 #
+# USAGE #
 
 ### init (could be added to ~/.bash_profile) ###
 
@@ -154,14 +125,49 @@ HP : Heteroplasmy Pipeline
     ... or (MARCC)
     sbatch --time=24:0:0 ./filter.all.sh
 
-# EXAMPLE 2 #
+# OUTPUT #
+
+    Files:
+      mutect2.03.vcf
+      mutect2.05.vcf
+      mutect2.10.vcf
+ 
+      mutect2.tab
+
+# EXAMPLES #
 
 #### use RSRS for realignment ####
 
     HP/scripts/run.sh in.txt . hs38DH.fa RSRS.fa
 
-# EXAMPLE 3 #
-
 #### use rCRS for realignment, mutserve for SNP calling ####
 
     HP/scripts/run.sh in.txt . hs38DH.fa rCRS.fa mutserve
+
+# LEGEND #
+
+### metadata
+    Run                           # SRR
+    rdLen                         # AvgReadLength
+    ...
+
+### read counts
+    chrM                          # number of reads aligned to chrM
+
+### computed coverage ####
+    Gcvg                          # recomputed genome coverage: Bases/3217346917
+    Mcvg                          # mitochondrion covearge: chrM*rdLen/16569
+
+### mtDNA copy number ###
+    M                             # Gcvg based:  2*Mcvg/Gcvg
+
+### mutect2 results ###
+    haplogroup                    # mutect2 haploroup
+    03%S                          # homozygous SNPs, 3% heteroplasmy rate
+    03%S                          # heterozygous
+    03%I                          # homozygous INDELs
+    03%i                          # heterozygous INDELs
+    ...
+    05%
+    10%
+
