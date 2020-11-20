@@ -91,6 +91,8 @@
 
 #### generate input file  ####
     find bams/ -name "*bam" > in.txt
+    ... or 
+    find crams/ -name "*cram" > in.txt
 
 #### split input file (optional; Ex: sets of 100) ####
     split -d -a 1 --numeric=1 -l 100 in.txt  in. --additional-suffix=.txt
@@ -109,15 +111,16 @@
     nohup ./filter.1.sh &
     nohup ./filter.2.sh &
     nohup ./filter.3.sh &
+    ...
+    ls filter.?.sh | parallel
     ... or (MARCC)
     sbatch --time=24:0:0 ./filter.all.sh
 
 # EXAMPLE 2 #
 
 #### use RSRS for realignment ####
-    HP/scripts/run.sh filter.1.txt filter.1/ hs38DH.fa RSRS.fa
+    HP/scripts/run.sh filter.all.txt filter.all/ hs38DH.fa RSRS.fa
    
 # EXAMPLE 3 #
 #### use rCRS for realignment, mutserve for SNP calling ####
-    HP/scripts/run.sh filter.1.txt filter.1/ hs38DH.fa rCRS.fa mutserve
-
+    HP/scripts/run.sh filter.all.txt filter.all/ hs38DH.fa rCRS.fa mutserve
