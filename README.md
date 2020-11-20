@@ -9,7 +9,7 @@
     git clone git://github.com/GregoryFaust/samblaster.git<br>
     git clone https://github.com/vcftools/vcftools.git<br>
 <br>
-* java: picard, mutserve, gatk (Mutect2), haplogrep
+* java: picard, mutserve, gatk (Mutect2), haplogrep<br>
     wget https://github.com/broadinstitute/picard/releases/download/2.23.8/picard.jar<br>
     wget https://github.com/broadinstitute/gatk/releases/download/4.1.9.0/gatk-4.1.9.0.zip<br>
     wget https://github.com/seppinho/haplogrep-cmd/releases/download/v2.2.9/haplogrep.zip<br>
