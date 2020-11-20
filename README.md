@@ -2,12 +2,12 @@
 
 <br>
 * executables: bwa, samtools, bcftools, htslib, samblaster, vcftools<br>
-        wget https://netactuate.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2<br>
-	wget https://github.com/samtools/samtools/releases/download/1.11/samtools-1.11.tar.bz2<br>
-	wget https://github.com/samtools/bcftools/releases/download/1.11/bcftools-1.11.tar.bz2<br>
-	wget https://github.com/samtools/htslib/releases/download/1.11/htslib-1.11.tar.bz2<br>
-	git clone git://github.com/GregoryFaust/samblaster.git<br>
-	git clone https://github.com/vcftools/vcftools.git<br>
+    wget https://netactuate.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2<br>
+    wget https://github.com/samtools/samtools/releases/download/1.11/samtools-1.11.tar.bz2<br>
+    wget https://github.com/samtools/bcftools/releases/download/1.11/bcftools-1.11.tar.bz2<br>
+    wget https://github.com/samtools/htslib/releases/download/1.11/htslib-1.11.tar.bz2<br>
+    git clone git://github.com/GregoryFaust/samblaster.git<br>
+    git clone https://github.com/vcftools/vcftools.git<br>
 <br>
 * java: picard, mutserve, gatk (Mutect2), haplogrep<br>
     wget https://github.com/broadinstitute/picard/releases/download/2.23.8/picard.jar<br>
@@ -87,39 +87,37 @@ RefSeq/                                 # references: chrM, hs38DH, rCRS<br>
 
 # EXAMPLE 1
 <br>
-1. init ; could add content to ~/.bash_profile
-  $ source HP/scripts/init.sh		
-  # source HP/scripts/init_marcc.sh      # MARCC
-
-2. check install (once) ; if successfull => "Success message!" at the end
-  $ HP/scripts/checkInstall.sh
-
-3. generate input file list (.bam or .cram)
-  $ find bams/ -name "*bam" > in.txt  
-
-3o. split input file (optional; sets of 100)
-  split -d -a 1 --numeric=3  -l 100 in.txt  in. --additional-suffix=.txt  
-
-4. run "run.sh" script ; if successful  generates "filter.all.sh"
-  $ HP/scripts/run.sh in.txt out > filter.all.sh
-
-4o. on multiple files
-  $ HP/scripts/run.sh in.000.txt out/ > filter.1.sh
-  $ HP/scripts/run.sh in.001.txt out/ > filter.2.sh
-  ...
-
-5. check filter.all.sh
-  $ cat filter.*.sh
-
-6. execute filter.all.sh
-  $ nohup ./filter.all.sh 
-  # sbatch --time=24:0:0 ./filter.all.sh   # MARCC
+1. init ; could add content to ~/.bash_profile<br>
+    $ source HP/scripts/init.sh<br>		
+    # source HP/scripts/init_marcc.sh      # MARCC<br>
+<br>
+2. check install (once) ; if successfull => "Success message!" at the end<br>
+  $ HP/scripts/checkInstall.sh<br>
+<br>
+3. generate input file list (.bam or .cram)<br>
+  $ find bams/ -name "*bam" > in.txt  <br>
+<br>
+3o. split input file (optional; sets of 100)<br>
+  split -d -a 1 --numeric=3  -l 100 in.txt  in. --additional-suffix=.txt<br>
+<br>
+4. run "run.sh" script ; if successful  generates "filter.all.sh"<br>
+  $ HP/scripts/run.sh in.txt out > filter.all.sh<br>
+<br>
+4o. on multiple files<br>
+  $ HP/scripts/run.sh in.000.txt out/ > filter.1.sh<br>
+  $ HP/scripts/run.sh in.001.txt out/ > filter.2.sh<br>
+  ...<br>
+5. check filter.all.sh<br>
+  $ cat filter.*.sh<br>
+6. execute filter.all.sh<br>
+  $ nohup ./filter.all.sh <br>
+  # sbatch --time=24:0:0 ./filter.all.sh   # MARCC<br>
 
 # EXAMPLE 2
-4. use RSRS.fa for realignment
-  HP/scripts/run.sh filter.1.txt filter.1/ hs38DH.fa RSRS.fa 
+4. use RSRS.fa for realignment<br>
+  HP/scripts/run.sh filter.1.txt filter.1/ hs38DH.fa RSRS.fa <br>
 
 # EXAMPLE 3
-4. use rCRS.fa for realignment, mutserve for SNP calling
-  HP/scripts/run.sh filter.1.txt filter.1/ hs38DH.fa rCRS.fa  mutserve
+4. use rCRS.fa for realignment, mutserve for SNP calling<br>
+  HP/scripts/run.sh filter.1.txt filter.1/ hs38DH.fa rCRS.fa mutserve<br>
 
