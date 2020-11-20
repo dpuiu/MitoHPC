@@ -46,7 +46,7 @@
     bin/                          # executables (in case they have not been already installed)<br>
     |-- ...
     RefSeq/                       # references: chrM, hs38DH, rCRS
-    |-- hs38DH.fa        	  # to be downloaded separately
+    |-- hs38DH.fa                 # to be downloaded separately
     |-- chrM.fa
     |-- rCRS.fa
     `-- RSRS.fa
@@ -65,7 +65,7 @@
     Mcvg		          # mitochondrion covearge: chrM*rdLen/16569
 
 ### mtDNA copy number ###
-    M		                  # Gcvg based:  2*Mcvg/Gcvg
+    M                             # Gcvg based:  2*Mcvg/Gcvg
 
 ### mutect2 results ###
     haplogroup	                  # mutect2 haploroup
