@@ -127,12 +127,11 @@ HP : Heteroplasmy Pipeline
 
 # OUTPUT #
 
-    Files:
-      mutect2.03.vcf
-      mutect2.05.vcf
-      mutect2.10.vcf
- 
-      mutect2.tab
+### Files: ###
+    mutect2.03.vcf
+    mutect2.05.vcf
+    mutect2.10.vcf
+    mutect2.tab
 
 # EXAMPLES #
 
