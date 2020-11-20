@@ -146,7 +146,6 @@ HP : Heteroplasmy Pipeline
 #### output ; simulated haplogroup A,B,C datasets ####
 
     head mutect2.03.vcf 
-
     ##fileformat=VCFv4.2
     ##source=Mutect2
     ##reference=file://../..//RefSeq//rCRS.fa>
