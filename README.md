@@ -1,6 +1,6 @@
 # PREREQUISEITES #
 
-## executables: bwa, samtools, bcftools, htslib, samblaster, vcftools ##
+### executables: bwa, samtools, bcftools, htslib, samblaster, vcftools ###
     wget https://netactuate.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2<br>
     wget https://github.com/samtools/samtools/releases/download/1.11/samtools-1.11.tar.bz2<br>
     wget https://github.com/samtools/bcftools/releases/download/1.11/bcftools-1.11.tar.bz2<br>
@@ -8,12 +8,12 @@
     git clone git://github.com/GregoryFaust/samblaster.git<br>
     git clone https://github.com/vcftools/vcftools.git<br>
 
-## java: picard, mutserve, gatk (Mutect2), haplogrep ##
+### java: picard, mutserve, gatk, haplogrep ###
     wget https://github.com/broadinstitute/picard/releases/download/2.23.8/picard.jar<br>
     wget https://github.com/broadinstitute/gatk/releases/download/4.1.9.0/gatk-4.1.9.0.zip<br>
     wget https://github.com/seppinho/haplogrep-cmd/releases/download/v2.2.9/haplogrep.zip<br>
-<br>
-* RefSeq: hs38DH**<br>
+
+### RefSeq: hs38DH ###
     wget ftp://ftp.ccb.jhu.edu/pub/dpuiu/Homo_sapiens/hs38DH/hs38DH.fa<br>
 
 # FILES
@@ -55,26 +55,22 @@ RefSeq/                                 # references: chrM, hs38DH, rCRS<br>
 # LEGEND
 
 <br>
-* metadata<br>
+### metadata ###
   Run   	: SRR<br>
   rdLen		: AvgReadLength (run)<br>
   ...<br>
 
-<br>
-* read counts<br>
+### read counts ###
   chrM		: number of reads aligned to chrM <br>
 
-<br>
-* computed coverage<br>
+### computed coverage ####
   Gcvg		: recomputed genome coverage: Bases/3217346917 <br>
   Mcvg		: mitochondrion covearge: chrM*rdLen/16569<br>
 
-<br>
-* mtDNA copy number<br>
+### mtDNA copy number ###
   M		: Gcvg based:  2*Mcvg/Gcvg<br>
 
-<br>
-* mutect2 results<br>
+### mutect2 results ###
   haplogroup	: mutect2 haploroup<br>
   03%S		: homozygous SNPs, 3% heteroplasmy rate<br>
   03%S		: heterozygous<br>
