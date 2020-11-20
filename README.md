@@ -19,27 +19,27 @@
 # FILES
     $ tree <br>
     scripts/<br>
-    |-- run.sh                          # main executable, calls "filter.sh" on multiple .bam/.cram files provided in an input file;
-    |-- checkInstall.sh                 # check prerequisites
-    |-- init.sh	                        # set environment variables
-    |-- init_marcc.sh                   # specific to MARCC
-    |-- filter.sh                       # filter/realign reads, calls SNP/INDELs, filter SNP/INDELs at multiple heteroplamsy levels
-    |-- readCount.sh			# count reads: all, mapped, chrM, filtered
-    |-- snpCount.sh                     # merge, count SNP/INDELs, HOM/HET(AF=) at multiple heteroplamsy levels
-    |-- snpCount1.sh                    # merge, count SNP/INDELs, HOM/HET(AF=) for a given heteroplamsy level
-    |-- circSam.pl                      # "circularizes" SAM alignments; extend reference, align & split reads spanning circ. point
-    |-- count.pl                        # count values in a certain column (-i; 0 based)
-    |-- fa2Vcf.pl                       # creates "##reference" & "##contig" VCF headers
-    |-- filterVcf.pl                    # filter VCF files; discard HETEROZYGOUS SNP/INDELs with AF less than a THOLD
-    |-- fixmutect2Vcf.pl                # postprocess gatk Mutect2 output
-    |-- fixmutserveVcf.pl               # postprocess mutserve output
-    |-- join.pl                         # join 2 files by the 1st column
-    |-- labelVcf.pl                     # add the homopolimer tag(HP) to SNPs located at certain positions
-    |-- maxVcf.pl                       # get the major allele
-    |-- mutect2.vcf                     # mutect2 VCF header
-    |-- mutserve.vcf                    # mutserve VCF header
-    |-- uniq2.pl                        # filters unique lines based on 2 columns (-i 0 -j 1)
-    java/                               # jars
+    |-- run.sh                    # main executable, calls "filter.sh" on multiple .bam/.cram files provided in an input file;
+    |-- checkInstall.sh           # check prerequisites
+    |-- init.sh	                  # set environment variables
+    |-- init_marcc.sh             # specific to MARCC
+    |-- filter.sh                 # filter/realign reads, calls SNP/INDELs, filter SNP/INDELs at multiple heteroplamsy levels
+    |-- readCount.sh              # count reads: all, mapped, chrM, filtered
+    |-- snpCount.sh               # merge, count SNP/INDELs, HOM/HET(AF=) at multiple heteroplamsy levels
+    |-- snpCount1.sh              # merge, count SNP/INDELs, HOM/HET(AF=) for a given heteroplamsy level
+    |-- circSam.pl                # "circularizes" SAM alignments; extend reference, align & split reads spanning circ. point
+    |-- count.pl                  # count values in a certain column (-i; 0 based)
+    |-- fa2Vcf.pl                 # creates "##reference" & "##contig" VCF headers
+    |-- filterVcf.pl              # filter VCF files; discard HETEROZYGOUS SNP/INDELs with AF less than a THOLD
+    |-- fixmutect2Vcf.pl          # postprocess gatk Mutect2 output
+    |-- fixmutserveVcf.pl         # postprocess mutserve output
+    |-- join.pl                   # join 2 files by the 1st column
+    |-- labelVcf.pl               # add the homopolimer tag(HP) to SNPs located at certain positions
+    |-- maxVcf.pl                 # get the major allele
+    |-- mutect2.vcf               # mutect2 VCF header
+    |-- mutserve.vcf              # mutserve VCF header
+    |-- uniq2.pl                  # filters unique lines based on 2 columns (-i 0 -j 1)
+    java/                         # jars
     |-- gatk.jar
     |-- haplogrep.jar
     |-- mutserve.jar
