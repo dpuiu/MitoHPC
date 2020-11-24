@@ -1,4 +1,4 @@
-HP : Heteroplasmy Pipeline
+# HP : Heteroplasmy Pipeline # 
 
 # PREREQUISITES #
 
