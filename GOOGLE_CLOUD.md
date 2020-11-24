@@ -60,14 +60,15 @@
     # create mounting and output directories
     mkdir -p runs/ runs.filter/
 
-    # create input file: 1 column containing the TOPMed Run names
+    # create input file: 1 column containing the TOPMed Run names; should contain up to ~100 lines 
     nano runs.txt 
     head runs.txt 
-    SRR
+    SRR...
     ...
+    wc -l runs.txt 
 
-    #  mount runs
-    fusera  mount --verbose  --ngc   ~/TOPMed/prj_17293_D27121.ngc --accession runs.txt runs/ & 
+    # mount runs
+    fusera  mount --verbose --ngc  ~/TOPMed/prj_17293_D27121.ngc --accession runs.txt runs/ & 
 
     # find alignment files (.cram & .cram.crai)  & run "samtools view" 
     find runs/ -name "*crai" | perl -ane '/(runs\/(\w+).*).crai/; print "samtools view $1 -T ~/genomics-public-data/references/hg38/v0/Homo_sapiens_assembly38.fasta chrM -b > runs.filter/$2.bam\n";'  | tee | sh
