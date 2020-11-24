@@ -203,9 +203,8 @@
     ...
 
 ### read counts
-
-Run              
-    all                           # all reads
+    Run                           # run name
+    all                           # all reads 
     mapped                        # mapped reads	
     chrM                          # number of reads aligned to chrM
     filter                        # number of chrM used (subsample ~2000x cvg based on name)
