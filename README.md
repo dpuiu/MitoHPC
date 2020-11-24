@@ -82,6 +82,11 @@
 
     checkInstall.sh
 
+## INPUT ##
+ 
+    .bam files  under bam/
+    .cram files under cram/
+
 # USAGE #
 
 ### init (could be added to ~/.bash_profile) ###
@@ -103,6 +108,11 @@
 #### split input file (optional; Ex: sets of 100) ####
 
     split -d -a 1 --numeric=1 -l 100 in.txt  in. --additional-suffix=.txt
+
+### generate index and count files ### 
+
+   cat in.txt | perl -ane 'print "samtools.sh $_";' > samtools.all.sh
+  ./samtools.all.sh
 
 #### generate pipeline script ####
 
