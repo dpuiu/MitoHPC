@@ -1,11 +1,12 @@
 # GOOGLE CLOUD SETUP #
 
-### Web browser: Login into google account: user@gmail.com ###
+### Open Web Browser ###
+    Login into google account: user@gmail.com
 
-### Go to "Google console" ### 
+### Go to "Google Console" ### 
     https://console.cloud.google.com/home/dashboard?project=topmed&authuser=0
 
-### Go to "Compute engine" ###
+### Go to "Compute Engine" ###
 
 ### Create/Select instance ###
     Machine family: General purpose
@@ -27,8 +28,8 @@
  
     # download fusera
     cd bin/
-    wget  https://github.com/mitre/fusera/releases/download/v2.0.0/fusera 
-    wget  https://github.com/mitre/fusera/releases/download/v2.0.0/sracp
+    wget https://github.com/mitre/fusera/releases/download/v2.0.0/fusera 
+    wget https://github.com/mitre/fusera/releases/download/v2.0.0/sracp
     chmod a+x fusera sracp 
     cd -
  
@@ -36,14 +37,14 @@
     gsutil config 
     gcloud auth login
  
-    install gcsfuse (for bucket mounting)
+    # install gcsfuse (for bucket mounting)
     export GCSFUSE_REPO=gcsfuse-`lsb_release -c -s`
     echo "deb http://packages.cloud.google.com/apt $GCSFUSE_REPO main" | sudo tee /etc/apt/sources.list.d/gcsfuse.list
     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
     sudo apt-get update
     sudo apt-get install gcsfuse
     sudo groupadd fuse
-    sudo usermod -a -G fuse user_gmail_com   # where user is the username
+    sudo usermod -a -G fuse user_gmail_com
 
     # mount genomics-public-data
     gcsfuse --implicit-dirs genomics-public-data ~/genomics-public-data/ 
@@ -53,20 +54,28 @@
     mkdir TOPMED
     cd TOPMED
     scp user@localhost:localpath/prj_17293_D27121.ngc .    
-    mkdir runs/ runs.filter/
 
 ### Filter chrM/NUMT alignments ###
 
+    # create mounting and output directories
+    mkdir -p runs/ runs.filter/
+
+    # create input file: 1 column containing the TOPMed Run names
     nano runs.txt 
     head runs.txt 
     SRR
     ...
-  
+
+    #  mount runs
     fusera  mount --verbose  --ngc   ~/TOPMed/prj_17293_D27121.ngc --accession runs.txt runs/ & 
+
+    # find alignment files (.cram & .cram.crai)  & run "samtools view" 
     find runs/ -name "*crai" | perl -ane '/(runs\/(\w+).*).crai/; print "samtools view $1 -T ~/genomics-public-data/references/hg38/v0/Homo_sapiens_assembly38.fasta chrM -b > runs.filter/$2.bam\n";'  | tee | sh
     find runs/ -name "*crai" | perl -ane '/(runs\/(\w+).*).crai/; print "samtools view $1 -T ~/genomics-public-data/references/hg38/v0/Homo_sapiens_assembly38.fasta chr1:629084-634422 chr17:22521366-22521502 chrM -C > runs.filter/$2.cram\n";'  | tee | sh
     
-    scp -r runs.filter user@localhost:localpath
+    # copy filtered files to local machine
+    scp -r runs.filter/ user@localhost:localpath
     
+    # unmount mounting directory
     fusera unmount runs/
 
