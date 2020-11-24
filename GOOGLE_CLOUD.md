@@ -1,17 +1,17 @@
-# GOOGLE CLOUD SETUP ==
+# GOOGLE CLOUD SETUP #
 
-* Web browser: Login into google account: user@gmail.com
+### Web browser: Login into google account: user@gmail.com ###
 
-* Go to "Google console":  
+### Go to "Google console" ### 
     https://console.cloud.google.com/home/dashboard?project=topmed&authuser=0
 
-* Go to "Compute engine"
+### Go to "Compute engine" ###
 
-* Create/Select instance : 
+### Create/Select instance ###
     Machine family: General purpose
     Series: E2
 
-* Connect using ssh
+### Connect using ssh ###
 
     $ ls
  
@@ -54,6 +54,8 @@
     cd TOPMED
     scp user@localhost:localpath/prj_17293_D27121.ngc .    
     mkdir runs/ runs.filter/
+
+### Filter chrM/NUMT alignments ###
 
     nano runs.txt 
     head runs.txt 
