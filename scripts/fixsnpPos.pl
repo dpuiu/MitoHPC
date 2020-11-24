@@ -8,7 +8,8 @@ my $HELP = qq~
 Program that recalculates snp positions
 
         EXAMPLE:
-		cat I.mutserve.vcf | fixmutserveVcf.pl -file rCRS.fa
+
+		....
 ~;
 
 ###############################################################################
@@ -22,10 +23,11 @@ MAIN:
 	my %opt;
 	my $result = GetOptions(
 		"ref=s"		=> \$opt{ref},
+		"rfile=s"        => \$opt{rfile},
  	        "file=s" 	=> \$opt{file},
  	);
 	die "ERROR: $! " if (!$result);
-	die "ERROR: $! " if (!defined($opt{file}));
+	die "ERROR: $! " if (!defined($opt{ref}) or !defined($opt{rfile}) or !defined($opt{file}));
 
 	my %diff;
 	open(IN,$opt{file}) or die "ERROR:$!";
@@ -39,7 +41,10 @@ MAIN:
         }
 	close(IN);
 
-	if($opt{ref} eq "rCRS") { $diff{3107}=-1 }
+	if($opt{ref} eq "rCRS" or $opt{ref} eq "chrM") 
+	{ 
+		$diff{3107}=-1 
+	}
 
 	my $diff=0;
 	my @pos=(sort {$a<=>$b} keys %diff);
@@ -61,6 +66,9 @@ MAIN:
 		}
 		elsif(/^##reference/ or /^##contig/)
 		{
+			
+			print "##reference=file://$opt{rfile}>\n";
+			print "##contig=<ID=$opt{ref},length=16569>\n" if($opt{ref} eq "rCRS" or $opt{ref} eq "chrM");
 		}
 		elsif(/^#/)
 		{

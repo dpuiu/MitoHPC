@@ -25,4 +25,6 @@ printf "\n"
 printf "readCount.sh $OUT\n"
 printf "snpCount.sh $OUT $M\n"
 printf "find $OUT -name *.$M.fa | xargs cat > $M.fa\n"
+printf "find join.pl count.tab $M.tab > count_$M.tab\n"
+
 exit 0

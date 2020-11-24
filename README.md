@@ -181,14 +181,19 @@ HP : Heteroplasmy Pipeline
     ...
 
 ### read counts
+
+Run              
+    all                           # all reads
+    mapped                        # mapped reads	
     chrM                          # number of reads aligned to chrM
+    filter                        # number of chrM used (subsample ~2000x cvg based on name)	
 
 ### computed coverage ####
     Gcvg                          # recomputed genome coverage: Bases/3217346917
     Mcvg                          # mitochondrion covearge: chrM*rdLen/16569
 
 ### mtDNA copy number ###
-    M                             # Gcvg based:  2*Mcvg/Gcvg
+    M                             # 2*Mcvg/Gcvg
 
 ### mutect2 results ###
     haplogroup                    # mutect2 haploroup

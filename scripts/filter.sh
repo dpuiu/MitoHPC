@@ -21,9 +21,11 @@ export R=`basename $R .mutect2`
 O=$D/$N                                                      # output dir.sample name
 G=${F%???}                                                   # ...
 
-export HG=hs38DH
+#export HG=hs38DH
 export MT=chrM
 export NUMT='chr1:629084-634422 chr17:22521366-22521502 '   # chrM + 2 selected NUMT
+#export MT=M                                                # tmp 20201121
+#export NUMT='1:629084-634422 17:22521366-22521502 '        # chrM + 2 selected NUMT
 
 P=1                # number of processors
 export L=222000    # ~2000x MT coverage
@@ -31,15 +33,18 @@ export L=222000    # ~2000x MT coverage
 export E=255       # extension(circularization) ; 149 for 150bp reads
 
 #########################################################################################################################################
+#test input file
+
+if [ ! -s $I.bai ] && [ ! -s $I.crai ] ; then exit 1 ; fi
+
+#########################################################################################################################################
 #format references
 
-if [ ! -s $I.bai ]    ; then samtools index $I ; fi
 if [ ! -s $F.fai ]    ; then samtools faidx $F ; fi
 if [ ! -s $G.dict   ] ; then java -jar $JDIR/picard.jar CreateSequenceDictionary R=$F O=$G.dict ; fi
 if [ ! -s $G+$E.fa  ] ; then 
-  cat $F.fai | perl -ane 'print "$F[0]\t0\t$F[1]\n$F[0]\t0\t$ENV{E}\n";' | bedtools  getfasta -fi $F -bed - | grep -v "^>" | perl -ane 'BEGIN { print ">$ENV{R}\n" } ;print;' > $G+$E.fa
-  java -jar $JDIR/picard.jar NormalizeFasta I=$G+$E.fa O=$G+$E.fa2 LINE_LENGTH=60
-  mv $G+$E.fa2 $G+$E.fa
+  cat $F.fai | perl -ane 'print "$F[0]\t0\t$F[1]\n$F[0]\t0\t$ENV{E}\n";' | bedtools getfasta -fi $F -bed - | grep -v "^>" | perl -ane 'BEGIN { print ">$ENV{R}\n" } ;print;' > $G+$E.fa
+  java -jar $JDIR/picard.jar NormalizeFasta I=$G+$E.fa O=$G+$E.fa2 LINE_LENGTH=60 ;  mv $G+$E.fa2 $G+$E.fa
 fi
 if [ ! -s $G+$E.bwt ] ; then bwa index $G+$E.fa -p $G+$E ; fi
 
@@ -56,7 +61,7 @@ if  [ ! -s $O.bam ] ; then
     fastp --stdin --interleaved_in --stdout | \
     bwa mem $G+$E - -p -v 1 -t $P -Y -R "@RG\tID:$N\tSM:$N\tPL:ILLUMINA" -v 1 | \
     samblaster --removeDups --addMateTags  | \
-    circSam.pl -ref_len $F.fai | grep -v "^$" | tee $O.sam | \
+    circSam.pl -ref_len $F.fai | grep -v "^$" | \
     samtools view -bu | \
     samtools sort > $O.bam
     samtools index $O.bam
@@ -66,9 +71,7 @@ fi
 #count aligned raeds
 
 if [ ! -s $O.count ] ; then
-  samtools view $I -c               | awk '{print $1,"all"}'    >  $O.count
-  samtools view $I -F 0x904 -c      | awk '{print $1,"mapped"}' >> $O.count
-  samtools view $I $MT  -F 0x900 -c | awk '{print $1,"chrM" }'  >>  $O.count
+  samtools view $I $MT  -F 0x900 -c | awk '{print $1,"chrM" }'  >  $O.count
   samtools view $O.bam  -F 0x900 -c | awk '{print $1,"filter"}' >> $O.count
 fi
 
@@ -76,9 +79,7 @@ fi
 #get covearge at each chrM position ; get overall stats
 
 if [ ! -s $O.cvg ] ; then
-  cat $O.bam | \
-    bedtools bamtobed -cigar | tee $O.bed | \
-    bedtools genomecov -i - -g $F.fai -d > $O.cvg 
+  cat $O.bam | bedtools bamtobed -cigar | bedtools genomecov -i - -g $F.fai -d > $O.cvg 
   cat $O.cvg | cut -f3 | st  --summary  | sed 's|^|'"$N"'\t|' > $O.cvg.stat
 fi
 
@@ -88,7 +89,7 @@ fi
 if [ ! -s $O.$M.vcf ] ; then
   if [  "$M" == "mutect2" ] ; then
     java -jar $JDIR/gatk.jar Mutect2           -R $F -I $O.bam                             -O $O.$M.vcf
-    java -jar $JDIR/gatk.jar FilterMutectCalls -R $F -V $O.$M.vcf --min-reads-per-strand 2 -O $O.${M}F.vcf # --min-allele-fraction 0.03 --unique 2
+    java -jar $JDIR/gatk.jar FilterMutectCalls -R $F -V $O.$M.vcf --min-reads-per-strand 2 -O $O.${M}F.vcf
     mv $O.${M}F.vcf  $O.$M.vcf
     rm $O.${M}F.vcf* $O.$M.vcf.*
   elif [ "$M" == "mutserve" ] ; then

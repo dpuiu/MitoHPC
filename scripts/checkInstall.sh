@@ -1,7 +1,7 @@
 #!/bin/bash -eux
 
 export SDIR=`dirname $0`        # script directory
-source $SDIR/init_marcc.sh
+source $SDIR/init.sh
 
 #test executables and Java jars
 which perl	        #usually available on Linux
@@ -20,8 +20,6 @@ test -f $JDIR/gatk.jar
 test -f $JDIR/haplogrep.jar
 test -f $JDIR/mutserve.jar
 test -f $JDIR/picard.jar
-test -f $RDIR/$H
-test -f $RDIR/$R
 
 ######################################################
 
@@ -52,11 +50,7 @@ ls -l $JDIR/mutserve.jar  | awk '{print $11}' >> checkInstall.log
 echo "########################"  >> checkInstall.log
 echo "VARS:"  >> checkInstall.log
 
-echo   "SDIR=" $SDIR >> checkInstall.log
-echo   "JDIR=" $JDIR >> checkInstall.log
-echo   "RDIR=" $RDIR >> checkInstall.log
-echo   "H=" $H >> checkInstall.log
-echo   "R=" $R >> checkInstall.log
-echo   "M=" $M >> checkInstall.log
-
+echo "SDIR=" $SDIR >> checkInstall.log
+echo "JDIR=" $JDIR >> checkInstall.log
+echo "RDIR=" $RDIR >> checkInstall.log
 echo Success!
