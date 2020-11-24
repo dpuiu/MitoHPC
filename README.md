@@ -128,10 +128,13 @@
 # OUTPUT #
 
 ### Files: ###
+
+    count.tab 
     mutect2.03.vcf
     mutect2.05.vcf
     mutect2.10.vcf
     mutect2.tab
+    count_mutect2.tab
 
 # EXAMPLES #
 
@@ -145,26 +148,32 @@
 
 #### output ; simulated haplogroup A,B,C datasets ####
 
+    # head count.tab 
+    Run     all        mapped     chrM    filter  M
+    chrM.A  740589366  739237125  487382  205095  256.05
+    chrM.B  763658318  762297733  495743  205156  252.56
+    chrM.C  749938586  748667901  590963  200121  306.55
+
     head mutect2.03.vcf 
     ##fileformat=VCFv4.2
     ##source=Mutect2
     ##reference=file://../..//RefSeq//rCRS.fa>
     ##contig=<ID=rCRS,length=16569>
     #CHROM	POS	ID	REF	ALT	QUAL	FILTER	                        INFO	                FORMAT	SAMPLE
-    rCRS	64	.	C	T	.	clustered_events;haplotype	SNP;DP=69	        SM	chrM.A
-    rCRS	73	.	A	G	.	clustered_events;haplotype	SNP;DP=72	        SM	chrM.A
-    rCRS	73	.	A	G	.	PASS	                        SNP;DP=50	        SM	chrM.B
-    rCRS	73	.	A	G	.	PASS	                        SNP;DP=43	        SM	chrM.C
-    rCRS	146	.	T	C	.	clustered_events;haplotype	SNP;DP=88	        SM	chrM.A
-    rCRS	153	.	A	G	.	clustered_events;haplotype	SNP;DP=89	        SM	chrM.A
+    rCRS	64	.	C	T	.	clustered_events;haplotype	SNP;DP=1290	        SM	chrM.A
+    rCRS	73	.	A	G	.	clustered_events;haplotype	SNP;DP=1421	        SM	chrM.A
+    rCRS	73	.	A	G	.	PASS	                        SNP;DP=1002	        SM	chrM.B
+    rCRS	73	.	A	G	.	PASS	                        SNP;DP=833	        SM	chrM.C
+    rCRS	146	.	T	C	.	clustered_events;haplotype	SNP;DP=1684	        SM	chrM.A
+    rCRS	153	.	A	G	.	clustered_events;haplotype	SNP;DP=1695	        SM	chrM.A
     ...
-    rCRS	310	.	T	TC	.	clustered_events	        INDEL;DP=71;HP	        SM	chrM.A
-    rCRS	310	.	T	TC	.	clustered_events	        INDEL;DP=62;HP	        SM	chrM.B
-    rCRS	310	.	T	TC	.	clustered_events	        INDEL;DP=57;HP	        SM	chrM.C
+    rCRS	310	.	T	TC	.	clustered_events	        INDEL;DP=1416;HP	SM	chrM.A
+    rCRS	310	.	T	TC	.	clustered_events	        INDEL;DP=1227;HP	SM	chrM.B
+    rCRS	310	.	T	TC	.	clustered_events	        INDEL;DP=1978;HP	SM	chrM.C
     ...
-    rCRS	374	.	A	G	.	clustered_events	        SNP;DP=76;AF=0.139	SM	chrM.A
-    rCRS	375	.	C	T	.	clustered_events;strand_bias	SNP;DP=65;AF=0.162	SM	chrM.B
-    rCRS	378	.	C	T	.	clustered_events	        SNP;DP=81;AF=0.13	SM	chrM.C
+    rCRS	374	.	A	G	.	clustered_events	        SNP;DP=1469;AF=0.139	SM	chrM.A
+    rCRS	375	.	C	T	.	clustered_events;strand_bias	SNP;DP=1250;AF=0.162	SM	chrM.B
+    rCRS	378	.	C	T	.	clustered_events	        SNP;DP=1612;AF=0.13	SM	chrM.C
     ...
  
     head mutect2.tab
@@ -186,7 +195,7 @@ Run
     all                           # all reads
     mapped                        # mapped reads	
     chrM                          # number of reads aligned to chrM
-    filter                        # number of chrM used (subsample ~2000x cvg based on name)	
+    filter                        # number of chrM used (subsample ~2000x cvg based on name)
 
 ### computed coverage ####
     Gcvg                          # recomputed genome coverage: Bases/3217346917
