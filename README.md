@@ -81,11 +81,14 @@
 ## CHECK INSTALL ##
 
     checkInstall.sh
+    cat checkInstall.log
 
 ## INPUT ##
  
-    .bam files  under bam/
-    .cram files under cram/
+### Alignment Files ###
+    bam/*.bam
+    ... or
+    cram/*.cram
 
 # USAGE #
 
@@ -101,7 +104,7 @@
 
 #### generate input file  ####
 
-    find bams/ -name "*bam" > in.txt
+    find bams/  -name "*bam"  > in.txt
     ... or
     find crams/ -name "*cram" > in.txt
 
@@ -137,7 +140,7 @@
 
 # OUTPUT #
 
-### Files: ###
+### TAB/VCF Files: ###
 
     count.tab 
     mutect2.03.vcf
