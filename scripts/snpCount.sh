@@ -10,6 +10,7 @@ fi
 snpCount1.sh $D $M 03
 snpCount1.sh $D $M 05
 snpCount1.sh $D $M 10
+snpCount1.sh $D $M max
 
 join.pl  $M.haplogroup.tab $M.03.tab | join.pl - $M.05.tab | join.pl - $M.10.tab | column -t > $M.tab
-rm $M.??.tab
+#rm $M.??.tab

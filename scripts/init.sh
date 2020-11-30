@@ -1,8 +1,12 @@
 #!/bin/bash -eux
 
-export SDIR=`dirname $0`        # script directory
-export JDIR=$SDIR/../java/      # java jar directory
-export RDIR=$SDIR/../RefSeq/    # RefSeq directory ; contains hs38DH.fa, chrM.fa, rCRS.fa ...
+SDIR=`dirname $0`        # script directory
+
+export SDIR=`readlink -f $SDIR`
 export PATH=$SDIR:$PATH
-export SH="sbatch"                 # bash, sbatch(SLURM), qsub(SGE,PBS)
+
+export JDIR=`readlink -f $SDIR/../java`
+export RDIR=`readlink -f $SDIR/../RefSeq`
+
+export SH="sh"                 # bash, sbatch(SLURM), qsub(SGE,PBS)
 

@@ -48,6 +48,12 @@ MAIN:
 			print "\n";
 			next;
 		}
+
+                foreach my $tag ("slippage","weak_evidence","strand_bias","germline","strict_strand","base_qual","germline","fragment","position")
+                {
+                        $F[6].=";$tag" if($F[6]!~/$tag/ and $F[7]=~/$tag/);
+                }
+
 		if($F[8]=~/^GT:AF:DP$/ and $F[9]=~/^(.+?):(.+?):(.+?)$/ or $F[8]=~/^GT:AF:DP:/ and $F[9]=~/^(.+?):(.+?):(.+?):/ or $F[8]=~/^GT:AD:AF:DP:/ and  $F[9]=~/^(.+?):.+?:(.+?):(.+?):/)
 		{
 			my ($GT,$AF,$DP)=($1,$2,$3);

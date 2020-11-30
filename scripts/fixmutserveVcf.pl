@@ -73,7 +73,7 @@ MAIN:
 				$P[4]=substr($chrM,$P[1]-1,1);
 				$P[3]="$P[4]$P[3]";
 				print join "\t",@P;print "\n";
-				print;
+				print;print "\n";
 				@P=();
 			}
 		}
@@ -83,7 +83,7 @@ MAIN:
 		}
 		else
 		{
-			print;
+			print;print "\n";
 		}
 	}
 

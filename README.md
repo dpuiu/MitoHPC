@@ -6,6 +6,7 @@
 * picard, mutserve, gatk, haplogre
 * hs38DH
 
+
 # INSTALLATION #
 
 ## INSTALL PREREQUISITES ##
@@ -108,14 +109,19 @@
     ... or
     find crams/ -name "*cram" > in.txt
 
-#### split input file (optional; Ex: sets of 100) ####
+#### split input file (optional; Ex: up to 9 sets of 100) ####
 
     split -d -a 1 --numeric=1 -l 100 in.txt  in. --additional-suffix=.txt
-
+    ... or
+    split -d -a 2 --numeric=1 -l 100 in.txt  in. --additional-suffix=.txt
+   
 ### generate index and count files ### 
 
-   cat in.txt | perl -ane 'print "samtools.sh $_";' > samtools.all.sh
-  ./samtools.all.sh
+     cat in.txt | perl -ane 'print "samtools.sh $_";' > samtools.all.sh
+     ... or (MARCC)
+     cat in.txt | perl -ane 'print "sbatch --p shared --time=24:0:0 samtools.sh $_";' > samtools.all.sh
+
+     sh ./samtools.all.sh
 
 #### generate pipeline script ####
 
@@ -136,7 +142,7 @@
     ...
     ls filter.?.sh | parallel
     ... or (MARCC)
-    sbatch --time=24:0:0 ./filter.all.sh
+    sbatch --p shared --time=24:0:0 ./filter.all.sh
 
 # OUTPUT #
 
