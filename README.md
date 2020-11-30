@@ -52,9 +52,11 @@
     |-- init.sh                   # set environment variables
     |-- init_marcc.sh             # specific to MARCC
     |-- filter.sh                 # filter/realign reads, calls SNP/INDELs, filter SNP/INDELs at multiple heteroplamsy levels
+    |-- filter2.sh                # run the filter.sh pipeline twice
     |-- readCount.sh              # count reads: all, mapped, chrM, filtered
     |-- snpCount.sh               # merge, count SNP/INDELs, HOM/HET(AF=) at multiple heteroplamsy levels
     |-- snpCount1.sh              # merge, count SNP/INDELs, HOM/HET(AF=) for a given heteroplamsy level
+    |-- samtools.sh               # index input file(if necessary); count total and mapped reads
     |-- circSam.pl                # "circularizes" SAM alignments; extend reference, align & split reads spanning circ. point
     |-- count.pl                  # count values in a certain column (-i; 0 based)
     |-- fa2Vcf.pl                 # creates "##reference" & "##contig" VCF headers
@@ -64,20 +66,22 @@
     |-- join.pl                   # join 2 files by the 1st column
     |-- labelVcf.pl               # add the homopolimer tag(HP) to SNPs located at certain positions
     |-- maxVcf.pl                 # get the major allele
+    |-- uniq2.pl                  # filters unique lines based on 2 columns (-i 0 -j 1)
     |-- mutect2.vcf               # mutect2 VCF header
     |-- mutserve.vcf              # mutserve VCF header
-    |-- uniq2.pl                  # filters unique lines based on 2 columns (-i 0 -j 1)
     java/                         # jars
     |-- gatk.jar
     |-- haplogrep.jar
     |-- mutserve.jar
+    |-- picard.jar
     bin/                          # executables (in case they have not been already installed)
     |-- ...
     RefSeq/                       # references: chrM, hs38DH, rCRS
     |-- hs38DH.fa                
+    |-- hs38DH.NUMT.fa            # hs38DH chr1:628834-634672 chr17:22521116-22521752: 2 largest NUMTs, extended by 250bp each direction
     |-- chrM.fa
     |-- rCRS.fa
-    `-- RSRS.fa
+    |-- RSRS.fa
 
 ## CHECK INSTALL ##
 

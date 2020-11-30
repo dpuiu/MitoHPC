@@ -27,7 +27,10 @@ printf "\n"
 printf "\n"
 printf "readCount.sh $ODIR\n"
 printf "snpCount.sh $ODIR $M\n"
-printf "find $ODIR -name *.$M.fa | xargs cat > $M.fa\n"
+printf "find $ODIR -name *.$M.fa | sort | xargs cat > $M.fa\n"
 printf "join.pl count.tab $M.tab > count_$M.tab\n"
+
+printf "find $ODIR -name *.$M.merge.bed | sort | xargs cat > $M.merge.bed\n"
+printf "find $ODIR -name *.$M.03.merge.bed | sort | xargs cat > $M.03.merge.bed\n"
 
 exit 0
