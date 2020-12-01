@@ -1,0 +1,30 @@
+digraph G {
+
+  subgraph cluster_0 {
+    "login GCloud" -> "select runs" -> "fusera mount" -> "samtools view\n-F chrM NUMTs " ->  "fusera umount" -> "scp localhost" ;
+    label = "TOPMed";
+  }
+  
+
+  subgraph cluster_1 {
+    "bwa align" -> "samtools sort" -> "samtools index" -> "samtools view\n-F chrM NUMTs"  ;
+    label = "Local sample";
+  }
+
+ "scp localhost" -> "input file" ;
+ "samtools view\n-F chrM NUMTs" -> "input file" ;
+ "input file" -> "samtools index " ;
+ "input file" -> "samtools sort -n |\nsamtool view |\nhead -222000" ;
+ 
+  subgraph cluster_2 {
+   "samtools index " -> "samtools view -c" -> "compute\nmtDNA-CN"; 
+  }
+  
+  subgraph cluster_3 {
+   "samtools sort -n |\nsamtool view |\nhead -222000" -> "bwa mem\nchrM+extensions" -> "samtools view\n-F chrM" -> "circSam" ;
+   "circSam" -> "mutect2" -> "combine vcfs";
+   "circSam" -> "mutserve" -> "combine vcfs" -> "annotate vcf" -> "filter 3,5,10% het" -> "count hom/het SNPs";
+   "circSam" -> "bedtools\ngenomecov" ;
+  
+  }
+}
