@@ -1,0 +1,80 @@
+digraph G {
+  rankdir="TB"
+  splines=ortho;
+
+  subgraph subs1 {
+    rank="same"
+    1 
+    2 
+    3 
+  }
+
+ subgraph subs2 {
+    rank="same"
+    4 
+    5 
+  }
+
+ subgraph subs3 {
+    rank="same"
+    6 
+    7 
+  }
+
+  1 -> 8 -> 9 -> 10 -> 11 -> 4 -> 12 -> 13 -> 6 -> 14 ;
+  1 -> 21 -> 22 -> 23 -> 24 [ style=dotted ];
+  2 -> 10 ;
+  3 -> 14 ;
+  3 -> 16 -> 10 ;
+  3 -> 23 [ style=dotted ];
+  4 -> 19 -> { 17 13 } [ style=dotted ];
+  6 -> 20 ;
+  6 -> 7 [ style=dashed minlen=3];
+  11 -> 5 ;
+  11 -> 15 [ style=dashed ];
+  12 -> 17 -> 18 ;
+  14 -> 3 [ style=dashed minlen=10 ];
+
+  1 [ label="MT+NUMTs\nFILTERED\nALIGNMENTS\nBAM/BAI" fillcolor="cyan" shape=circle style=filled ];
+  2 [ label="NUMTs:\n\nchr1:629,084-634,422\nchr17:22,521,366-22,521,502'" color="green" style=filled ];
+  3 [ label="MT:\n\nchrM=rCRS\nRSRS\nSAMPLE CONSENSUS" color="green" style=filled ];
+  4 [ label="CIRCULARIZE\nALIGNMENTS" shape=box color="blue" ];
+  5 [ label="COMPUTE &\nCHECK\nCOVERAGE" shape="box" color="blue" ];
+  6 [ label="FILTER SNPs\nfrequency cutoffs 3,5,10%" shape="box" color="red" ];
+  7 [ label="VALIDATE SNPs" shape="box" color="red" ];
+  8 [ label="SUBSAMLE\n~2000x cvg" shape=box color="blue" ];
+  9 [ label="BAM->FASTQ\nfastp trimming" shape=box color="green" ];
+  10 [ label="bwa index MT+extension+NUMTs\nbwa mem" shape=box color="blue" ];
+  11 [ label="samtools view -F MT\nsam-blaster deduplication" shape=box color="blue" ];
+  12 [ label="GATK Mutect2\nSNP CALLING" shape=box color="red" ];
+  13 [ label="ANNOTATE SNPs:\nHV,HS,HP,HG,NUMT,dbSNP\n" shape=box color="red" ];
+  14 [ label="GENERATE\nMT CONSENSUS" shape=ellipse style=filled color="green" ];
+  15 [ label="VALITDATE CONSENSUS\n100% ID & CVG" shape=box color="blue" ];
+  16 [ label="EXTEND\n300bp 3'" shape=box color="green" ];
+  17 [ label="haplogrep" color=red shape=box ];
+  18 [ label="HAPLOGROUP" style=filled color="orange" ];
+  19 [ label="mutserve\nSNP CALLING" shape=box color="red" ];
+  20 [ label="COUNT\nHETEROPLASMIES" style=filled color=yellow];
+  21 [ label="SUBSAMLE\n~400x cvg" shape=box color="blue" ];
+  22 [ label="Megahit2\nDeNovo ASSEMBLY" shape=box color=orange ];
+  23 [ label="NUCMER\n" shape=box color="blue" ];
+  24 [ label="SHOW SNPs\n" shape=box color="blue" ];
+ }
+
+}
+// node shape
+//elipse: input
+//circle : output
+
+//nodes colors
+//orange: metadata
+//blue: alignments: bam/cram
+//greed: FASTA or FASTQ
+//red: SNPs (include INDELs)
+//yellow:coverage
+
+//arrow style
+//solid: required
+//dotted: optional
+//dashed: 2nd itteration
+

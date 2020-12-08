@@ -1,0 +1,68 @@
+digraph G {
+  rankdir = "TB" ;
+  splines = ortho;
+  node [ shape=box ];
+
+  subgraph cluster_N {
+    node [ color=orange ] ;
+
+    1 [ label = "GET NGC TopMed\nACCES KEY"] ;
+    2 [ label = "SELECT STUDY" ] ;
+    3 [ label = "GET METADATA" ] ;
+    4 [ label = "FIlter Run\nSample,sSbject,Sex\nBases,Cvg,RdLen,Center" style=filled fillcolor="orange" ] ;
+    2 -> 3 -> 4 ;
+    label = "NCBI dbGaP";
+  }
+
+  subgraph cluster_G {
+    5 -> 6 -> 7 -> 8 -> 9 -> 10 -> 11 -> { 12 6 } ;
+    label = "GCloud Console: TOPMed Samples";
+  }
+
+  subgraph cluster_L {
+    13 -> 14 -> 15 -> 16 -> 17 -> 18 -> { 19 20 };
+    15 -> 21 ;
+    label = "HIPAA Server: Local/TopMed Samples";
+  }
+
+  1 -> 5 [ style=dashed ];
+  4 -> 6 [ style=dashed ] ;
+  4 -> 19 [ style=dashed ];
+  12 -> 18 [ style=dashed ];
+  21 -> 19 ;
+
+  5 [ label = " scp Key & Run IDs " color=orange ]
+  6 [ label = "SELECT Runs\n<100" color=orange ] ;
+  7 [ label = "fusera mount" ]
+  8 [ label = "CRAM/CRAI" shape="ellipse" color="blue" style=filled fillcolor="cyan" ] ;
+  9 [ label = "samtools view\n-T hs38DH\n-F chrM NUMTs" color=blue ] ;
+  10 [ label = "FILTERED\nBAM/BAI" shape="ellipse" color="blue"] ;
+  11 [ label = "fusera umount" ] ;
+  12 [ label = "scp" ] ;
+  13 [ label = "FASTQ FILES" shape="ellipse" color="green" style=filled fillcolor="green" ] ;
+  14 [ label = "bwa mem hs38DH" color=blue] ;
+  15 [ label = "samtools sort\nsamtools index\nsamtools view -c\n" color=blue ] ;
+  16 [ label = "CRAM/CRAI" shape="ellipse" color="blue"] ;
+  17 [ label = "samtools view\n-T hs38DH\n-F chrM NUMTs" color=blue] ;
+  18 [ label = "FILTERED\nBAM/BAI" shape="ellipse" style=filled color="cyan"] ;
+  19 [ label = "COMPUTE COVERAGE\n& mtDNA-CN" style=filled fillcolor="orange" ] ;
+  20 [ label = "CALL SNPS\nCOUNT HETEROPLASMIES" style = filled fillcolor = "yellow"] ;
+  21 [ label ="TOTAL READS" shape=ellipse color=orange];
+}
+
+//node shape
+//ellipse: input
+//circle : output
+
+//nodes colors
+//orange: metadata
+//blue: alignments: bam/cram
+//greed: FASTA or FASTQ
+//red: SNPs (include INDELs)
+//yellow:coverage
+
+//arrow style
+//solid: required
+//dotted: optional
+//dashed: 2nd itteration
+
