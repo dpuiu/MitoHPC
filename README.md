@@ -3,7 +3,7 @@
 # PREREQUISITES #
 
 * bwa, samtools, bcftools, htslib, samblaster, vcftools
-* picard, mutserve, gatk, haplogre
+* picard, mutserve, gatk, haplogrep
 * hs38DH
 
 
@@ -83,11 +83,6 @@
     |-- rCRS.fa
     |-- RSRS.fa
 
-## CHECK INSTALL ##
-
-    checkInstall.sh
-    cat checkInstall.log
-
 ## INPUT ##
  
 ### Alignment Files ###
@@ -99,54 +94,54 @@
 
 ### init (could be added to ~/.bash_profile) ###
 
-    source HP/scripts/init.sh
+    $ source HP/scripts/init.sh
     ... or (MARCC)
-    source HP/scripts/init_marcc.sh
+    $ source HP/scripts/init_marcc.sh
 
 #### check install (once; if successfull => "Success message!") ####
 
-    HP/scripts/checkInstall.sh
-
+    $ HP/scripts/checkInstall.sh
+    $ cat checkInstall.log
 #### generate input file  ####
 
-    find bams/  -name "*bam"  > in.txt
+    $ find bams/  -name "*bam"  > in.txt
     ... or
-    find crams/ -name "*cram" > in.txt
+    $ find crams/ -name "*cram" > in.txt
 
 #### split input file (optional; Ex: up to 9 sets of 100) ####
 
-    split -d -a 1 --numeric=1 -l 100 in.txt  in. --additional-suffix=.txt
+    $ split -d -a 1 --numeric=1 -l 100 in.txt  in. --additional-suffix=.txt
     ... or
-    split -d -a 2 --numeric=1 -l 100 in.txt  in. --additional-suffix=.txt
+    $ split -d -a 2 --numeric=1 -l 100 in.txt  in. --additional-suffix=.txt
    
 ### generate index and count files ### 
 
-     cat in.txt | perl -ane 'print "samtools.sh $_";' > samtools.all.sh
+     $ sed 's|^|samtools.sh |' in.txt > samtools.all.sh
      ... or (MARCC)
-     cat in.txt | perl -ane 'print "sbatch --p shared --time=24:0:0 samtools.sh $_";' > samtools.all.sh
+     $ sed 's|^|sbatch --p shared --time=24:0:0 samtools.sh ' in.txt > samtools.all.sh
 
-     sh ./samtools.all.sh
+     $ sh ./samtools.all.sh
 
 #### generate pipeline script ####
 
-    HP/scripts/run.sh in.txt   > filter.all.sh
+    $ HP/scripts/run.sh in.txt   > filter.all.sh
     ... or
-    HP/scripts/run.sh in.1.txt > filter.1.sh
-    HP/scripts/run.sh in.2.txt > filter.2.sh
-    HP/scripts/run.sh in.3.txt > filter.3.sh
+    $ HP/scripts/run.sh in.1.txt > filter.1.sh
+    $ HP/scripts/run.sh in.2.txt > filter.2.sh
+    $ HP/scripts/run.sh in.3.txt > filter.3.sh
     ...
 
 #### run pipeline script  ####
 
-    nohup ./filter.all.sh &
+    $ nohup ./filter.all.sh &
     ... or
-    nohup ./filter.1.sh &
-    nohup ./filter.2.sh &
-    nohup ./filter.3.sh &
+    $ nohup ./filter.1.sh &
+    $ nohup ./filter.2.sh &
+    $ nohup ./filter.3.sh &
     ...
-    ls filter.?.sh | parallel
+    $ ls filter.?.sh | parallel
     ... or (MARCC)
-    sbatch --p shared --time=24:0:0 ./filter.all.sh
+    $ sbatch --p shared --time=24:0:0 ./filter.all.sh
 
 # OUTPUT #
 
@@ -163,21 +158,21 @@
 
 #### use RSRS for realignment ####
 
-    HP/scripts/run.sh in.txt . hs38DH.fa RSRS.fa
+    $ HP/scripts/run.sh in.txt . hs38DH.fa RSRS.fa
 
 #### use rCRS for realignment, mutserve for SNP calling ####
 
-    HP/scripts/run.sh in.txt . hs38DH.fa rCRS.fa mutserve
+    $ HP/scripts/run.sh in.txt . hs38DH.fa rCRS.fa mutserve
 
 #### output ; simulated haplogroup A,B,C datasets ####
 
-    # head count.tab 
+    $ head count.tab 
     Run     all        mapped     chrM    filter  M
     chrM.A  740589366  739237125  487382  205095  256.05
     chrM.B  763658318  762297733  495743  205156  252.56
     chrM.C  749938586  748667901  590963  200121  306.55
 
-    head mutect2.03.vcf 
+    $ head mutect2.03.vcf 
     ##fileformat=VCFv4.2
     ##source=Mutect2
     ##reference=file://../..//RefSeq//rCRS.fa>
@@ -199,7 +194,7 @@
     rCRS	378	.	C	T	.	clustered_events	        SNP;DP=1612;AF=0.13	SM	chrM.C
     ...
  
-    head mutect2.tab
+    $ head mutect2.tab
     Run     haplogroup  03%S  03%s  03%I  03%i  05%S  05%s  05%I  05%i  10%S  10%s  10%I  10%i
     chrM.A  A2+(64)     28    35    3     8     28    35    3     8     28    34    3     8
     chrM.B  B2          25    34    2     8     25    34    2     8     25    34    2     8
