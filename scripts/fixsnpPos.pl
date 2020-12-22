@@ -46,13 +46,16 @@ MAIN:
 		$diff{3107}=-1 
 	}
 
+	my %diff2;
 	my $diff=0;
 	my @pos=(sort {$a<=>$b} keys %diff);
 	foreach my $pos (@pos)
 	{
 		$diff+=$diff{$pos};
-		$diff{$pos}=$diff;
+		#$diff{$pos}=$diff; 		# Dec 8
+		$diff2{$pos+$diff}=$diff	# Dec 8
 	}
+	my @pos2=(sort {$a<=>$b} keys %diff2);
 
 	###################################################
 	##reference=file://out/chrM.L0/chrM.L0.mutect2.fa>
@@ -79,16 +82,17 @@ MAIN:
 		{
 			chomp;
 			my @F=split /\t/;
-			my $diff=0;
+			my $diff2=0;
 			my $i=0;
-			while($i<@pos and $F[1]>$pos[$i])
+			while($i<@pos2 and $F[1]>$pos2[$i]) 	
 			{
-				$diff=$diff{$pos[$i]};
+				$diff2=$diff2{$pos2[$i]};
 				$i++
 			}
 
 			$F[0]=$opt{ref};
-			$F[1]-=$diff;
+			$F[1]-=$diff2; 
+			#$F[1]+=$diff2;
 			print join "\t",@F;
 			print "\n";
 		}
