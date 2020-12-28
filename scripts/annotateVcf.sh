@@ -4,7 +4,7 @@
 #2: O: output
 
 I=$1  ; test -s $I
-O=$2
+O=${I}2
 
 #RDIR=$SDIR/RefSeq/
 
@@ -19,3 +19,4 @@ bcftools annotate -a $RDIR/HG.vcf.gz    $O.gz -c "INFO"  > $O ; bgzip -f $O ; ta
 bcftools annotate -a $RDIR/NUMT.vcf.gz  $O.gz -c "INFO"  > $O ; bgzip -f $O ; tabix -f $O.gz
 bcftools annotate -a $RDIR/dbSNP.vcf.gz $O.gz -c "ID"    > $O
 rm $O.gz $O.gz.tbi
+mv $O $I

@@ -5,7 +5,10 @@ export M=$2 # source (mutect2...)
 export T=$3 # thold
 
 test -f $D/$M.haplogroup.tab
-find $D/ -name "*.$M.$T.vcf" | xargs cat | grep -v ^# | sort -k2,2n -k4,4 -k5,5 -k10,10  > $D/$M.$T.vcf
+find $D/ -name "*.$M.$T.vcf" -not -name "*.$M.$M.$T.vcf"  | xargs cat | bedtools sort -header | uniq > $D/$M.$T.vcf
+if [ ! -s $D/$M.$T.vcf ] ; then exit 0 ; fi
+
+annotateVcf.sh  $D/$M.$T.vcf
 
 cat $D/$M.$T.vcf | uniq2.pl -i 1 -j -1 | grep -v ";AF=0" | count.pl -i 9  | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%H\n"} print;' > $D/$M.$T.H.tab
 cat $D/$M.$T.vcf | uniq2.pl -i 1 -j -1 | grep ";AF=0"    | count.pl -i 9  | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%h\n"} print;' > $D/$M.$T.h.tab
@@ -21,7 +24,6 @@ cat $D/$M.$T.vcf | uniq2.pl -i 1 -j -1 | grep ";AF=0"    | grep "SNP;"    | grep
 cat $D/$M.$T.vcf | uniq2.pl -i 1 -j -1 | grep -v ";AF=0" | grep "INDEL;"  | grep -v ";HP"  | count.pl -i 9  | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%Ip\n"} print;' > $D/$M.$T.Ip.tab
 cat $D/$M.$T.vcf | uniq2.pl -i 1 -j -1 | grep ";AF=0"    | grep "INDEL;"  | grep -v ";HP"  | count.pl -i 9  | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%ip\n"} print;' > $D/$M.$T.ip.tab
 
-
 cut -f1  $D/$M.haplogroup.tab | \
   join.pl - $D/$M.$T.H.tab -empty 0  | join.pl - $D/$M.$T.h.tab -empty 0  | \
   join.pl - $D/$M.$T.S.tab -empty 0  | join.pl - $D/$M.$T.s.tab -empty 0  | \
@@ -30,4 +32,4 @@ cut -f1  $D/$M.haplogroup.tab | \
   join.pl - $D/$M.$T.Sp.tab -empty 0 | join.pl - $D/$M.$T.sp.tab -empty 0 | \
   join.pl - $D/$M.$T.Ip.tab -empty 0 | join.pl - $D/$M.$T.ip.tab -empty 0 > $D/$M.$T.tab
 
-rm $D/$M.$T.*.tab
+rm $D/$M.$T.?.tab $D/$M.$T.??.tab

@@ -1,0 +1,25 @@
+########################
+DATE:
+Wed Dec 23 16:16:18 EST 2020
+########################
+EXECUTABLES:
+samtools 1.11
+bcftools 1.11
+bedtools v2.29.2
+fastp 0.21.0
+bwa Version: 0.7.17-r1198-dirty
+samblaster: Version 0.1.26
+tabix Version: 1.2.1
+This is perl 5, version 16, subversion 3 (v5.16.3) built for x86_64-linux-thread-multi
+java 13.0.2 2020-01-14
+########################
+JARS:
+/home-1/dpuiu1@jhu.edu/sw/java/picard.jar
+/home-1/dpuiu1@jhu.edu/sw/java/gatk-package-4.1.9.0-local.jar
+/home-1/dpuiu1@jhu.edu/sw/java/haplogrep-2.2.9.jar
+/home-1/dpuiu1@jhu.edu/sw/java/mutserve-1.3.4.jar
+########################
+VARS:
+SDIR= /work-zfs/ssalzbe1/users/dpuiu/Homo_sapiens_mito/HP.20201222/scripts
+JDIR= /work-zfs/ssalzbe1/users/dpuiu/Homo_sapiens_mito/HP.20201117/java
+RDIR= /work-zfs/ssalzbe1/users/dpuiu/Homo_sapiens_mito/HP.20201222/RefSeq

@@ -15,7 +15,7 @@ export M=${3:-mutect2}           # or mutserve
 export H=${4:-hs38DH.fa}         # human reference
 export R=${5:-rCRS.fa}           # or RSRS.fa
 
-test -f $IN
+test -s $IN
 mkdir -p $ODIR ; test -d $ODIR
 ###############################################################
 

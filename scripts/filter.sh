@@ -27,6 +27,7 @@ export R=`basename $R .mutect2`
 
 G=${F%???} 
 
+IDIR=`dirname $I`
 ODIR=`dirname $O`; mkdir -p $ODIR
 
 ########################################################################################################################################
@@ -38,7 +39,6 @@ export NUMT='chr1:629084-634422 chr17:22521366-22521502 '   # chrM + 2 selected 
 #export MT=M                                                 # tmp; sim dataset
 #export NUMT='1:629084-634422 17:22521366-22521502 '        
 
-
 P=1                # number of processors
 export L=222000    # ~2000x MT coverage
 export E=300       # extension(circularization)
@@ -47,7 +47,7 @@ export E=300       # extension(circularization)
 #test input file
 
 test -s $I
-test -s $I.count
+test -s $IDIR/$N.count
 if [ ! -s $I.bai ] && [ ! -s $I.crai ] ; then exit 1 ; fi
 
 #########################################################################################################################################
@@ -85,7 +85,7 @@ fi
 #count aligned reads
 
 if [ ! -s $O.count ] ; then
-  cp $I.count $O.count
+  cp $IDIR/$N.count $O.count
   samtools view $I $MT  -F 0x900 -c | awk '{print $1,"chrM" }'  >> $O.count
   samtools view $O.bam  -F 0x900 -c | awk '{print $1,"filter"}' >> $O.count
 fi
@@ -144,4 +144,8 @@ if  [ ! -s $O.fa ]  && [ ! -s $O.$M.fa ] ; then
   elif [ "$R" == "RSRS" ] ; then
     java -jar $JDIR/haplogrep.jar classify --in $O.$M.vcf  --format  vcf  --out $O.$M.haplogroup --rsrs
   fi
+fi
+
+if [ -s $O.haplogroup ]; then
+  cp $O.haplogroup $O.$M.haplogroup
 fi
