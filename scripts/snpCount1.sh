@@ -5,7 +5,7 @@ export M=$2 # source (mutect2...)
 export T=$3 # thold
 
 test -f $D/$M.haplogroup.tab
-find $D/ -name "*.$M.$T.vcf" -not -name "*.$M.$M.$T.vcf"  | xargs cat | bedtools sort -header | uniq > $D/$M.$T.vcf
+find $D/ -name "*.$M.$T.vcf" -not -name "*.$M.$M.$T.vcf"  | xargs cat | uniq.pl | bedtools sort -header > $D/$M.$T.vcf
 if [ ! -s $D/$M.$T.vcf ] ; then exit 0 ; fi
 
 annotateVcf.sh  $D/$M.$T.vcf

@@ -10,7 +10,7 @@
 I=$1  ; test -s $I
 O=$2
 M=$3
-H=$4  ; test -f $H
+H=$4  ; test -s $H
 FO=$5 ; test -s $FO
 F=$6  ; test -s $F
 
@@ -86,7 +86,7 @@ fi
 
 if [ ! -s $O.count ] ; then
   cp $IDIR/$N.count $O.count
-  samtools view $I $MT  -F 0x900 -c | awk '{print $1,"chrM" }'  >> $O.count
+  #samtools view $I $MT  -F 0x900 -c | awk '{print $1,"chrM" }'  >> $O.count
   samtools view $O.bam  -F 0x900 -c | awk '{print $1,"filter"}' >> $O.count
 fi
 
@@ -95,8 +95,8 @@ fi
 
 if [ ! -s $O.cvg ] ; then
   cat $O.bam | bedtools bamtobed -cigar | bedtools genomecov -i - -g $F.fai -d > $O.cvg 
-  cat $O.cvg | cut -f3 | st  --summary  | sed 's|^|'"$N"'\t|' > $O.cvg.stat
 fi
+cat $O.cvg | cut -f3 | st  --summary --sd | sed 's|^|'"$N"'\t|' > $O.cvg.stat
 
 #########################################################################################################################################
 #compute SNP/INDELs using mutect2 or mutserve
@@ -119,10 +119,9 @@ if [ ! -s $O.$M.vcf ] ; then
   ##########################################################################################################################################
   # filter SNPs
   cat $SDIR/$M.vcf > $O.$M.00.vcf
-  fa2Vcf.pl $F >> $O.$M.00.vcf
+  fa2Vcf.pl $FO >> $O.$M.00.vcf
   cat $O.$M.vcf | bcftools norm -m -  | filterVcf.pl -sample $N -source $M | grep -v ^# | sort -k2,2n -k4,4 -k5,5 | fix${M}Vcf.pl -file $F   >> $O.$M.00.vcf
-  cat $O.$M.00.vcf | bcftools norm -m +  | perl -ane 'if(/^#/) {print} else { chomp; @F=split /\t/; $F[6]=~s/multiallelic// unless($F[4]=~/,/); $F[6]="." unless($F[6]); print join "\t",@F;print "\n"}' | bcftools norm -m - > $O.$M.00.vcf2
-  mv $O.$M.00.vcf2 $O.$M.00.vcf ; vcf-validator $O.$M.00.vcf
+  vcf-validator $O.$M.00.vcf
   cat $O.$M.00.vcf | filterVcf.pl -p 0.03  | tee $O.$M.03.vcf | filterVcf.pl -p 0.05  | tee $O.$M.05.vcf | filterVcf.pl -p 0.10  > $O.$M.10.vcf
 fi
 

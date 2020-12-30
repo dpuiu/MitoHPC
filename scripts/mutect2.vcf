@@ -32,3 +32,4 @@
 ##INFO=<ID=CDS,Number=0,Type=Flag,Description="CDS">
 ##INFO=<ID=HG,Number=1,Type=String,Description="haplogroup">
 ##INFO=<ID=NUMT,Number=0,Type=Flag,Description="NUMT">
+##INFO=<ID=HV,Number=0,Type=Flag,Description="Hypervariable">

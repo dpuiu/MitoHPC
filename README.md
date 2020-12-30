@@ -102,6 +102,7 @@
 
     $ HP/scripts/checkInstall.sh
     $ cat checkInstall.log
+
 #### generate input file  ####
 
     $ find bams/  -name "*bam"  > in.txt
@@ -114,7 +115,7 @@
     ... or
     $ split -d -a 2 --numeric=1 -l 100 in.txt  in. --additional-suffix=.txt
    
-### generate index and count files ### 
+### generate index and count files ( prefix.bam  => prefix.bam.bai & prefix.count )  or ( prefix.cram => prefix.cram.crai & prefix.count ) ###
 
      $ sed 's|^|samtools.sh |' in.txt > samtools.all.sh
      ... or (MARCC)
