@@ -1,0 +1,17 @@
+##fileformat=VCFv4.2
+##source=reduceVcf
+##INFO=<ID=dp_mean,Number=1,Type=Integer,Description="Mean depth across all individuals for the site">
+##INFO=<ID=AC_hom,Number=1,Type=Integer,Description="Homoplasmic allele count">
+##INFO=<ID=AC_het,Number=1,Type=Integer,Description="Heteroplasmic allele count">
+##INFO=<ID=AF_hom,Number=1,Type=Float,Description="Homoplasmic allele frequency">
+##INFO=<ID=AF_het,Number=1,Type=Float,Description="Heteroplasmic allele frequency">
+##INFO=<ID=AN,Number=1,Type=Integer,Description="Overall allele number">
+##INFO=<ID=max_hl,Number=A,Type=Float,Description="Maximum heteroplasmy level observed among all samples for that variant">
+##INFO=<ID=SNP,Number=0,Type=Flag,Description="SNP">
+##INFO=<ID=INDEL,Number=0,Type=Flag,Description="INDEL">
+##INFO=<ID=HP,Number=0,Type=Flag,Description="Homoloplymer">
+##INFO=<ID=HS,Number=0,Type=Flag,Description="Hot spot">
+##INFO=<ID=CDS,Number=0,Type=Flag,Description="CDS">
+##INFO=<ID=HG,Number=1,Type=String,Description="haplogroup">
+##INFO=<ID=NUMT,Number=0,Type=Flag,Description="NUMT">
+##INFO=<ID=HV,Number=0,Type=Flag,Description="Hypervariable">

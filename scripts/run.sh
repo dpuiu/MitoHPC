@@ -26,6 +26,7 @@ cat $IN | perl -ane '/.+\/(.+)\./; print "$ENV{SH} $ENV{SDIR}/filter.sh  $F[0] $
 printf "\n######################################\n"
 
 printf "\nreadCount.sh $ODIR\n"
+printf "cvgCount.sh $ODIR\n"
 printf "snpCount.sh $ODIR $M\n"
 printf "find $ODIR -name *.$M.fa | sort | xargs cat > $ODIR/$M.fa\n"
 printf "join.pl $ODIR/count.tab $ODIR/$M.tab > $ODIR/count_$M.tab\n"
@@ -36,12 +37,13 @@ printf "find $ODIR -name *.$M.merge.bed | sort | xargs cat > $ODIR/$M.merge.bed\
 ##################################################################
 
 if [ "$M" == "mutect2" ] ; then
-
   printf "\n######################################\n\n"
   cat $IN | perl -ane '/.+\/(.+)\./; print "$ENV{SH} $ENV{SDIR}/filter.sh  $F[0] $ENV{ODIR}/$1/$1.$ENV{M} $ENV{M} $ENV{RDIR}/$ENV{H} $ENV{RDIR}/$ENV{R} $ENV{ODIR}/$1/$1.$ENV{M}.fa\n";'
   printf "\n######################################\n"
 
   printf "\ncp $ODIR/$M.haplogroup.tab $ODIR/$M.$M.haplogroup.tab\n";
+  printf "cvgCount.sh $ODIR $M\n"
+  printf "readCount.sh $ODIR $M\n"
   printf "snpCount.sh $ODIR $M.$M\n"
-  printf "join.pl $ODIR/count.tab $ODIR/$M.$M.tab > $ODIR/count_$M.$M.tab\n"
+  printf "join.pl $ODIR/count.$M.tab $ODIR/$M.$M.tab > $ODIR/count_$M.$M.tab\n"
 fi

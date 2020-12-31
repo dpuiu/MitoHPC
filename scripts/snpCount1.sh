@@ -10,6 +10,13 @@ if [ ! -s $D/$M.$T.vcf ] ; then exit 0 ; fi
 
 annotateVcf.sh  $D/$M.$T.vcf
 
+#########################################################
+
+N=`grep -c -v ^Run $D/$M.haplogroup.tab`
+cat $D/$M.$T.vcf | reduceVcf.pl -AN $N | cat $SDIR/reduce.vcf - | bedtools sort -header > $D/$M.$T.rvcf
+
+##########################################################
+
 cat $D/$M.$T.vcf | uniq2.pl -i 1 -j -1 | grep -v ";AF=0" | count.pl -i 9  | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%H\n"} print;' > $D/$M.$T.H.tab
 cat $D/$M.$T.vcf | uniq2.pl -i 1 -j -1 | grep ";AF=0"    | count.pl -i 9  | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%h\n"} print;' > $D/$M.$T.h.tab
 cat $D/$M.$T.vcf | uniq2.pl -i 1 -j -1 | grep -v ";AF=0" | grep "SNP;"    | count.pl -i 9  | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%S\n"} print;' > $D/$M.$T.S.tab
@@ -33,3 +40,4 @@ cut -f1  $D/$M.haplogroup.tab | \
   join.pl - $D/$M.$T.Ip.tab -empty 0 | join.pl - $D/$M.$T.ip.tab -empty 0 > $D/$M.$T.tab
 
 rm $D/$M.$T.?.tab $D/$M.$T.??.tab
+

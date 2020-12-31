@@ -95,8 +95,8 @@ fi
 
 if [ ! -s $O.cvg ] ; then
   cat $O.bam | bedtools bamtobed -cigar | bedtools genomecov -i - -g $F.fai -d > $O.cvg 
+  cat $O.cvg | cut -f3 | st  --summary --mean --sd | sed 's|^|'"$N"'\t|' > $O.cvg.stat
 fi
-cat $O.cvg | cut -f3 | st  --summary --sd | sed 's|^|'"$N"'\t|' > $O.cvg.stat
 
 #########################################################################################################################################
 #compute SNP/INDELs using mutect2 or mutserve
