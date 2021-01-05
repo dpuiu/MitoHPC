@@ -9,31 +9,37 @@
 
 # INSTALLATION #
 
-## INSTALL PREREQUISITES ##
+## DOWNLOAD PREREQUISITES ##
 
     wget https://netactuate.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2
     wget https://github.com/samtools/samtools/releases/download/1.11/samtools-1.11.tar.bz2
     wget https://github.com/samtools/bcftools/releases/download/1.11/bcftools-1.11.tar.bz2
     wget https://github.com/samtools/htslib/releases/download/1.11/htslib-1.11.tar.bz2
-
     git clone git://github.com/GregoryFaust/samblaster.git
     git clone https://github.com/vcftools/vcftools.git
 
+    # java
     wget https://github.com/broadinstitute/picard/releases/download/2.23.8/picard.jar
     wget https://github.com/broadinstitute/gatk/releases/download/4.1.9.0/gatk-4.1.9.0.zip
     wget https://github.com/seppinho/haplogrep-cmd/releases/download/v2.2.9/haplogrep.zip
+    wget https://github.com/seppinho/mutserve/releases/download/v1.3.4/mutserve-1.3.4.jar
+
+## INSTALL PREREQUISITES ##
+
+    check first if already installed ...
 
 ## DOWNLOAD PIPELINE ##
 
     git clone https://github.com/dpuiu/HP.git
-
+    
 ## SET PATHS & ENIRONMENTAL VARIABLES ##
 
+    cd HP/
     cd java/
-    ln -s gatk-4.1.9.0.zip    gatk.jar
-    ln -s haplogrep-2.2.9.jar haplogrepjar
+    ln -s picard.jar
+    ln -s gatk-4.1.9.0/gatk-package-4.1.9.0-local.jar gatk.jar
+    ln -s haplogrep-2.2.9.jar haplogrep.jar
     ln -s mutserve-1.3.4.jar  mutserve.jar  
-    ln -s picard.jar        
     cd -
 
     cd scripts/
