@@ -1,135 +1,70 @@
 # HP : Heteroplasmy Pipeline # 
 
-# PREREQUISITES #
+#########################################################################
 
-* bwa, samtools, bcftools, htslib, samblaster, vcftools
-* picard, mutserve, gatk, haplogrep
-* hs38DH
+## PREREQUISITES ##
 
+  * bwa, samtools, bcftools, htslib, samblaster, vcftools
+  * picard, mutserve, gatk, haplogrep
+  * hs38DH
 
-# INSTALLATION #
+#########################################################################
 
-## DOWNLOAD PREREQUISITES ##
+## INSTALL ## 
 
-    wget https://netactuate.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2
-    wget https://github.com/samtools/samtools/releases/download/1.11/samtools-1.11.tar.bz2
-    wget https://github.com/samtools/bcftools/releases/download/1.11/bcftools-1.11.tar.bz2
-    wget https://github.com/samtools/htslib/releases/download/1.11/htslib-1.11.tar.bz2
-    git clone git://github.com/GregoryFaust/samblaster.git
-    git clone https://github.com/vcftools/vcftools.git
+### DOWNLOAD PIPELINE ###
 
-    # java
-    wget https://github.com/broadinstitute/picard/releases/download/2.23.8/picard.jar
-    wget https://github.com/broadinstitute/gatk/releases/download/4.1.9.0/gatk-4.1.9.0.zip
-    wget https://github.com/seppinho/haplogrep-cmd/releases/download/v2.2.9/haplogrep.zip
-    wget https://github.com/seppinho/mutserve/releases/download/v1.3.4/mutserve-1.3.4.jar
+    $ git clone https://github.com/dpuiu/HP.git
+    $ cd HP/
 
-## INSTALL PREREQUISITES ##
-
-    check first if already installed ...
-
-## DOWNLOAD PIPELINE ##
-
-    git clone https://github.com/dpuiu/HP.git
+### INSTALL PREREQUISITES ###
     
-## SET PATHS & ENIRONMENTAL VARIABLES ##
+    $ ./scripts/install_prerequisites.sh
 
-    cd HP/
-    cd java/
-    ln -s picard.jar
-    ln -s gatk-4.1.9.0/gatk-package-4.1.9.0-local.jar gatk.jar
-    ln -s haplogrep-2.2.9.jar haplogrep.jar
-    ln -s mutserve-1.3.4.jar  mutserve.jar  
-    cd -
+### SETUP ENVIRONMENT ###
+    
+    # best to be added to ~/.bash_profile
 
-    cd scripts/
-    export SDIR=`dirname $0`        # script directory
-    export JDIR=$SDIR/../java/      # java jar directory
-    export RDIR=$SDIR/../RefSeq/    # RefSeq directory ; should contain chrM.fa, rCRS.fa, RSRS.fa; link hs38DH.fa here
-    export H=hs38DH.fa              # human reference
-    export R=rCRS.fa                # or RSRS.fa
-    export M=mutect2                # or mutserve
-    export PATH=$SDIR:$PATH
-
-    tree
-    scripts
-    |-- run.sh                    # main executable, calls "filter.sh" on multiple .bam/.cram files provided in an input file;
-    |-- checkInstall.sh           # check prerequisites
-    |-- init.sh                   # set environment variables
-    |-- init_marcc.sh             # specific to MARCC
-    |-- filter.sh                 # filter/realign reads, calls SNP/INDELs, filter SNP/INDELs at multiple heteroplamsy levels
-    |-- filter2.sh                # run the filter.sh pipeline twice
-    |-- readCount.sh              # count reads: all, mapped, chrM, filtered
-    |-- snpCount.sh               # merge, count SNP/INDELs, HOM/HET(AF=) at multiple heteroplamsy levels
-    |-- snpCount1.sh              # merge, count SNP/INDELs, HOM/HET(AF=) for a given heteroplamsy level
-    |-- samtools.sh               # index input file(if necessary); count total and mapped reads
-    |-- circSam.pl                # "circularizes" SAM alignments; extend reference, align & split reads spanning circ. point
-    |-- count.pl                  # count values in a certain column (-i; 0 based)
-    |-- fa2Vcf.pl                 # creates "##reference" & "##contig" VCF headers
-    |-- filterVcf.pl              # filter VCF files; discard HETEROZYGOUS SNP/INDELs with AF less than a THOLD
-    |-- fixmutect2Vcf.pl          # postprocess gatk Mutect2 output
-    |-- fixmutserveVcf.pl         # postprocess mutserve output
-    |-- join.pl                   # join 2 files by the 1st column
-    |-- labelVcf.pl               # add the homopolimer tag(HP) to SNPs located at certain positions
-    |-- maxVcf.pl                 # get the major allele
-    |-- uniq2.pl                  # filters unique lines based on 2 columns (-i 0 -j 1)
-    |-- mutect2.vcf               # mutect2 VCF header
-    |-- mutserve.vcf              # mutserve VCF header
-    java/                         # jars
-    |-- gatk.jar
-    |-- haplogrep.jar
-    |-- mutserve.jar
-    |-- picard.jar
-    bin/                          # executables (in case they have not been already installed)
-    |-- ...
-    RefSeq/                       # references: chrM, hs38DH, rCRS
-    |-- hs38DH.fa                
-    |-- hs38DH.NUMT.fa            # hs38DH chr1:628834-634672 chr17:22521116-22521752: 2 largest NUMTs, extended by 250bp each direction
-    |-- chrM.fa
-    |-- rCRS.fa
-    |-- RSRS.fa
-
-## INPUT ##
- 
-### Alignment Files ###
-    bam/*.bam
-    ... or
-    cram/*.cram
-
-# USAGE #
-
-### init (could be added to ~/.bash_profile) ###
-
-    $ source HP/scripts/init.sh
+    $ source scripts/init.sh
     ... or (MARCC)
-    $ source HP/scripts/init_marcc.sh
+    $ source scripts/init_marcc.sh
 
-#### check install (once; if successfull => "Success message!") ####
-
-    $ HP/scripts/checkInstall.sh
+### CHECK INSTALL ###
+  
+    # once; if successfull => "Success message!"
+    $ scripts/checkInstall.sh
     $ cat checkInstall.log
 
-#### generate input file  ####
+#########################################################################
+
+## USAGE ##
+
+### GENERATE INPUT FILE  ###
 
     $ find bams/  -name "*bam"  > in.txt
     ... or
     $ find crams/ -name "*cram" > in.txt
 
-#### split input file (optional; Ex: up to 9 sets of 100) ####
+### SPLIT INPUT FILE (optional) ###
+   
+    # Ex: up to 9 sets of 100
 
     $ split -d -a 1 --numeric=1 -l 100 in.txt  in. --additional-suffix=.txt
     ... or
     $ split -d -a 2 --numeric=1 -l 100 in.txt  in. --additional-suffix=.txt
    
-### generate index and count files ( prefix.bam  => prefix.bam.bai & prefix.count )  or ( prefix.cram => prefix.cram.crai & prefix.count ) ###
+### GENERATE INDEX AND COUNT FILES ###
+
+     # prefix.bam  => prefix.bam.bai & prefix.count 
+     .... or 
+     # prefix.cram => prefix.cram.crai & prefix.count 
 
      $ sed 's|^|samtools.sh |' in.txt > samtools.all.sh
      ... or (MARCC)
      $ sed 's|^|sbatch --p shared --time=24:0:0 samtools.sh ' in.txt > samtools.all.sh
-
      $ sh ./samtools.all.sh
 
-#### generate pipeline script ####
+### GENERATE PIPLEINE SCRIPT ###
 
     $ HP/scripts/run.sh in.txt   > filter.all.sh
     ... or
@@ -138,7 +73,7 @@
     $ HP/scripts/run.sh in.3.txt > filter.3.sh
     ...
 
-#### run pipeline script  ####
+### RUN PIPELINE  ###
 
     $ nohup ./filter.all.sh &
     ... or
@@ -150,7 +85,9 @@
     ... or (MARCC)
     $ sbatch --p shared --time=24:0:0 ./filter.all.sh
 
-# OUTPUT #
+#########################################################################
+
+## OUTPUT ##
 
 ### TAB/VCF Files: ###
 
@@ -161,17 +98,19 @@
     mutect2.tab
     count_mutect2.tab
 
-# EXAMPLES #
+#########################################################################
 
-#### use RSRS for realignment ####
+## EXAMPLES ##
+
+### use RSRS for realignment ###
 
     $ HP/scripts/run.sh in.txt . hs38DH.fa RSRS.fa
 
-#### use rCRS for realignment, mutserve for SNP calling ####
+### use rCRS for realignment, mutserve for SNP calling ###
 
     $ HP/scripts/run.sh in.txt . hs38DH.fa rCRS.fa mutserve
 
-#### output ; simulated haplogroup A,B,C datasets ####
+### output ; simulated haplogroup A,B,C datasets ###
 
     $ head count.tab 
     Run     all        mapped     chrM    filter  M
@@ -207,21 +146,21 @@
     chrM.B  B2          25    34    2     8     25    34    2     8     25    34    2     8
     chrM.C  C           35    35    4     8     35    35    4     8     35    35    4     8
 
-# LEGEND #
+## LEGEND ##
 
-### metadata
+### metadata ###
     Run                           # SRR
     rdLen                         # AvgReadLength
     ...
 
-### read counts
+### read counts ###
     Run                           # run name
     all                           # all reads 
     mapped                        # mapped reads	
     chrM                          # number of reads aligned to chrM
     filter                        # number of chrM used (subsample ~2000x cvg based on name)
 
-### computed coverage ####
+### computed coverage ###
     Gcvg                          # recomputed genome coverage: Bases/3217346917
     Mcvg                          # mitochondrion covearge: chrM*rdLen/16569
 
