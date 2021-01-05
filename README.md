@@ -4,9 +4,9 @@
 
 ## PREREQUISITES ##
 
-  * bwa, samtools, bcftools, htslib, samblaster, vcftools
-  * picard, mutserve, gatk, haplogrep
-  * hs38DH
+  * SOFTWARE PACKAGES: bwa, samtools, bcftools, htslib, samblaster, vcftools, st
+  * JAVA JARS:         picard, mutserve, gatk, haplogrep
+  * HUMAN ASSEMBLY:    hs38DH
 
 #########################################################################
 

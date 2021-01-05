@@ -48,6 +48,14 @@ make
 cp src/cpp/vcftools ../../bin/
 cd -
 
+wget https://github.com/nferraz/st/archive/v1.1.4.tar.gz -O st-1.1.4.tar.gz
+tar -xzvf st-1.1.4.tar.gz
+cd st-1.1.4
+perl ./Makefile.PL INSTALL_BASE=../../ ; make ; make test ; make install
+cd -
+
+################### 
+
 wget https://github.com/broadinstitute/picard/releases/download/2.23.8/picard.jar
 cp picard.jar ../java/
 
@@ -62,6 +70,7 @@ cp haplogrep.jar ../java/
 wget https://github.com/seppinho/mutserve/releases/download/v1.3.4/mutserve-1.3.4.jar
 cp mutserve-1.3.4.jar ../java/mutserve.jar
 cd ../
+
 #################
 
 cd RefSeq/
