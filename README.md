@@ -19,7 +19,7 @@
 
 ### INSTALL PREREQUISITES ###
     
-    $ ./scripts/install_prerequisites.sh
+    $ scripts/install_prerequisites.sh
 
 ### SETUP ENVIRONMENT ###
     
