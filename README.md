@@ -17,17 +17,13 @@
     $ git clone https://github.com/dpuiu/HP.git
     $ cd HP/
 
-### INSTALL PREREQUISITES ###
-    
-    $ scripts/install_prerequisites.sh
-
 ### SETUP ENVIRONMENT ###
     
-    # best to be added to ~/.bash_profile
+    $ export PATH=$PWD/scripts/:$PWD/bin/:$PATH
 
-    $ source scripts/init.sh
-    ... or (MARCC)
-    $ source scripts/init_marcc.sh
+### INSTALL PREREQUISITES ###
+
+    $ scripts/install_prerequisites.sh
 
 ### CHECK INSTALL ###
   
@@ -61,7 +57,7 @@
 
      $ sed 's|^|samtools.sh |' in.txt > samtools.all.sh
      ... or (MARCC)
-     $ sed 's|^|sbatch --p shared --time=24:0:0 samtools.sh ' in.txt > samtools.all.sh
+     $ sed 's|^|sbatch --p shared --time=24:0:0 samtools.sh|' in.txt > samtools.all.sh
      $ sh ./samtools.all.sh
 
 ### GENERATE PIPLEINE SCRIPT ###
