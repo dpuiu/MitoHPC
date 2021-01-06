@@ -54,6 +54,18 @@ cd st-1.1.4
 perl ./Makefile.PL INSTALL_BASE=../../ ; make ; make test ; make install
 cd -
 
+wget https://github.com/arq5x/bedtools2/releases/download/v2.29.2/bedtools-2.29.2.tar.gz
+tar -xzvf bedtools-2.29.2.tar.gz
+cd bedtools-2.29.2
+cp -i bin/bedtools  ../bin/
+cd -
+
+wget https://github.com/OpenGene/fastp/archive/v0.20.1.tar.gz -O fastp-0.20.1.tar.gz
+tar -xzvf fastp-0.20.1.tar.gz
+make
+cp fastp ../../bin/
+cd -
+
 ################### 
 
 wget https://github.com/broadinstitute/picard/releases/download/2.23.8/picard.jar
