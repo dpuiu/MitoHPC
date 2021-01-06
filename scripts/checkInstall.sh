@@ -7,6 +7,7 @@ source $SDIR/init.sh
 which perl	        #usually available on Linux
 which gcc	        #MARCC:"module load gcc"
 which java	        #MARCC:"module load java
+
 which bwa	        #MARCC:"module load bwa"  or install from "https://sourceforge.net/projects/bio-bwa/files/"
 which samtools          #install from "http://www.htslib.org/download/"
 which bedtools          #MARCC:"module load bedtools"
@@ -15,6 +16,9 @@ which samblaster        #install from "https://github.com/GregoryFaust/samblaste
 which circSam.pl        #available under scripts
 which filterVcf.pl      #available under scripts
 which st                #simple statistics: install from "https://github.com/nferraz/st"
+which bcftools
+which tabix
+which vcftools
 
 test -f $JDIR/gatk.jar
 test -f $JDIR/haplogrep.jar
