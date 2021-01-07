@@ -44,6 +44,7 @@ perl --version | grep -v ^$ | head -1  >> checkInstall.log
 java --version | head -1               >> checkInstall.log
  
 echo "########################"  >> checkInstall.log
+echo "JAVA_HOME=" $JAVA_HOME >> checkInstall.log
 echo "JARS:"  >> checkInstall.log
 
 ls -l $JDIR/picard.jar    | awk '{print $11}' >> checkInstall.log
@@ -54,7 +55,10 @@ ls -l $JDIR/mutserve.jar  | awk '{print $11}' >> checkInstall.log
 echo "########################"  >> checkInstall.log
 echo "VARS:"  >> checkInstall.log
 
+echo "HDIR=" $HDIR >> checkInstall.log
+echo "BDIR=" $BDIR >> checkInstall.log
 echo "SDIR=" $SDIR >> checkInstall.log
 echo "JDIR=" $JDIR >> checkInstall.log
 echo "RDIR=" $RDIR >> checkInstall.log
+
 echo Success!

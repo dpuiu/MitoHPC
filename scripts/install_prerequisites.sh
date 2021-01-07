@@ -1,12 +1,7 @@
 #!/bin/sh -eux
 
 SDIR=`dirname $0`	 # script directory
-export SDIR=`readlink -f $SDIR`
-export HDIR=`readlink -f $SDIR/..`
-export BDIR=`readlink -f $SDIR/../bin`
-export JDIR=`readlink -f $SDIR/../java`
-export RDIR=`readlink -f $SDIR/../RefSeq`
-
+source $SDIR/init.sh
 mkdir -p $HDIR/prerequisites/ $BDIR/ $JDIR/
 
 #############
