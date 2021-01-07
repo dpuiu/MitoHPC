@@ -58,7 +58,7 @@ if [ ! -s $BDIR/vcftools ] ; then
   wget https://github.com/vcftools/vcftools/releases/download/v0.1.16/vcftools-0.1.16.tar.gz
   tar -xzvf vcftools-0.1.16.tar.gz
   cd vcftools-0.1.16
-  ./configure --prefix=$HDIR/ ; make ; make install
+  ./configure --prefix=$HDIR/  ; make ; make install
   cd -
 fi
 
