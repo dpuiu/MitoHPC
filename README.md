@@ -15,20 +15,19 @@
 ### DOWNLOAD PIPELINE ###
 
     $ git clone https://github.com/dpuiu/HP.git
-    $ cd HP/
 
 ### SETUP ENVIRONMENT ###
     
-    $ export PATH=$PWD/scripts/:$PWD/bin/:$PATH
+    $ export PATH=$PWD/HP/scripts/:$PWD/HP/bin/:$PATH
 
 ### INSTALL PREREQUISITES ###
 
-    $ scripts/install_prerequisites.sh
+    $ HP/scripts/install_prerequisites.sh
 
 ### CHECK INSTALL ###
   
     # once; if successfull => "Success message!"
-    $ scripts/checkInstall.sh
+    $ HP/scripts/checkInstall.sh
     $ cat checkInstall.log
 
 #########################################################################
