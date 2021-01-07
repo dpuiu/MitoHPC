@@ -8,5 +8,5 @@ export JDIR=$HDIR/java
 export RDIR=$HDIR/RefSeq
 
 export PATH=$SDIR:$BDIR:$PATH
-export SH="sh"                 # bash, sbatch(SLURM), qsub(SGE,PBS)
+export SH="bash"                 # bash, sbatch(SLURM), qsub(SGE,PBS)
 
