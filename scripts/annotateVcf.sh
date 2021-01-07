@@ -1,12 +1,16 @@
 #!/bin/bash -eux
 
-#1: I: input file.bam path/prefix.bam
-#2: O: output
+#########################################################
 
-I=$1  ; test -s $I
+#Program that annotates a vcf file
+#Input arguments
+
+I=$1   # input vcf file
+
+##########################################################
+
+test -s $I
 O=${I}2
-
-#RDIR=$SDIR/RefSeq/
 
 bgzip -f -c $I > $O.gz
 tabix -f $O.gz

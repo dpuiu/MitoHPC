@@ -1,6 +1,13 @@
 #!/bin/bash -eux
 
-D=$1        # out dir
+##########################################################
+
+#Program that summarizes aligned read counts
+#Input arguments
+
+D=$1        # input directory
+
+##########################################################
 
 find $D/*/ -name "*.count" | xargs grep all -H    | perl -ane 'print "$1\t$2\n" if(/.+\/(\S+).count:(\d+)/);' | sort -u > $D/count.all.tab
 find $D/*/ -name "*.count" | xargs grep mapped -H | perl -ane 'print "$1\t$2\n" if(/.+\/(\S+).count:(\d+)/);' | sort -u > $D/count.mapped.tab

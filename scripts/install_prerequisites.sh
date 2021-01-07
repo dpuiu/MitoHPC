@@ -1,5 +1,12 @@
 #!/bin/sh -eux
 
+#######################################################################
+
+#Program that downloads and install software prerequisites and hs38DH.fa
+
+########################################################################
+
+
 SDIR=`dirname $0`	 # script directory
 source $SDIR/init.sh
 mkdir -p $HDIR/prerequisites/ $BDIR/ $JDIR/

@@ -1,5 +1,11 @@
 #!/bin/bash -e
 
+#########################################################
+
+#Program that setups the environment on MARCC cluster (only)
+
+##########################################################
+
 module load gcc
 module load java
 module load bedtools

@@ -1,7 +1,12 @@
 #!/bin/bash -eux
 
+##########################################################
+
+#Program that summarizes aligned read counts
+#Input arguments
+
 D=$1 # out dir
-M=$2 # source(mutect2...)
+M=$2 # snp caller: mutect2 or mutserve
 
 find $D/ -name "*.$M.haplogroup" | xargs cat | grep -v SampleID | sed 's|"||g' | awk '{print $1,$2}' | sort -u | perl -ane 'BEGIN {print "Run\thaplogroup\n"} print "$F[0]\t$F[1]\n";' > $D/$M.haplogroup.tab
 cat $D/$M.haplogroup.tab |  perl -ane 'print "$1\n" if(/(^Run.+)/ or /(\S+\s+L\d)(.*)/ or /(\S+\s+HV)(.*)/ or /(\S+\s+JT)(.*)/ or /(\S+\s+\w)(.*)/);' > $M.haplogroup1.tab

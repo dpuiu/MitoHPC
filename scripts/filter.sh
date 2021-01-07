@@ -1,5 +1,9 @@
 #!/bin/bash -eux
 
+#######################################################################################################################################
+
+#Program that runs the heteroplasmy pipeline on a single sample
+#Input arguments
 #1: I: input file.bam path/.bam
 #2: O: output         path(ODIR)/prefix 
 #3: M: input; snp callung method: mutect2 or mutserve
@@ -95,7 +99,7 @@ fi
 
 if [ ! -s $O.cvg ] ; then
   cat $O.bam | bedtools bamtobed -cigar | bedtools genomecov -i - -g $F.fai -d > $O.cvg 
-  cat $O.cvg | cut -f3 | st  --summary --mean --sd | sed 's|^|'"$N"'\t|' > $O.cvg.stat
+  #cat $O.cvg | cut -f3 | st  --summary --mean --sd | sed 's|^|'"$N"'\t|' > $O.cvg.stat
 fi
 
 #########################################################################################################################################
@@ -121,7 +125,7 @@ if [ ! -s $O.$M.vcf ] ; then
   cat $SDIR/$M.vcf > $O.$M.00.vcf
   fa2Vcf.pl $FO >> $O.$M.00.vcf
   cat $O.$M.vcf | bcftools norm -m -  | filterVcf.pl -sample $N -source $M | grep -v ^# | sort -k2,2n -k4,4 -k5,5 | fix${M}Vcf.pl -file $F   >> $O.$M.00.vcf
-  vcf-validator $O.$M.00.vcf
+  #vcf-validator $O.$M.00.vcf
   cat $O.$M.00.vcf | filterVcf.pl -p 0.03  | tee $O.$M.03.vcf | filterVcf.pl -p 0.05  | tee $O.$M.05.vcf | filterVcf.pl -p 0.10  > $O.$M.10.vcf
 fi
 

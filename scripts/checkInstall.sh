@@ -1,5 +1,12 @@
 #!/bin/bash -eux
 
+#########################################################
+
+#Program that checks if all dependencies are installed
+#No input arguments
+
+##########################################################
+
 export SDIR=`dirname $0`        # script directory
 source $SDIR/init.sh
 
