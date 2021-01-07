@@ -47,10 +47,10 @@ echo "########################"  >> checkInstall.log
 echo "JAVA_HOME=" $JAVA_HOME >> checkInstall.log
 echo "JARS:"  >> checkInstall.log
 
-ls -l $JDIR/picard.jar    | awk '{print $11}' >> checkInstall.log
-ls -l $JDIR/gatk.jar      | awk '{print $11}' >> checkInstall.log
-ls -l $JDIR/haplogrep.jar | awk '{print $11}' >> checkInstall.log
-ls -l $JDIR/mutserve.jar  | awk '{print $11}' >> checkInstall.log
+ls -l $JDIR/picard.jar    | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
+ls -l $JDIR/gatk.jar      | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
+ls -l $JDIR/haplogrep.jar | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
+ls -l $JDIR/mutserve.jar  | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
 
 echo "########################"  >> checkInstall.log
 echo "VARS:"  >> checkInstall.log

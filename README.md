@@ -4,6 +4,7 @@
 
 ## PREREQUISITES ##
 
+  * gcc (v4.8.5+), java (v1.8.0+) , perl(v5.16.3+)
   * SOFTWARE PACKAGES: bwa, samtools, bedtools, fastp, samblaster, bcftools, htslib, vcftools, st
   * JAVA JARS:         picard, mutserve, gatk, haplogrep
   * HUMAN ASSEMBLY:    hs38DH
@@ -18,7 +19,11 @@
 
 ### SETUP ENVIRONMENT ###
     
-    $ export PATH=$PWD/HP/scripts/:$PWD/HP/bin/:$PATH
+    # could be added to ~/.bashrc
+    $ export SDIR=$PWD/HP/scripts/ 
+    $ source $SDIR/init.sh
+    ... or    
+    $ source $SDIR/init_marcc.sh
 
 ### INSTALL PREREQUISITES ###
 
@@ -26,7 +31,7 @@
 
 ### CHECK INSTALL ###
   
-    # once; if successfull => "Success message!"
+    # if successfull => "Success message!"
     $ HP/scripts/checkInstall.sh
     $ cat checkInstall.log
 

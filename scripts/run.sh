@@ -19,7 +19,7 @@ test -s $IN
 mkdir -p $ODIR ; test -d $ODIR
 ###############################################################
 
-printf "#!/bin/bash -eux\n\nexport SDIR=$SDIR\nexport JDIR=$JDIR\nexport RDIR=$RDIR\nexport H=$H\nexport R=$R\nexport PATH=$SDIR:\$PATH\n"
+printf "#!/bin/bash -eux\n\nexport SDIR=$SDIR\nexport JDIR=$JDIR\nexport RDIR=$RDIR\nexport H=$H\nexport R=$R\nexport PATH=$SDIR:$BDIR:\$PATH\n"
 
 printf "\n######################################\n\n"
 cat $IN | perl -ane '/.+\/(.+)\./; print "$ENV{SH} $ENV{SDIR}/filter.sh  $F[0] $ENV{ODIR}/$1/$1 $ENV{M} $ENV{RDIR}/$ENV{H} $ENV{RDIR}/$ENV{R} $ENV{RDIR}/$ENV{R}\n";'
