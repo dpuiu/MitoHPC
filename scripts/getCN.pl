@@ -35,6 +35,7 @@ MAIN:
 		{
 			my $M=($F[3]*2*$opt{ref})/($F[2]*$opt{chrM});
 			$M=int($M*100+.5)/100;
+			$M="." if($M>10000);
 			push @F,$M ;
 		}
 
