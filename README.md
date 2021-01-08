@@ -70,12 +70,13 @@
 
 ### GENERATE PIPLEINE SCRIPT ###
 
-    $ $SDIR/run.sh in.txt   > filter.all.sh
+    $ $SDIR/run.sh in.txt out/  > filter.all.sh
     ... or
-    $ $SDIR/run.sh in.1.txt > filter.1.sh
-    $ $SDIR/run.sh in.2.txt > filter.2.sh
-    $ $SDIR/run.sh in.3.txt > filter.3.sh
+    $ $SDIR/run.sh in.1.txt out/ > filter.1.sh
+    $ $SDIR/run.sh in.2.txt out/ > filter.2.sh
+    $ $SDIR/run.sh in.3.txt out/ > filter.3.sh
     ...
+    $ chmod u+x ./filter.*sh
 
 ### RUN PIPELINE  ###
 
