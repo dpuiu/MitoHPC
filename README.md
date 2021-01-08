@@ -19,11 +19,14 @@
 
 ### SETUP ENVIRONMENT ###
     
-    # could be added to ~/.bashrc
     $ export SDIR=$PWD/HP/scripts/ 
     $ source $SDIR/init.sh
     ... or    
     $ source $SDIR/init_marcc.sh
+
+    # could be added to ~/.bashrc
+    $ echo "SDIR=$SDIR" >> ~/.bashrc
+    $ echo "source $SDIR/init.sh" >> ~/.bashrc
 
 ### INSTALL PREREQUISITES ###
 
