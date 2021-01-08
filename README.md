@@ -19,7 +19,7 @@
 
 ### SETUP ENVIRONMENT ###
     
-    $ export SDIR=$PWD/HP/scripts/ 
+    $ export **SDIR=$PWD/HP/scripts/** 
     $ source $SDIR/init.sh
     ... or    
     $ source $SDIR/init_marcc.sh
@@ -31,12 +31,12 @@
 
 ### INSTALL PREREQUISITES ###
 
-    $ HP/scripts/install_prerequisites.sh
+    $ $SDIR/install_prerequisites.sh
 
 ### CHECK INSTALL ###
   
     # if successfull => "Success message!"
-    $ HP/scripts/checkInstall.sh
+    $ $SDIR/checkInstall.sh
     $ cat checkInstall.log
 
 #########################################################################
@@ -45,9 +45,9 @@
 
 ### GENERATE INPUT FILE  ###
 
-    $ find bams/  -name "*bam"  > in.txt
+    $ find bams/ -name "*.bam"  > in.txt
     ... or
-    $ find crams/ -name "*cram" > in.txt
+    $ find crams/-name "*.cram" > in.txt
 
 ### SPLIT INPUT FILE (optional) ###
    
@@ -70,11 +70,11 @@
 
 ### GENERATE PIPLEINE SCRIPT ###
 
-    $ HP/scripts/run.sh in.txt   > filter.all.sh
+    $ $SDIR/run.sh in.txt   > filter.all.sh
     ... or
-    $ HP/scripts/run.sh in.1.txt > filter.1.sh
-    $ HP/scripts/run.sh in.2.txt > filter.2.sh
-    $ HP/scripts/run.sh in.3.txt > filter.3.sh
+    $ $SDIR/run.sh in.1.txt > filter.1.sh
+    $ $SDIR/run.sh in.2.txt > filter.2.sh
+    $ $SDIR/run.sh in.3.txt > filter.3.sh
     ...
 
 ### RUN PIPELINE  ###
