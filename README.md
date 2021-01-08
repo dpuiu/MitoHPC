@@ -25,6 +25,7 @@
     $ source $SDIR/init_marcc.sh
 
     # could be added to ~/.bashrc
+    $ echo "## HP settings ##"  >> ~/.bashrc
     $ echo "SDIR=$SDIR" >> ~/.bashrc
     $ echo "source $SDIR/init.sh" >> ~/.bashrc
 
