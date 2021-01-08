@@ -19,7 +19,7 @@
 
 ### SETUP ENVIRONMENT ###
     
-    $ export **SDIR=$PWD/HP/scripts/** 
+**    $ export SDIR=$PWD/HP/scripts/** 
     $ source $SDIR/init.sh
     ... or    
     $ source $SDIR/init_marcc.sh
