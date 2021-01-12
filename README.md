@@ -4,14 +4,14 @@
 
 ## SYSTEM PREREQUISITES ##
 
-  OS:                UNIX/LINIX 
-  SOFTWARE PACKAGES: git, wget, tar, unzip, autoconf, gcc(v4.8.5+), java(v1.8.0+), perl(v5.16.3+), ....
+    OS:                UNIX/LINIX 
+    SOFTWARE PACKAGES: git, wget, tar, unzip, autoconf, gcc(v4.8.5+), java(v1.8.0+), perl(v5.16.3+), ....
  
 ## PIPELINE PREREQUISITES ##
 
-  SOFTWARE PACKAGES: bwa, samtools, bedtools, fastp, samblaster, bcftools, htslib, vcftools, st
-  JAVA JARS:         picard, mutserve, gatk, haplogrep
-  HUMAN ASSEMBLY:    hs38DH
+    SOFTWARE PACKAGES: bwa, samtools, bedtools, fastp, samblaster, bcftools, htslib, vcftools, st
+    JAVA JARS:         picard, mutserve, gatk, haplogrep
+    HUMAN ASSEMBLY:    hs38DH
 
 #########################################################################
 
