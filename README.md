@@ -2,17 +2,24 @@
 
 #########################################################################
 
-## PREREQUISITES ##
+## SYSTEM PREREQUISITES ##
 
-  1. gcc (v4.8.5+), java (v1.8.0+) , perl(v5.16.3+), wget, git, tar, unzip, autoconf ...
+  OS:                UNIX/LINIX 
+  SOFTWARE PACKAGES: git, wget, tar, unzip, autoconf, gcc(v4.8.5+), java(v1.8.0+), perl(v5.16.3+), ....
  
-  2. SOFTWARE PACKAGES: bwa, samtools, bedtools, fastp, samblaster, bcftools, htslib, vcftools, st
-  3. JAVA JARS:         picard, mutserve, gatk, haplogrep
-  4. HUMAN ASSEMBLY:    hs38DH
+## PIPELINE PREREQUISITES ##
+
+  SOFTWARE PACKAGES: bwa, samtools, bedtools, fastp, samblaster, bcftools, htslib, vcftools, st
+  JAVA JARS:         picard, mutserve, gatk, haplogrep
+  HUMAN ASSEMBLY:    hs38DH
 
 #########################################################################
 
 ## INSTALL ## 
+
+### INSTALL SYSTEM PREREQUISITES (optional) ###
+
+    $SDIR/install_sysprerequisites.sh	
 
 ### DOWNLOAD PIPELINE ###
 
@@ -20,25 +27,21 @@
 
 ### SETUP ENVIRONMENT ###
     
-    export SDIR=$PWD/HP/scripts/   # set SDIR (script directory)
-    echo $SDIR
+    export SDIR=$PWD/HP/scripts/   # set SDIR variable (script directory)
+    echo $SDIR                     # check SDIR variable is set correctly
  
     source $SDIR/init.sh
     ... or    
-    source $SDIR/init_marcc.sh	   # MARCC cluster, SLURM job scheduling
+    source $SDIR/init_marcc.sh     # for MARCC computer cluster, uses SLURM job scheduler
 
-    # could be added to ~/.bashrc
+    # could be added to ~/.bashrc             # set environmental variables
     echo "## HP settings ##"  >> ~/.bashrc
     echo "SDIR=$SDIR" >> ~/.bashrc
     echo "source $SDIR/init.sh" >> ~/.bashrc
 
-### INSTALL PREREQUISITES (optional) ###
+### INSTALL PIPELINE PREREQUISITES (optional) ###
 
-    $SDIR/install_ubuntu.sh         # install PREREQUISITES 1 on UBUNTU, DEBIAN ...   
-    ... or
-    $SDIR/install_redhat.sh 	    # install PREREQUISITES 1 on REDHAT, FEDORA ...
-
-    $SDIR/install_prerequisites.sh  # install PREREQUISITES 2,3,4
+    $SDIR/install_prerequisites.sh  # install PIPELINE PREREQUISITES
 
 ### CHECK INSTALL ###
   
