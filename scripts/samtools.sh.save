@@ -30,7 +30,10 @@ if [ ! -s $D/$N.count ] ; then
   samtools view -@ $P $I $MT -F 0x904 -c | awk '{print $1,"chrM"}'   >> $D/$N.count
 fi
 
-if [ ! -s $D/$N.cvg.stat ] ; then
-  samtools depth $I | grep ^$MT > $D/$N.cvg
-  cat $D/$N.cvg | cut -f3 | st  --summary --mean --sd | sed 's|^|'"$N"'\t|' > $D/$N.cvg.stat
-fi
+#if [ ! -s $D/$N.cvg.stat ] ; then
+  #samtools depth $I | grep ^$MT > $D/$N.cvg
+  cat $I | bedtools bamtobed -cigar | bedtools genomecov -i - -g $RDIR/$MT.fa.fai -d > $D/$N.cvg.stat
+  #cat $D/$N.cvg | cut -f3 | st  --summary --mean --sd | sed 's|^|'"$N"'\t|' > $D/$N.cvg.stat
+#fi
+
+

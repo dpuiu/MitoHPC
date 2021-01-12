@@ -48,3 +48,5 @@ if [ "$M" == "mutect2" ] ; then
   printf "snpCount.sh $ODIR $M.$M\n"
   printf "join.pl $ODIR/count.$M.tab $ODIR/$M.$M.tab > $ODIR/count_$M.$M.tab\n"
 fi
+
+printf "rm -f fastp.html fastp.json\n"

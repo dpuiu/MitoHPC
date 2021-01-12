@@ -4,7 +4,7 @@
 
 ## PREREQUISITES ##
 
-  * gcc (v4.8.5+), java (v1.8.0+) , perl(v5.16.3+)
+  * gcc (v4.8.5+), java (v1.8.0+) , perl(v5.16.3+), wget, git, tar, unzip, autoconf ...
   * SOFTWARE PACKAGES: bwa, samtools, bedtools, fastp, samblaster, bcftools, htslib, vcftools, st
   * JAVA JARS:         picard, mutserve, gatk, haplogrep
   * HUMAN ASSEMBLY:    hs38DH
@@ -30,6 +30,8 @@
     $ echo "source $SDIR/init.sh" >> ~/.bashrc
 
 ### INSTALL PREREQUISITES ###
+
+    # $SDIR/install_ubuntu.sh       # install ubuntu packages
 
     $ $SDIR/install_prerequisites.sh
 
