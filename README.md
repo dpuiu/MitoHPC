@@ -74,7 +74,7 @@
      chmod a+x ./samtools.all.sh
      ./samtools.all.sh
 
-### GENERATE PIPLEINE SCRIPT ###
+### GENERATE PIPELINE SCRIPT ###
 
     $SDIR/run.sh in.txt out/  > filter.all.sh
     ... or
