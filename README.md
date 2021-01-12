@@ -23,21 +23,21 @@
 
 ### SETUP ENVIRONMENT ###
     
-    export SDIR=$PWD/HP/scripts/   # set SDIR variable (script directory)
-    echo $SDIR                     # check SDIR variable is set correctly
+    export SDIR=$PWD/HP/scripts/   # set script directory variable
+    echo $SDIR                     # check if variable is set correctly
  
     source $SDIR/init.sh
     ... or    
     source $SDIR/init_marcc.sh     # for MARCC computer cluster, uses SLURM job scheduler
 
-    # could be added to ~/.bashrc             # set environmental variables
+    # add environmental variables to ~/.bashrc (optional)
     echo "## HP settings ##"  >> ~/.bashrc
     echo "SDIR=$SDIR" >> ~/.bashrc
     echo "source $SDIR/init.sh" >> ~/.bashrc
 
 ### INSTALL PIPELINE PREREQUISITES (optional) ###
 
-    $SDIR/install_prerequisites.sh  # install PIPELINE PREREQUISITES
+    $SDIR/install_prerequisites.sh  
 
 ### CHECK INSTALL ###
   
