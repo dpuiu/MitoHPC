@@ -49,9 +49,10 @@
 
 ### GENERATE INPUT FILE  ###
 
-    find bams/ -name "*.bam"  > in.txt
+    # ADIR=alignment directory path
+    find $ADIR -name "*.bam"  > in.txt
     ... or
-    find crams/-name "*.cram" > in.txt
+    find $ADIR -name "*.cram" > in.txt
 
 ### SPLIT INPUT FILE (optional; for large datasets) ###
    
