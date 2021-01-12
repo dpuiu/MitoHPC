@@ -31,7 +31,7 @@
 
 ### INSTALL PREREQUISITES ###
 
-    # $SDIR/install_ubuntu.sh       # install ubuntu packages
+    # $SDIR/install_ubuntu.sh       # install packages on UBUNTU & DEBIAN  
 
     $ $SDIR/install_prerequisites.sh
 
