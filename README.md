@@ -3,7 +3,7 @@
 ## SYSTEM PREREQUISITES ##
 
     OS:                UNIX/LINIX 
-    SOFTWARE PACKAGES: git, wget, tar, unzip, autoconf, gcc(v4.8.5+), java(v1.8.0+), perl(v5.16.3+), ....
+    SOFTWARE PACKAGES: git, wget, tar, unzip, autoconf, gcc(v4.8.5+), java(v1.8.0+), perl(v5.16.3+) ....
  
 ## PIPELINE PREREQUISITES ##
 
@@ -13,13 +13,13 @@
 
 ## INSTALL ## 
 
-### INSTALL SYSTEM PREREQUISITES (optional) ###
-
-    $SDIR/install_sysprerequisites.sh	
-
 ### DOWNLOAD PIPELINE ###
 
     git clone https://github.com/dpuiu/HP.git
+
+### INSTALL SYSTEM PREREQUISITES (optional) ###
+
+    $SDIR/install_sysprerequisites.sh
 
 ### SETUP ENVIRONMENT ###
     
