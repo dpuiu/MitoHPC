@@ -86,21 +86,25 @@
 
 ### RUN PIPELINE  ###
 
-    nohup ./filter.all.sh &
+    ./filter.all.sh
+    ... or
+    nohup ./filter.all.sh &	                       # run in the backgroud
     ... or
     nohup ./filter.1.sh &
     nohup ./filter.2.sh &
     nohup ./filter.3.sh &
     ...
-    ls filter.?.sh | parallel
+    ls filter.?.sh | parallel	                       # run in parallel
     ... or (MARCC)
-    sbatch --p shared --time=24:0:0 ./filter.all.sh
+
+    sbatch --p shared --time=24:0:0 ./filter.all.sh    # use a job scheduler
 
 ## OUTPUT ##
 
-### TAB/VCF Files: ###
+    TAB/VCF Files: 
 
-    # 1st itteration (ref=rCRS or RSRS, snp caller mutect2 or mutserve)
+### 1st ITTERATION ### 
+
     count.tab 
  
     mutect2.03.vcf	# HOM & HET SNPs; 3% min HET THOLD
@@ -113,7 +117,7 @@
     mutserve.10.vcf
     count_mutserve.tab
 
-    # optionl ; if mutect2 is run a 2nd time, ref=sample MT consensus
+### 2nd ITTERATION ###
     mutect2.mutect2.03.vcf
     mutect2.mutect2.05.vcf
     mutect2.mutect2.10.vcf
