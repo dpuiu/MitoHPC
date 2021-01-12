@@ -3,13 +3,14 @@
 #######################################################################################################################################
 
 #Program that runs the heteroplasmy pipeline on a single sample
+
 #Input arguments
-#1: I: input file.bam path/.bam
-#2: O: output         path(ODIR)/prefix 
-#3: M: input; snp callung method: mutect2 or mutserve
-#4: H: input; human reference hs38DH.fa  path(RDIR)/.fa
-#5: FO:input; original mito reference ; rCRS.fa    path(RDIR)/prefix.fa   
-#6: F: input; original/new mito referece ; rCRS.fa  path(RDIR)/prefix.fa  path(ODIR)/prefix.fa 
+#1: I:  BAM/CRAM alignment file; full path
+#2: O:  output prefix; full path
+#3: M:  SNP calling method: mutect2(default) or mutserve
+#4: H:  reference sequence path : hs38DH.fa assembly(default)
+#5: FO: target sequence path : rCRS.fa assembly (default)    
+#6: F:  target sequence path : rCRS.fa assembly (default) or sampleConsensus.fa(2nd itteration)
 
 I=$1  ; test -s $I
 O=$2
@@ -38,10 +39,6 @@ ODIR=`dirname $O`; mkdir -p $ODIR
 export HG=hs38DH
 export MT=chrM
 export NUMT='chr1:629084-634422 chr17:22521366-22521502 '   # chrM + 2 selected NUMT
-
-#export HG=grch38_1kgmaj
-#export MT=M                                                 # tmp; sim dataset
-#export NUMT='1:629084-634422 17:22521366-22521502 '        
 
 P=1                # number of processors
 export L=222000    # ~2000x MT coverage
