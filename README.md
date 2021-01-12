@@ -1,7 +1,5 @@
 # HP : Heteroplasmy Pipeline # 
 
-#########################################################################
-
 ## SYSTEM PREREQUISITES ##
 
     OS:                UNIX/LINIX 
@@ -12,8 +10,6 @@
     SOFTWARE PACKAGES: bwa, samtools, bedtools, fastp, samblaster, bcftools, htslib, vcftools, st
     JAVA JARS:         picard, mutserve, gatk, haplogrep
     HUMAN ASSEMBLY:    hs38DH
-
-#########################################################################
 
 ## INSTALL ## 
 
@@ -48,8 +44,6 @@
     # if successfull => "Success message!"
     $SDIR/checkInstall.sh
     cat checkInstall.log
-
-#########################################################################
 
 ## USAGE ##
 
@@ -101,8 +95,6 @@
     ... or (MARCC)
     sbatch --p shared --time=24:0:0 ./filter.all.sh
 
-#########################################################################
-
 ## OUTPUT ##
 
 ### TAB/VCF Files: ###
@@ -125,8 +117,6 @@
     mutect2.mutect2.05.vcf
     mutect2.mutect2.10.vcf
     count_mutect2.mutect2.tab
-
-#########################################################################
 
 ## EXAMPLES ##
 
@@ -200,4 +190,3 @@
     ...
     05%
     10%
-
