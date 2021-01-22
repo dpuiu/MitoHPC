@@ -70,7 +70,7 @@
 
      sed 's|^|samtools.sh |' in.txt > samtools.all.sh
      ... or (MARCC)
-     sed 's|^|sbatch --p shared --time=24:0:0 samtools.sh|' in.txt > samtools.all.sh
+     sed 's|^|sbatch --partition=shared --time=24:0:0 samtools.sh |' in.txt > samtools.all.sh
      chmod a+x ./samtools.all.sh
      ./samtools.all.sh
 
