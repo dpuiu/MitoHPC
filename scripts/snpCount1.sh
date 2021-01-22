@@ -13,7 +13,7 @@ annotateVcf.sh  $D/$M.$T.vcf
 #########################################################
 
 N=`grep -c -v ^Run $D/$M.haplogroup.tab`
-cat $D/$M.$T.vcf | reduceVcf.pl -AN $N | cat $SDIR/reduce.vcf - | bedtools sort -header > $D/$M.$T.rvcf
+#cat $D/$M.$T.vcf | reduceVcf.pl -AN $N | cat $SDIR/reduce.vcf - | bedtools sort -header > $D/$M.$T.rvcf
 
 ##########################################################
 

@@ -87,8 +87,8 @@ fi
 
 if [ ! -s $O.count ] ; then
   cp $IDIR/$N.count $O.count
-  #samtools view $I $MT  -F 0x900 -c | awk '{print $1,"chrM" }'  >> $O.count
-  samtools view $O.bam  -F 0x900 -c | awk '{print $1,"filter"}' >> $O.count
+  samtools view $I $MT  -F 0x904 -c | awk '{print $1,"chrM" }'  >> $O.count
+  samtools view $O.bam  -F 0x904 -c | awk '{print $1,"filter"}' >> $O.count
 fi
 
 #########################################################################################################################################
@@ -96,7 +96,7 @@ fi
 
 if [ ! -s $O.cvg ] ; then
   cat $O.bam | bedtools bamtobed -cigar | bedtools genomecov -i - -g $F.fai -d > $O.cvg 
-  cat $O.cvg | cut -f3 | st  --summary --mean --sd | sed 's|^|'"$N"'\t|' > $O.cvg.stat
+  cat $O.cvg | cut -f3 | st  --summary --mean | sed 's|^|'"$N"'\t|' > $O.cvg.stat
 fi
 
 #########################################################################################################################################

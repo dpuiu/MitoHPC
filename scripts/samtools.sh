@@ -27,7 +27,7 @@ fi
 if [ ! -s $D/$N.count ] ; then
   samtools view -@ $P $I -F 0x900 -c     | awk '{print $1,"all"}'    >  $D/$N.count
   samtools view -@ $P $I -F 0x904 -c     | awk '{print $1,"mapped"}' >> $D/$N.count
-  samtools view -@ $P $I $MT -F 0x904 -c | awk '{print $1,"chrM"}'   >> $D/$N.count
+  #samtools view -@ $P $I $MT -F 0x904 -c | awk '{print $1,"chrM"}'   >> $D/$N.count
 fi
 
 if [ ! -s $D/$N.cvg.stat ] ; then
