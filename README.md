@@ -68,36 +68,36 @@
      .... or 
      # prefix.cram => prefix.cram.crai & prefix.count 
 
-     sed 's|^|samtools.sh |' in.txt > samtools.all.sh
+     sed "s|^|$SDIR/samtools.sh |" in.txt > samtools.all.sh
      ... or (MARCC)
-     sed 's|^|sbatch --partition=shared --time=24:0:0 samtools.sh |' in.txt > samtools.all.sh
+     sed "s|^|sbatch --partition=shared --time=24:0:0 $SDIR/samtools.sh |" in.txt > samtools.all.sh
+
      chmod a+x ./samtools.all.sh
      ./samtools.all.sh
 
 ### GENERATE PIPELINE SCRIPT ###
 
     $SDIR/run.sh in.txt out/  > filter.all.sh
-    ... or
+    ... or (multiple jobs)
     $SDIR/run.sh in.1.txt out/ > filter.1.sh
     $SDIR/run.sh in.2.txt out/ > filter.2.sh
     $SDIR/run.sh in.3.txt out/ > filter.3.sh
-    ...
+    
     chmod u+x ./filter.*sh
 
 ### RUN PIPELINE  ###
 
     ./filter.all.sh
     ... or
-    nohup ./filter.all.sh &	                       # run in the backgroud
+    nohup ./filter.all.sh &	                               # run in the backgroud
     ... or
     nohup ./filter.1.sh &
     nohup ./filter.2.sh &
     nohup ./filter.3.sh &
     ...
-    ls filter.?.sh | parallel	                       # run in parallel
+    ls filter.?.sh | parallel	                               # run in parallel
     ... or (MARCC)
-
-    sbatch --p shared --time=24:0:0 ./filter.all.sh    # use a job scheduler
+    sbatch --partition=shared --time=24:0:0 ./filter.all.sh    # run using a job scheduler
 
 ## OUTPUT ##
 

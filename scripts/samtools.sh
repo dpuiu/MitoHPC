@@ -31,6 +31,5 @@ if [ ! -s $D/$N.count ] ; then
 fi
 
 if [ ! -s $D/$N.cvg.stat ] ; then
-  samtools depth $I | grep ^$MT > $D/$N.cvg
-  cat $D/$N.cvg | cut -f3 | st  --summary --mean --sd | sed 's|^|'"$N"'\t|' > $D/$N.cvg.stat
+  samtools depth $I | grep ^$MT | tee $D/$N.cvg | cut -f3 | st  --summary --mean | sed 's|^|'"$N"'\t|' > $D/$N.cvg.stat
 fi
