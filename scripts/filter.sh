@@ -34,15 +34,8 @@ G=${F%???}
 
 IDIR=`dirname $I`
 ODIR=`dirname $O`; mkdir -p $ODIR
-
-########################################################################################################################################
-export HG=hs38DH
-export MT=chrM
-export NUMT='chr1:629084-634422 chr17:22521366-22521502 '   # chrM + 2 selected NUMT
-
-P=1                # number of processors
-export L=222000    # ~2000x MT coverage
-export E=300       # extension(circularization)
+P=1                						# number of processors
+MSIZE=16569
 
 #########################################################################################################################################
 #test input file
@@ -50,6 +43,8 @@ export E=300       # extension(circularization)
 test -s $I
 test -s $IDIR/$N.count
 if [ ! -s $I.bai ] && [ ! -s $I.crai ] ; then exit 1 ; fi
+
+if [ $(stat -c%s $F) -lt $MSIZE ] ; then exit 1 ; fi
 
 #########################################################################################################################################
 #format references
@@ -123,7 +118,7 @@ if [ ! -s $O.$M.vcf ] ; then
   fa2Vcf.pl $FO >> $O.$M.00.vcf
   cat $O.$M.vcf | bcftools norm -m -  | filterVcf.pl -sample $N -source $M | grep -v ^# | sort -k2,2n -k4,4 -k5,5 | fix${M}Vcf.pl -file $F   >> $O.$M.00.vcf
   #vcf-validator $O.$M.00.vcf
-  cat $O.$M.00.vcf | filterVcf.pl -p 0.03  | tee $O.$M.03.vcf | filterVcf.pl -p 0.05  | tee $O.$M.05.vcf | filterVcf.pl -p 0.10  > $O.$M.10.vcf
+  cat $O.$M.00.vcf | filterVcf.pl -p 0.$T1  | tee $O.$M.$T1.vcf | filterVcf.pl -p 0.$T2  | tee $O.$M.$T2.vcf | filterVcf.pl -p 0.$T3  > $O.$M.$T3.vcf
 fi
 
 #########################################################################################################################################
@@ -132,6 +127,9 @@ fi
 if  [ ! -s $O.fa ]  && [ ! -s $O.$M.fa ] ; then
   cat $O.$M.03.vcf | maxVcf.pl |  tee $O.$M.max.vcf  | bgzip -f -c > $O.$M.max.vcf.gz  ; tabix -f $O.$M.max.vcf.gz
   bcftools consensus -f $F $O.$M.max.vcf.gz | perl -ane 'if($.==1) { print ">$ENV{N}\n" } else { s/N//g; print }' > $O.$M.fa
+
+  if [ $(stat -c%s " $O.$M.fa") -lt $MSIZE ] ; then exit 1 ; fi
+
   java -jar $JDIR/picard.jar NormalizeFasta I=$O.$M.fa O=$O.$M.norm.fa LINE_LENGTH=60 ; mv $O.$M.norm.fa $O.$M.fa ; rm $O.$M.max.vcf.*
   bwa index $O.$M.fa  -p $O.$M
   bedtools bamtofastq -i $O.bam -fq /dev/stdout | bwa mem $O.$M - -v 1 -t $P -v 1 -k 63 | samtools sort | bedtools bamtobed -tag NM -cigar | perl -ane 'print if($F[4]==0);' | bedtools merge -d -5  | bed2bed.pl > $O.$M.merge.bed
