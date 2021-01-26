@@ -3,12 +3,12 @@
 ## FILES ##
 
     HV.bed.gz    : hyper variable regions
-    HP.bed.gz	 : homopolymers
-    HS.bed.gz	 : hotspots
+    HP.bed.gz    : homopolymers
+    HS.bed.gz    : hotspots
     CDS.bed.gz   : coding regions
 
     HG.vcf.gz    : haplogroup specific SNV's
-    NUMT.vcf.gz	 : NUMT SNV's
+    NUMT.vcf.gz  : NUMT SNV's
     dbSNP.vcf.gz : dbSNP	
 
 ## SUMMARY ##
