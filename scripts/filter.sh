@@ -54,7 +54,9 @@ if [ ! -s $G.dict   ] ; then java -jar $JDIR/picard.jar CreateSequenceDictionary
 if [ ! -s $G+.fa  ] ; then 
   cat $F.fai | perl -ane 'print "$F[0]\t0\t$F[1]\n$F[0]\t0\t$ENV{E}\n";' | bedtools getfasta -fi $F -bed - | grep -v "^>" | perl -ane 'BEGIN { print ">$ENV{R}\n" } ;print;' > $G+.fa
   cat $RDIR/$HG.NUMT.fa >> $G+.fa
-  java -jar $JDIR/picard.jar NormalizeFasta I=$G+.fa O=$G+.norm.fa LINE_LENGTH=60 ;  mv $G+.norm.fa $G+.fa
+  #java -jar $JDIR/picard.jar NormalizeFasta I=$G+.fa O=$G+.norm.fa LINE_LENGTH=60
+  cat $G+.fa | perl -ane 'if(/^>/) { print "\n" if($.>1); print} else { chomp ;print} END{print "\n"}' > $G+.norm.fa
+  mv $G+.norm.fa $G+.fa
 fi
 if [ ! -s $G+.bwt ] ; then bwa index $G+.fa -p $G+ ; fi
 
@@ -130,7 +132,9 @@ if  [ ! -s $O.fa ]  && [ ! -s $O.$M.fa ] ; then
 
   if [ $(stat -c%s " $O.$M.fa") -lt $MSIZE ] ; then exit 1 ; fi
 
-  java -jar $JDIR/picard.jar NormalizeFasta I=$O.$M.fa O=$O.$M.norm.fa LINE_LENGTH=60 ; mv $O.$M.norm.fa $O.$M.fa ; rm $O.$M.max.vcf.*
+  #java -jar $JDIR/picard.jar NormalizeFasta I=$O.$M.fa O=$O.$M.norm.fa LINE_LENGTH=60
+  cat $O.$M.fa | perl -ane 'if(/^>/) { print "\n" if($.>1); print} else { chomp ;print} END{print "\n"}' > $O.$M.norm.fa
+  mv $O.$M.norm.fa $O.$M.fa ; rm $O.$M.max.vcf.*
   bwa index $O.$M.fa  -p $O.$M
   bedtools bamtofastq -i $O.bam -fq /dev/stdout | bwa mem $O.$M - -v 1 -t $P -v 1 -k 63 | samtools sort | bedtools bamtobed -tag NM -cigar | perl -ane 'print if($F[4]==0);' | bedtools merge -d -5  | bed2bed.pl > $O.$M.merge.bed
   rm -f $O.$M.*{sa,amb,ann,pac,bwt}

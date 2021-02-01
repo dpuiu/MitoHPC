@@ -13,7 +13,7 @@
 
 ## SUMMARY ##
 
-    .        #regions  min  q1   q2   q3    max   mean    sum      	
+    .        #regions  min  q1   q2   q3    max   mean    sum    
     HV       3         136  136  315  359   359   270.00  810    	
     HP       9         5    9    11   15    22    12.33   111 		
     HS       13        1    1    1    1     1     1.00    13     	
