@@ -35,7 +35,7 @@ G=${F%???}
 IDIR=`dirname $I`
 ODIR=`dirname $O`; mkdir -p $ODIR
 P=1                						# number of processors
-MSIZE=16569
+MSIZE=16500
 
 #########################################################################################################################################
 #test input file
@@ -50,11 +50,11 @@ if [ $(stat -c%s $F) -lt $MSIZE ] ; then exit 1 ; fi
 #format references
 
 if [ ! -s $F.fai ]    ; then samtools faidx $F ; fi
-if [ ! -s $G.dict   ] ; then java -jar $JDIR/picard.jar CreateSequenceDictionary R=$F O=$G.dict ; fi
+if [ ! -s $G.dict   ] ; then java -jar $JDIR/picard.jar CreateSequenceDictionary --REFERENCE $F --OUTPUT $G.dict ; fi
 if [ ! -s $G+.fa  ] ; then 
   cat $F.fai | perl -ane 'print "$F[0]\t0\t$F[1]\n$F[0]\t0\t$ENV{E}\n";' | bedtools getfasta -fi $F -bed - | grep -v "^>" | perl -ane 'BEGIN { print ">$ENV{R}\n" } ;print;' > $G+.fa
   cat $RDIR/$HG.NUMT.fa >> $G+.fa
-  #java -jar $JDIR/picard.jar NormalizeFasta I=$G+.fa O=$G+.norm.fa LINE_LENGTH=60
+  #java -jar $JDIR/picard.jar NormalizeFasta --INPUT $G+.fa --OUTPUT $G+.norm.fa --LINE_LENGTH 60
   cat $G+.fa | perl -ane 'if(/^>/) { print "\n" if($.>1); print} else { chomp ;print} END{print "\n"}' > $G+.norm.fa
   mv $G+.norm.fa $G+.fa
 fi
@@ -63,7 +63,7 @@ if [ ! -s $G+.bwt ] ; then bwa index $G+.fa -p $G+ ; fi
 #########################################################################################################################################
 #filter & realign reads
 
-if  [ ! -s $O.bam ] ; then
+if  [ ! -s $O.bam.bai ] ; then
   samtools view $I $MT $NUMT -bu -F 0x900 -T $H | \
     samtools sort -n -O SAM | \
     perl -ane 'if(/^@/) {print} elsif($L>$ENV{L}) {last} elsif($P[0] eq $F[0]) {print $p,$_ ; $L+=2}; @P=@F; $p=$_;' | \
@@ -77,7 +77,8 @@ if  [ ! -s $O.bam ] ; then
     grep -v -P '^\@SQ\tSN:chr1' | \
     samtools view -bu | \
     samtools sort > $O.bam
-    samtools index $O.bam
+
+  samtools index $O.bam
 fi
 #########################################################################################################################################
 #count aligned reads
@@ -91,7 +92,7 @@ fi
 #########################################################################################################################################
 #get covearge at each chrM position ; get overall stats
 
-if [ ! -s $O.cvg ] ; then
+if [ ! -s $O.cvg.stat ] ; then
   cat $O.bam | bedtools bamtobed -cigar | bedtools genomecov -i - -g $F.fai -d > $O.cvg 
   cat $O.cvg | cut -f3 | st  --summary --mean | sed 's|^|'"$N"'\t|' > $O.cvg.stat
 fi
@@ -113,28 +114,34 @@ if [ ! -s $O.$M.vcf ] ; then
     cat $O.$M.vcf | perl -ane 'if(/^##/) { print } else { print join "\t",@F[0..9]; print "\n"}' | sed 's|^chrM|rCRS|g' | sed 's|.bam$||'  > $O.${M}F.vcf
     mv $O.${M}F.vcf $O.$M.vcf ; rm -f ${O}_raw.txt $O.txt
   fi
+fi
+##########################################################################################################################################
 
-  ##########################################################################################################################################
+if [ ! -s $O.$M.$T3.vcf.gz ]; then
   # filter SNPs
   cat $SDIR/$M.vcf > $O.$M.00.vcf
   fa2Vcf.pl $FO >> $O.$M.00.vcf
-  cat $O.$M.vcf | bcftools norm -m -  | filterVcf.pl -sample $N -source $M | grep -v ^# | sort -k2,2n -k4,4 -k5,5 | fix${M}Vcf.pl -file $F   >> $O.$M.00.vcf
-  #vcf-validator $O.$M.00.vcf
-  cat $O.$M.00.vcf | filterVcf.pl -p 0.$T1  | tee $O.$M.$T1.vcf | filterVcf.pl -p 0.$T2  | tee $O.$M.$T2.vcf | filterVcf.pl -p 0.$T3  > $O.$M.$T3.vcf
-fi
+  cat $O.$M.vcf  | bcftools norm -m - | filterVcf.pl -sample $N -source $M | grep -v ^# | sort -k2,2n -k4,4 -k5,5 | fix${M}Vcf.pl -file $F >> $O.$M.00.vcf
+  #cat $O.$M.vcf | bcftools norm -m - | filterVcf.pl -sample $N -source $M | grep -v ^#  >> $O.$M.00.vcf
 
+  cat $O.$M.00.vcf | filterVcf.pl -p 0.$T1  | tee $O.$M.$T1.vcf | filterVcf.pl -p 0.$T2 | tee $O.$M.$T2.vcf | filterVcf.pl -p 0.$T3  > $O.$M.$T3.vcf
+  bgzip -f $O.$M.$T1.vcf ; tabix -f $O.$M.$T1.vcf.gz
+  bgzip -f $O.$M.$T2.vcf ; tabix -f $O.$M.$T2.vcf.gz
+  bgzip -f $O.$M.$T3.vcf ; tabix -f $O.$M.$T3.vcf.gz
+fi
 #########################################################################################################################################
 #get new consensus
 
 if  [ ! -s $O.fa ]  && [ ! -s $O.$M.fa ] ; then
-  cat $O.$M.03.vcf | maxVcf.pl |  tee $O.$M.max.vcf  | bgzip -f -c > $O.$M.max.vcf.gz  ; tabix -f $O.$M.max.vcf.gz
+  cat $O.$M.00.vcf | maxVcf.pl | bedtools sort -header > $O.$M.max.vcf
+  bgzip -f  $O.$M.max.vcf ;  tabix -f $O.$M.max.vcf.gz
   bcftools consensus -f $F $O.$M.max.vcf.gz | perl -ane 'if($.==1) { print ">$ENV{N}\n" } else { s/N//g; print }' > $O.$M.fa
 
   if [ $(stat -c%s " $O.$M.fa") -lt $MSIZE ] ; then exit 1 ; fi
 
-  #java -jar $JDIR/picard.jar NormalizeFasta I=$O.$M.fa O=$O.$M.norm.fa LINE_LENGTH=60
+  #java -jar $JDIR/picard.jar NormalizeFasta --INPUT $O.$M.fa --OUTPUT $O.$M.norm.fa --LINE_LENGTH 60
   cat $O.$M.fa | perl -ane 'if(/^>/) { print "\n" if($.>1); print} else { chomp ;print} END{print "\n"}' > $O.$M.norm.fa
-  mv $O.$M.norm.fa $O.$M.fa ; rm $O.$M.max.vcf.*
+  mv $O.$M.norm.fa $O.$M.fa 
   bwa index $O.$M.fa  -p $O.$M
   bedtools bamtofastq -i $O.bam -fq /dev/stdout | bwa mem $O.$M - -v 1 -t $P -v 1 -k 63 | samtools sort | bedtools bamtobed -tag NM -cigar | perl -ane 'print if($F[4]==0);' | bedtools merge -d -5  | bed2bed.pl > $O.$M.merge.bed
   rm -f $O.$M.*{sa,amb,ann,pac,bwt}
@@ -151,3 +158,5 @@ fi
 if [ -s $O.haplogroup ]; then
   cp $O.haplogroup $O.$M.haplogroup
 fi
+
+rm $O.$M.{$T1,$T2,$T3,max}.vcf.gz.tbi

@@ -17,7 +17,7 @@ cat $D/$M.haplogroup.tab |  perl -ane 'print "$1\n" if(/(^Run.+)/ or /(\S+\s+L\d
 snpCount1.sh $D $M $T1
 snpCount1.sh $D $M $T2
 snpCount1.sh $D $M $T3
-snpCount1.sh $D $M max
+#snpCount1.sh $D $M max
 
 join.pl  $D/$M.haplogroup.tab $D/$M.$T1.tab | join.pl - $D/$M.$T2.tab | join.pl - $D/$M.$T3.tab > $D/$M.tab
 rm -f $D/$M.{$T1,$T2,$T3,max}.tab 

@@ -1,5 +1,5 @@
 ##fileformat=VCFv4.2
-##reference=file://../../RefSeq/chrM.fa>
+##reference=file://../RefSeq/chrM.fa>
 ##contig=<ID=chrM,length=16569>
 #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	SAMPLE
 chrM	3307	.	A	G	.	.	.	MV

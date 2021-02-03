@@ -22,8 +22,7 @@
 ##FILTER=<ID=strand_bias,Description="Evidence for alt allele comes from one read direction only">
 ##FILTER=<ID=strict_strand,Description="Evidence for alt allele is not represented in both directions">
 ##FILTER=<ID=weak_evidence,Description="Mutation does not meet likelihood threshold">
-##INFO=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
-##INFO=<ID=AF,Number=A,Type=Float,Description="Allele Frequency">
+##INFO=<ID=SM,Number=1,Type=String,Description="Sample">
 ##INFO=<ID=SNP,Number=0,Type=Flag,Description="SNP">
 ##INFO=<ID=INDEL,Number=0,Type=Flag,Description="INDEL">
 ##FORMAT=<ID=SM,Number=1,Type=String,Description="Sample">
@@ -33,3 +32,7 @@
 ##INFO=<ID=HG,Number=1,Type=String,Description="haplogroup">
 ##INFO=<ID=NUMT,Number=0,Type=Flag,Description="NUMT">
 ##INFO=<ID=HV,Number=0,Type=Flag,Description="Hypervariable">
+##INFO=<ID=SM,Number=1,Type=String,Description="Sample">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
+##FORMAT=<ID=AF,Number=A,Type=Float,Description="Allele Frequency">

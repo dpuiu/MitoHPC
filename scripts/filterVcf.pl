@@ -11,112 +11,87 @@ Program that filters a VCF file
                  cat I.vcf | filterVcf.pl -sample SRR00000 -source mutect2 -p 0.05
 ~;
 
-###############################################################################
-#
-# Main program
-#
-###############################################################################
-
 MAIN:
 {
 	# define variables
 	my %opt;
-	$opt{percent}=0;
+	$opt{percent}="0.0";
 
 	my $result = GetOptions(
+                "percent=s" 	=> \$opt{percent},
 		"sample=s"	=> \$opt{sample},
 		"source=s"	=> \$opt{source},
-                "percent=s"     => \$opt{percent},
+		"header=s"	=> \$opt{header}
         );
         die "ERROR: $! " if (!$result);
+	$opt{percent}=~/^0.[01234]\d*$/ or die "ERROR:percent must be >=0 and <0.5";
+
+	if($opt{header})
+	{
+		open(IN,$opt{header}) or die "ERROR: $!";
+		while(<IN>)
+		{
+			print;
+		}
+		close(IN)
+	}
 
 	while(<>)
 	{
-		chomp;s/\|/\//g;
+		if(/^#/)
+		{
+			if($opt{header}) { next }
+			else		 { print; next}
+		}
+
+		chomp;
                 my @F=split /\t/;
+		die "NORMALIZATION ERROR:$_\n" if($F[4]=~/,/);
+		#$F[6]="." unless($F[6] eq "PASS");
 
-		if(/^#CHROM/)
+		if($F[7]!~/SNP/ and $F[7]!~/INDEL/)
 		{
-		 	$F[9]=$opt{sample} if($opt{sample});
-			print join "\t",@F[0..9];
-			print "\n";
-			next;
-		}
-               	elsif(/^#/)
-		{
-			print;
-			print "\n";
-			next;
-		}
-
-                foreach my $tag ("slippage","weak_evidence","strand_bias","germline","strict_strand","base_qual","germline","fragment","position")
-                {
-                        $F[6].=";$tag" if($F[6]!~/$tag/ and $F[7]=~/$tag/);
-                }
-
-		if($F[8]=~/^GT:AF:DP$/ and $F[9]=~/^(.+?):(.+?):(.+?)$/ or $F[8]=~/^GT:AF:DP:/ and $F[9]=~/^(.+?):(.+?):(.+?):/ or $F[8]=~/^GT:AD:AF:DP:/ and  $F[9]=~/^(.+?):.+?:(.+?):(.+?):/)
-		{
-			my ($GT,$AF,$DP)=($1,$2,$3);
-			my @AF=split /,/,$AF;
-			if(@AF>1)
-			{
-				$GT=~/(\d+)/;
-				$GT=$1;
-				$GT=$GT-- if($GT>1);
-				$AF=$AF[$GT];
-			}
-
 			$F[7]=($F[4] eq "*" or length($F[3]) ne length($F[4]))?"INDEL":"SNP";
-			if($AF<$opt{percent})
-			{
-				next;
-			}
-			elsif($AF>=$opt{percent} or $AF>=1-$opt{percent})
-			{
-				$F[7].=";DP=$DP;AF=$AF";
-			}
-			else
-			{
-				$F[7].=";DP=$DP";
-			}
 		}
-		elsif($F[8]=~/^GT:DP$/ and $F[9]=~/^(.+?):(.+?)$/ or $F[8]=~/^GT:DP:/ and $F[9]=~/^(.+?):(.+?):/)
+
+		if($F[7]!~/SM=/ and defined($opt{sample}))
 		{
-			my ($GT,$DP)=($1,$2);
-
-			$F[7]=($F[4] eq "*" or length($F[3]) ne length($F[4]))?"INDEL":"SNP";
-			$F[7].=";DP=$DP";
-		}
-		elsif($F[7]=~/(.+);AF=(\d\.\d+)(.*)/ or $F[7]=~/(.+);AF=(\d)(.*)/)
-                {
-			my $AF=$2;
-			if($AF<$opt{percent})
-			{
-				next;
-                        }
-			elsif($AF>1-$opt{percent})
-			{
-				$F[7]="$1$3";
-			}
+			$F[7]="SM=$opt{sample};$F[7]";
 		}
 
-		@F[8,9]=("SM",$opt{sample}) if($opt{sample});
-
-		my @F3=split //,$F[3];
-		my @F4=split //,$F[4];
-		if(scalar(@F3)==scalar(@F4) and scalar(@F3)>1)
+		my @F8=split /:/,$F[8];
+		my @F9=split /:/,$F[9];
+		my %h;
+		foreach my $i (0..@F8-1)
 		{
+			$h{$F8[$i]}=$F9[$i];
+		}
+		$h{AF}=1 unless($h{AF});
+		$h{AF}=$1 if($h{AF}=~/(\d\.\d+)/);
+
+		if(!$h{AF} or $h{AF}>1-$opt{percent}) 	{ $h{AF}=1; }
+		elsif($h{AF}<$opt{percent})		{ next;     }
+
+		$F[8]="GT:DP:AF";
+		$F[9]="$h{GT}:$h{DP}:$h{AF}";
+
+		if(length($F[3])>1 and length($F[3])==length($F[4]))
+		{
+			my @F3=split //,$F[3];
+			my @F4=split //,$F[4];
+
 			foreach my $i (0..@F3-1)
 			{
-				next if($F3[$i] eq $F4[$i]);
-				print join "\t",($F[0],$F[1]+$i,$F[2],$F3[$i],$F4[$i],@F[5..9]); 
+				print join "\t",($F[0],$F[1]+$i,$F[2],$F3[$i],$F4[$i],@F[5..9]);
 				print "\n";
 			}
 		}
 		else
 		{
-			print join "\t",@F[0..9];print "\n";
+			print join "\t",@F[0..9];
+			print "\n";
 		}
+
 	}
 	exit 0;
 }

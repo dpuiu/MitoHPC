@@ -39,16 +39,17 @@ MAIN:
 
 		chomp;
 		my @F=split /\t/;
-		if(@P and $P[1]==$F[1] and $P[4] eq $F[4] and $P[7]=~/AF=/ and $F[7]=~/AF=/)
+		if(@P and $P[1]==$F[1] and $P[4] eq $F[4])
 		{
-			$P[7]=~/AF=(\S+)/;
-			my $PAF=$1;
+			my $PAF=0;
+			$P[9]=~/.+:(.+)/;
+			$PAF+=$1;
 
-			$F[7]=~/(.*AF=)(\S+)/;
+			$F[9]=~/(.+):(.+)/;
 			$PAF+=$2;
 			$PAF=1 if($PAF>1);
 
-			$F[7]="$1$PAF";
+			$F[9]="$1:$PAF";
 		}
 		elsif(@P)
 		{

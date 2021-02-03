@@ -8,7 +8,8 @@
 ##########################################################
 
 export SDIR=`dirname $0`        # script directory
-source $SDIR/init.sh
+test -f  ./init.sh
+source ./init.sh
 
 #test executables and Java jars
 which perl	        #usually available on Linux
@@ -67,5 +68,12 @@ echo "BDIR=" $BDIR >> checkInstall.log
 echo "SDIR=" $SDIR >> checkInstall.log
 echo "JDIR=" $JDIR >> checkInstall.log
 echo "RDIR=" $RDIR >> checkInstall.log
+
+echo "########################"  >> checkInstall.log
+echo "REFERENCE SEQUENCES:"  >> checkInstall.log
+
+test -s $RDIR/$HG
+test -s $RDIR/$MT.fa
+test -s $RDIR/$R
 
 echo Success!
