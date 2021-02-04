@@ -155,8 +155,8 @@
       rCRS   285  .   CAA  C    .     .       SM=sim.C;INDEL;HV     GT:DP:AF  0/1:61:1
       rCRS   302  .   A    AC   .     .       SM=sim.A;INDEL;HV;HP  GT:DP:AF  0/1:71:1
       ...
-      rCRS   375  .   C    T    .     .       SM=sim.B;SNP          GT:DP:AF  0/1:65:0.162
-      rCRS   378  .   C    T    .     .       SM=sim.C;SNP          GT:DP:AF  0/1:81:0.13
+      rCRS   375  .   C    T    .     .       SM=sim.B              GT:DP:AF  0/1:65:0.162
+      rCRS   378  .   C    T    .     .       SM=sim.C              GT:DP:AF  0/1:81:0.13
       ...
 
     zcat mutect2.03.merge.vcf.gz
@@ -165,7 +165,7 @@
       ##INFO=<ID=AN,Number=1,Type=Integer,Description="Total number of alleles in called genotypes">
       ##INFO=<ID=SF,Number=.,Type=String,Description="Source File (index to sourceFiles, f when filtered)">
       ...
-      #CHROM POS  ID  REF  ALT  QUAL  FILTER  INFO                   FORMAT    sim.A     sim.A         sim.C
+      #CHROM POS  ID  REF  ALT  QUAL  FILTER  INFO                   FORMAT    sim.A     sim.B         sim.C
       rCRS   64   .   C    T    .     .       AC=1;AN=2;SF=0f        GT:DP:AF  0|1:67:1  .             .
       rCRS   73   .   A    G    .     .       AC=3;AN=6;SF=0f,1,2    GT:DP:AF  0|1:70:1  0/1:52:1      0/1:43:1
       rCRS   146  .   T    C    .     .       AC=1;AN=2;SF=0f        GT:DP:AF  0|1:88:1  .             .
