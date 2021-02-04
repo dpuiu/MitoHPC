@@ -95,15 +95,15 @@
     $SDIR/run.sh in.txt out/     hs38DH.fa  RSRS.fa mutserve
 
 
-## EXAMPLE 2 : 3 simulated datasets: sim.A, sim.B , sim.C based on haplogroups A,B,C  ##
+## EXAMPLE 2 : 3 simulated datasets  ##
 
-    #input file
+### input file ###
     cat in.txt 
       bams/sim.A.bam
       bams/sim.B.bam
       bams/sim.C.bam 
 
-    #after running samtools.sh
+### after running samtools.sh ###
     ls bams/*
       bams/sim.A.bam
       bams/sim.A.bam.bai
@@ -120,8 +120,8 @@
        11000 mapped
        10947 chrM
 
-    ....
-    #after running the pipeline
+### after running the pipeline ###
+
     head count_mutect2.tab 
       Run    all        mapped     chrM    filter  M        haplogroup  03%S  03%s  03%I  03%i  05%S  05%s  05%I  05%i  10%S  10%s  10%I  10%i
       sim.A  740589366  739237125  487382  205095  256.05   A2+(64)     28    35    3     8     28    35    3     8     28    34    3     8
@@ -181,7 +181,7 @@
       rCRS    378    .  C            T    .     .                             AC=1;AN=2;SF=2f          GT:DP:AF  .          .              0/1:81:0.13
       ....
 
-## LEGEND ##
+### LEGEND ###
 
     Run                           # Sample name
 
