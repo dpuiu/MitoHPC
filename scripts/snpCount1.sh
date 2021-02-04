@@ -6,7 +6,7 @@ export T=$3 # thold
 
 test -f $D/$M.haplogroup.tab
 
-find $D/ -name "*.$M.$T.vcf.gz" -not -name "*.$M.$M.$T.vcf.gz" | xargs vcf-concat | bedtools sort -header >  $D/$M.$T.concat.vcf
+find $D/ -name "*.$M.$T.vcf.gz" -not -name "*.$M.$M.$T.vcf.gz" | sort | xargs vcf-concat | bedtools sort -header >  $D/$M.$T.concat.vcf
 annotateVcf.sh  $D/$M.$T.concat.vcf
 bgzip -f $D/$M.$T.concat.vcf
 #########################################################
