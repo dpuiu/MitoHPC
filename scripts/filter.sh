@@ -159,4 +159,3 @@ if [ -s $O.haplogroup ]; then
   cp $O.haplogroup $O.$M.haplogroup
 fi
 
-rm $O.$M.{$T1,$T2,$T3,max}.vcf.gz.tbi

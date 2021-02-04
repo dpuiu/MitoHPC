@@ -82,8 +82,11 @@ MAIN:
 
 			foreach my $i (0..@F3-1)
 			{
-				print join "\t",($F[0],$F[1]+$i,$F[2],$F3[$i],$F4[$i],@F[5..9]);
-				print "\n";
+				if($F3[$i] ne $F4[$i])
+				{
+					print join "\t",($F[0],$F[1]+$i,$F[2],$F3[$i],$F4[$i],@F[5..9]);
+					print "\n";
+				}
 			}
 		}
 		else

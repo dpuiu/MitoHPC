@@ -26,18 +26,10 @@
     export SDIR=$PWD/HP/scripts/   # set script directory variable
     echo $SDIR                     # check if variable is set correctly
  
-    source $SDIR/init.sh
-    ... or    
-    source $SDIR/init_marcc.sh     # for MARCC computer cluster, uses SLURM job scheduler
-
-    # add environmental variables to ~/.bashrc (optional)
-    echo "## HP settings ##"  >> ~/.bashrc
-    echo "SDIR=$SDIR" >> ~/.bashrc
-    echo "source $SDIR/init.sh" >> ~/.bashrc
-
 ### INSTALL PIPELINE PREREQUISITES (optional) ###
 
     $SDIR/install_prerequisites.sh  
+    
 
 ### CHECK INSTALL ###
   
@@ -49,18 +41,17 @@
 
 ### GENERATE INPUT FILE  ###
 
+    # go to the working directory
+
+    # copy init.sh ; edit if necessary
+    cp -i $SDIR/init.sh	.
+    nano init.sh
+
+    # generate an imput file which contains the list of the BAM/CRAM files to be processed 
     # ADIR=alignment directory path
     find $ADIR -name "*.bam"  > in.txt
     ... or
     find $ADIR -name "*.cram" > in.txt
-
-### SPLIT INPUT FILE (optional; for large datasets) ###
-   
-    # Ex: up to 9 sets of 100
-
-    split -d -a 1 --numeric=1 -l 100 in.txt  in. --additional-suffix=.txt
-    ... or
-    split -d -a 2 --numeric=1 -l 100 in.txt  in. --additional-suffix=.txt
    
 ### GENERATE INDEX AND COUNT FILES ###
 
@@ -78,12 +69,7 @@
 ### GENERATE PIPELINE SCRIPT ###
 
     $SDIR/run.sh in.txt out/  > filter.all.sh
-    ... or (multiple jobs)
-    $SDIR/run.sh in.1.txt out/ > filter.1.sh
-    $SDIR/run.sh in.2.txt out/ > filter.2.sh
-    $SDIR/run.sh in.3.txt out/ > filter.3.sh
-    
-    chmod u+x ./filter.*sh
+    chmod u+x ./filter.all.sh
 
 ### RUN PIPELINE  ###
 
@@ -91,10 +77,6 @@
     ... or
     nohup ./filter.all.sh &	                               # run in the backgroud
     ... or
-    nohup ./filter.1.sh &
-    nohup ./filter.2.sh &
-    nohup ./filter.3.sh &
-    ...
     ls filter.?.sh | parallel	                               # run in parallel
     ... or (MARCC)
     sbatch --partition=shared --time=24:0:0 ./filter.all.sh    # run using a job scheduler
