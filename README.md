@@ -17,10 +17,6 @@
 
     git clone https://github.com/dpuiu/HP.git
 
-### INSTALL SYSTEM PREREQUISITES (optional) ###
-
-    $SDIR/install_sysprerequisites.sh
-
 ### SETUP ENVIRONMENT ###
     
     export SDIR=$PWD/HP/scripts/   # set script directory variable
