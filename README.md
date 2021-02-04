@@ -72,8 +72,6 @@
     ./filter.all.sh
     ... or
     nohup ./filter.all.sh &	                               # run in the backgroud
-    ... or
-    ls filter.?.sh | parallel	                               # run in parallel
     ... or (MARCC)
     sbatch --partition=shared --time=24:0:0 ./filter.all.sh    # run using a job scheduler
 
@@ -85,20 +83,11 @@
 
     count.tab 
  
-    mutect2.03.vcf	# HOM & HET SNPs; 3% min HET THOLD
-    mutect2.05.vcf	#                 5%
-    mutect2.10.vcf	#                 10%
-    count_mutect2.tab   # read, MT & SNP counts ; SNPs: HOM & HET 3,5,10% thold 
-    ... or
-    mutserve.03.vcf
-    mutserve.05.vcf
-    mutserve.10.vcf
-    count_mutserve.tab
+    {mutect2,mutserve}.{03,05,10}.{concat,merge}.vcf.gz		# HOM & HET SNPs; 3,5,10% min HET THOLD
+    count_mutect2.tab   					# reads, mtDNA-CN & SNP counts ; SNPs: HOM & HET 3,5,10% THOLD
 
 ### 2nd ITTERATION ###
-    mutect2.mutect2.03.vcf
-    mutect2.mutect2.05.vcf
-    mutect2.mutect2.10.vcf
+    mutect2.mutect2.{03,05,10}.concat.vcf
     count_mutect2.mutect2.tab
 
 ## EXAMPLES ##
@@ -108,7 +97,7 @@
     #script      inFile outDir   humanRef  MTRef
     $SDIR/run.sh in.txt out/    
     ... or
-    $SDIR/run.sh in.txt out/     hs38DH.fa RSRS.fa
+    $SDIR/run.sh in.txt out/   
 
 ### use rCRS for realignment, mutserve for SNP calling ###
 

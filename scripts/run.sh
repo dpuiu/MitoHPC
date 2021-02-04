@@ -1,6 +1,13 @@
 #!/bin/bash -e
+
 export IN=$1                     # input file with .bam/.cram file path; required
 export ODIR=${2:-out}            # output dir; should be empty; required
+export MT=${3:-mutect2}          # or mutserve
+export HG=${4:-hs38DH.fa}        # human reference
+export R=${5:-rCRS.fa}           # or RSRS.fa
+export T1=${6:-03}               # Heteroplasmy thold
+export T2=${7:-05}
+export T3=${8:-10}
 
 ###############################################################
 
