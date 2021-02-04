@@ -40,7 +40,7 @@
     # go to the working directory
 
     # copy init.sh ; edit if necessary
-    cp -i $SDIR/init.sh	.
+    cp -i $SDIR/init.sh .
     nano init.sh
 
     # generate an imput file which contains the list of the BAM/CRAM files to be processed 
