@@ -35,7 +35,7 @@
 
 ## USAGE ##
 
-### GENERATE INPUT FILE  ###
+### COPY init.sh & GENERATE INPUT FILE  ###
 
     # go to the working directory
 
