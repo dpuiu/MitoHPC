@@ -143,7 +143,7 @@
       ##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
       ##FORMAT=<ID=AF,Number=A,Type=Float,Description="Allele Frequency">
       ...
-      #CHROM  POS    ID  REF         ALT  QUAL  FILTER                        INFO                    FORMAT    SAMPLE
+      #CHROM  POS    ID  REF        ALT  QUAL  FILTER                        INFO                    FORMAT    SAMPLE
       rCRS    64     .   C           T    .     clustered_events;haplotype    SM=sim.A;SNP;HV         GT:DP:AF  0|1:67:1
       rCRS    73     .   A           G    .     clustered_events;haplotype    SM=sim.A;SNP;HV;NUMT    GT:DP:AF  0|1:70:1
       rCRS    73     .   A           G    .     PASS                          SM=sim.C;SNP;HV         GT:DP:AF  0/1:43:1
@@ -156,8 +156,8 @@
       rCRS    285    .   CAA         C    .     clustered_events              SM=sim.C;INDEL;HV       GT:DP:AF  0/1:61:1
       rCRS    302    .   A           AC   .     clustered_events              SM=sim.A;INDEL;HV;HP    GT:DP:AF  0/1:71:1
       ...
-      rCRS    375    .   C           T    .     clustered_events;strand_bias  SM=sim.B;SNP            GT:DP:AF  0/1:65:0.162	 # AF<1 => heteroplasmy
-      rCRS    378    .   C           T    .     clustered_events              SM=sim.C;SNP            GT:DP:AF  0/1:81:0.13	 # AF<1 => heteroplasmy
+      rCRS    375    .   C           T    .     clustered_events;strand_bias  SM=sim.B;SNP            GT:DP:AF  0/1:65:0.162
+      rCRS    378    .   C           T    .     clustered_events              SM=sim.C;SNP            GT:DP:AF  0/1:81:0.13
       ...
 
     zcat mutect2.03.merge.vcf.gz
@@ -166,19 +166,19 @@
       ##INFO=<ID=AN,Number=1,Type=Integer,Description="Total number of alleles in called genotypes">
       ##INFO=<ID=SF,Number=.,Type=String,Description="Source File (index to sourceFiles, f when filtered)">
       ...
-      #CHROM  POS    ID  REF         ALT  QUAL  FILTER                        INFO                     FORMAT    sim.A     sim.A           sim.C
-      rCRS    64     .   C           T    .     .                             AC=1;AN=2;SF=0f          GT:DP:AF  0|1:67:1   .              .
-      rCRS    73     .   A           G    .     .                             AC=3;AN=6;SF=0f,1,2      GT:DP:AF  0|1:70:1   0/1:52:1       0/1:43:1
-      rCRS    146    .   T           C    .     .                             AC=1;AN=2;SF=0f          GT:DP:AF  0|1:88:1   .              .
-      rCRS    153    .   A           G    .     .                             AC=1;AN=2;SF=0f          GT:DP:AF  0|1:89:1   .              .
-      rCRS    235    .   A           G    .     .                             AC=1;AN=2;SF=0f          GT:DP:AF  0/1:74:1   .              .
-      rCRS    247    .   GA          G    .     .                             AC=1;AN=2;INDEL;SF=2f    GT:DP:AF  .          .              0/1:67:1
+      #CHROM  POS    ID  REF    ALT  QUAL  FILTER  INFO                     FORMAT    sim.A     sim.A           sim.C
+      rCRS    64     .   C      T    .     .       AC=1;AN=2;SF=0f          GT:DP:AF  0|1:67:1   .              .
+      rCRS    73     .   A      G    .     .       AC=3;AN=6;SF=0f,1,2      GT:DP:AF  0|1:70:1   0/1:52:1       0/1:43:1
+      rCRS    146    .   T      C    .     .       AC=1;AN=2;SF=0f          GT:DP:AF  0|1:88:1   .              .
+      rCRS    153    .   A      G    .     .       AC=1;AN=2;SF=0f          GT:DP:AF  0|1:89:1   .              .
+      rCRS    235    .   A      G    .     .       AC=1;AN=2;SF=0f          GT:DP:AF  0/1:74:1   .              .
+      rCRS    247    .   GA     G    .     .       AC=1;AN=2;INDEL;SF=2f    GT:DP:AF  .          .              0/1:67:1
       ...
-      rCRS    285    .   CAA         C    .     .                             AC=1;AN=2;INDEL;SF=2f    GT:DP:AF  .          .              0/1:61:1
-      rCRS    302    .   A           AC   .     .                             AC=1;AN=2;INDEL;SF=0f    GT:DP:AF  0/1:71:1   .              .
+      rCRS    285    .   CAA    C    .     .       AC=1;AN=2;INDEL;SF=2f    GT:DP:AF  .          .              0/1:61:1
+      rCRS    302    .   A      AC   .     .       AC=1;AN=2;INDEL;SF=0f    GT:DP:AF  0/1:71:1   .              .
       ...
-      rCRS    375    .  C            T    .     .                             AC=1;AN=2;SF=1f          GT:DP:AF  .          0/1:65:0.162   .
-      rCRS    378    .  C            T    .     .                             AC=1;AN=2;SF=2f          GT:DP:AF  .          .              0/1:81:0.13
+      rCRS    375    .  C       T    .     .       AC=1;AN=2;SF=1f          GT:DP:AF  .          0/1:65:0.162   .
+      rCRS    378    .  C       T    .     .       AC=1;AN=2;SF=2f          GT:DP:AF  .          .              0/1:81:0.13
       ....
 
 ### LEGEND ###
