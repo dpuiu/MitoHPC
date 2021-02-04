@@ -77,10 +77,10 @@
 
     count.tab 
  
-    {mutect2,mutserve}.{03,05,10}.{concat,merge}.vcf.gz         # SNVs; 3,5,10% minimum heteroplasmy thold
+    {mutect2,mutserve}.{03,05,10}.{concat,merge}.vcf.gz    # SNVs; 3,5,10% minimum heteroplasmy thold
 
-    cont.tab                                                    # reads, mtDNA-CN counts
-    count_{mutect2,mutserve}.tab                                # reads, mtDNA-CN & SNV counts 
+    cont.tab                                               # reads, mtDNA-CN counts
+    count_{mutect2,mutserve}.tab                           # reads, mtDNA-CN & SNV counts 
 
 ### 2nd ITTERATION ###
 
@@ -160,7 +160,7 @@
       rCRS    378    .   C           T    .     clustered_events              SM=sim.C;SNP            GT:DP:AF  0/1:81:0.13	 # AF<1 => heteroplasmy
       ...
 
-   zcat mutect2.03.merge.vcf.gz
+    zcat mutect2.03.merge.vcf.gz
       ...
       ##INFO=<ID=AC,Number=.,Type=Integer,Description="Allele count in genotypes">
       ##INFO=<ID=AN,Number=1,Type=Integer,Description="Total number of alleles in called genotypes">
