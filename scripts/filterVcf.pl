@@ -24,7 +24,7 @@ MAIN:
 		"header=s"	=> \$opt{header}
         );
         die "ERROR: $! " if (!$result);
-	$opt{percent}=~/^0.[01234]\d*$/ or die "ERROR:percent must be >=0 and <0.5";
+	$opt{percent}=~/^0.[01234]\d*$/ or die "ERROR:percent must be >0 and <0.5";
 
 	if($opt{header})
 	{
@@ -49,15 +49,12 @@ MAIN:
 		die "NORMALIZATION ERROR:$_\n" if($F[4]=~/,/);
 		#$F[6]="." unless($F[6] eq "PASS");
 
-		if($F[7]!~/SNP/ and $F[7]!~/INDEL/)
-		{
-			$F[7]=($F[4] eq "*" or length($F[3]) ne length($F[4]))?"INDEL":"SNP";
-		}
-
-		if($F[7]!~/SM=/ and defined($opt{sample}))
-		{
-			$F[7]="SM=$opt{sample};$F[7]";
-		}
+                if($F[7]!~/SM=/ and defined($opt{sample}))
+                {
+                        $F[7]="SM=$opt{sample}";
+			$F[7].=";INDEL" if($F[7]!~/INDEL/ and ($F[4] eq "*" or length($F[3]) ne length($F[4])));
+                }
+		###############################
 
 		my @F8=split /:/,$F[8];
 		my @F9=split /:/,$F[9];

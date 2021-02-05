@@ -30,13 +30,12 @@ MAIN:
 		my $POS=$F[1];
 
 		my $AF=1;
-		$AF=$1 if($F[7]=~/AF=(\S+?);/ or $F[7]=~/AF=(\S+)$/);
-
-		if(!$max{$POS} or $AF>$max{$POS})
-		{
-			$max{$POS}=$AF;
-			$line{$POS}=$_;
-		}
+		$AF=$1 if($F[9]=~/.+:(\S+)/);
+                if(!$max{$POS} or $AF>$max{$POS})
+                {
+                        $max{$POS}=$AF;
+                        $line{$POS}=$_;
+                }
 
 		$sum{$POS}+=$AF;
 	}

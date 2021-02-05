@@ -11,19 +11,19 @@ annotateVcf.sh  $D/$M.$T.concat.vcf
 bgzip -f $D/$M.$T.concat.vcf
 #########################################################
 
-zcat $D/$M.$T.concat.vcf | uniqSnp.pl | grep -v "^#" | grep ":1$"    |                 perl -ane 'print "$1\n" if(/SM=(.+?);/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%H\n"} print;' > $D/$M.$T.H.tab
-zcat $D/$M.$T.concat.vcf | uniqSnp.pl | grep -v "^#" | grep -v ":1$" |                 perl -ane 'print "$1\n" if(/SM=(.+?);/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%h\n"} print;' > $D/$M.$T.h.tab
-zcat $D/$M.$T.concat.vcf | uniqSnp.pl | grep -v "^#" | grep ":1$"    | grep ";SNP"   | perl -ane 'print "$1\n" if(/SM=(.+?);/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%S\n"} print;' > $D/$M.$T.S.tab
-zcat $D/$M.$T.concat.vcf | uniqSnp.pl | grep -v "^#" | grep -v ":1$" | grep ";SNP"   | perl -ane 'print "$1\n" if(/SM=(.+?);/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%s\n"} print;' > $D/$M.$T.s.tab
-zcat $D/$M.$T.concat.vcf | uniqSnp.pl | grep -v "^#" | grep ":1$"    | grep ";INDEL" | perl -ane 'print "$1\n" if(/SM=(.+?);/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%I\n"} print;' > $D/$M.$T.I.tab
-zcat $D/$M.$T.concat.vcf | uniqSnp.pl | grep -v "^#" | grep -v ":1$" | grep ";INDEL" | perl -ane 'print "$1\n" if(/SM=(.+?);/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%i\n"} print;' > $D/$M.$T.i.tab
+zcat $D/$M.$T.concat.vcf.gz | uniqSnp.pl | grep -v "^#" | grep ":1$"    |                 perl -ane 'print "$1\n" if(/SM=(.+?)[;\s]/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%H\n"} print;' > $D/$M.$T.H.tab
+zcat $D/$M.$T.concat.vcf.gz | uniqSnp.pl | grep -v "^#" | grep -v ":1$" |                 perl -ane 'print "$1\n" if(/SM=(.+?)[;\s]/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%h\n"} print;' > $D/$M.$T.h.tab
+zcat $D/$M.$T.concat.vcf.gz | uniqSnp.pl | grep -v "^#" | grep ":1$"    | grep -v ";INDEL"   | perl -ane 'print "$1\n" if(/SM=(.+?)[;\s]/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%S\n"} print;' > $D/$M.$T.S.tab
+zcat $D/$M.$T.concat.vcf.gz | uniqSnp.pl | grep -v "^#" | grep -v ":1$" | grep -v ";INDEL"   | perl -ane 'print "$1\n" if(/SM=(.+?)[;\s]/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%s\n"} print;' > $D/$M.$T.s.tab
+zcat $D/$M.$T.concat.vcf.gz | uniqSnp.pl | grep -v "^#" | grep ":1$"    | grep ";INDEL" | perl -ane 'print "$1\n" if(/SM=(.+?)[;\s]/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%I\n"} print;' > $D/$M.$T.I.tab
+zcat $D/$M.$T.concat.vcf.gz | uniqSnp.pl | grep -v "^#" | grep -v ":1$" | grep ";INDEL" | perl -ane 'print "$1\n" if(/SM=(.+?)[;\s]/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%i\n"} print;' > $D/$M.$T.i.tab
 
-zcat $D/$M.$T.concat.vcf | uniqSnp.pl | grep -v "^#" | grep ":1$"    | grep -v ";HP" |                 perl -ane 'print "$1\n" if(/SM=(.+?);/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%Hp\n"} print;' > $D/$M.$T.Hp.tab
-zcat $D/$M.$T.concat.vcf | uniqSnp.pl | grep -v "^#" | grep -v ":1$" | grep -v ";HP" |                 perl -ane 'print "$1\n" if(/SM=(.+?);/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%hp\n"} print;' > $D/$M.$T.hp.tab
-zcat $D/$M.$T.concat.vcf | uniqSnp.pl | grep -v "^#" | grep ":1$"    | grep ";SNP"   | grep -v ";HP" | perl -ane 'print "$1\n" if(/SM=(.+?);/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%Sp\n"} print;' > $D/$M.$T.Sp.tab
-zcat $D/$M.$T.concat.vcf | uniqSnp.pl | grep -v "^#" | grep -v ":1$" | grep ";SNP"   | grep -v ";HP" | perl -ane 'print "$1\n" if(/SM=(.+?);/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%sp\n"} print;' > $D/$M.$T.sp.tab
-zcat $D/$M.$T.concat.vcf | uniqSnp.pl | grep -v "^#" | grep ":1$"    | grep ";INDEL" | grep -v ";HP" | perl -ane 'print "$1\n" if(/SM=(.+?);/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%Ip\n"} print;' > $D/$M.$T.Ip.tab
-zcat $D/$M.$T.concat.vcf | uniqSnp.pl | grep -v "^#" | grep -v ":1$" | grep ";INDEL" | grep -v ";HP" | perl -ane 'print "$1\n" if(/SM=(.+?);/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%ip\n"} print;' > $D/$M.$T.ip.tab
+zcat $D/$M.$T.concat.vcf.gz | uniqSnp.pl | grep -v "^#" | grep ":1$"    | grep -v ";HP" |                 perl -ane 'print "$1\n" if(/SM=(.+?)[;\s]/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%Hp\n"} print;' > $D/$M.$T.Hp.tab
+zcat $D/$M.$T.concat.vcf.gz | uniqSnp.pl | grep -v "^#" | grep -v ":1$" | grep -v ";HP" |                 perl -ane 'print "$1\n" if(/SM=(.+?)[;\s]/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%hp\n"} print;' > $D/$M.$T.hp.tab
+zcat $D/$M.$T.concat.vcf.gz | uniqSnp.pl | grep -v "^#" | grep ":1$"    | grep -v ";INDEL"   | grep -v ";HP" | perl -ane 'print "$1\n" if(/SM=(.+?)[;\s]/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%Sp\n"} print;' > $D/$M.$T.Sp.tab
+zcat $D/$M.$T.concat.vcf.gz | uniqSnp.pl | grep -v "^#" | grep -v ":1$" | grep -v ";INDEL"   | grep -v ";HP" | perl -ane 'print "$1\n" if(/SM=(.+?)[;\s]/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%sp\n"} print;' > $D/$M.$T.sp.tab
+zcat $D/$M.$T.concat.vcf.gz | uniqSnp.pl | grep -v "^#" | grep ":1$"    | grep ";INDEL" | grep -v ";HP" | perl -ane 'print "$1\n" if(/SM=(.+?)[;\s]/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%Ip\n"} print;' > $D/$M.$T.Ip.tab
+zcat $D/$M.$T.concat.vcf.gz | uniqSnp.pl | grep -v "^#" | grep -v ":1$" | grep ";INDEL" | grep -v ";HP" | perl -ane 'print "$1\n" if(/SM=(.+?)[;\s]/);' | count.pl | sort | perl -ane 'BEGIN { print "Run\t$ENV{T}%ip\n"} print;' > $D/$M.$T.ip.tab
 
 cut -f1  $D/$M.haplogroup.tab | \
   join.pl - $D/$M.$T.H.tab -empty 0  | join.pl - $D/$M.$T.h.tab -empty 0  | \

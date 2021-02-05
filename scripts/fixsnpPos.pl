@@ -23,7 +23,7 @@ MAIN:
 	my %opt;
 	my $result = GetOptions(
 		"ref=s"		=> \$opt{ref},
-		"rfile=s"        => \$opt{rfile},
+		"rfile=s"       => \$opt{rfile},
  	        "file=s" 	=> \$opt{file},
  	);
 	die "ERROR: $! " if (!$result);
@@ -33,7 +33,7 @@ MAIN:
 	open(IN,$opt{file}) or die "ERROR:$!";
         while(<IN>)
         {
-		if(/INDEL;/)
+		if(!/^#/ and /INDEL/)
 		{
 			my @F=split;
 			$diff{$F[1]}=length($F[4])-length($F[3]);
@@ -42,8 +42,8 @@ MAIN:
 	close(IN);
 
 	if($opt{ref} eq "rCRS" or $opt{ref} eq "chrM") 
-	{ 
-		$diff{3107}=-1 
+	{
+		$diff{3107}=-1
 	}
 
 	my %diff2;
@@ -69,7 +69,6 @@ MAIN:
 		}
 		elsif(/^##reference/ or /^##contig/)
 		{
-			
 			print "##reference=file://$opt{rfile}>\n";
 			print "##contig=<ID=$opt{ref},length=16569>\n" if($opt{ref} eq "rCRS" or $opt{ref} eq "chrM");
 		}
@@ -84,7 +83,7 @@ MAIN:
 			my @F=split /\t/;
 			my $diff2=0;
 			my $i=0;
-			while($i<@pos2 and $F[1]>$pos2[$i]) 	
+			while($i<@pos2 and $F[1]>$pos2[$i])
 			{
 				$diff2=$diff2{$pos2[$i]};
 				$i++

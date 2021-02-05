@@ -8,8 +8,8 @@
 ##########################################################
 
 export SDIR=`dirname $0`        # script directory
-test -f  ./init.sh
-source ./init.sh
+#test -f  $SDIR/init.sh
+#source $SDIR/init.sh
 
 #test executables and Java jars
 which perl	        #usually available on Linux

@@ -105,9 +105,10 @@ if [ ! -s $O.$M.vcf ] ; then
     java -jar $JDIR/gatk.jar Mutect2           -R $F -I $O.bam                             -O $O.$M.vcf
     java -jar $JDIR/gatk.jar FilterMutectCalls -R $F -V $O.$M.vcf --min-reads-per-strand 2 -O $O.${M}F.vcf
     mv $O.${M}F.vcf  $O.$M.vcf ; rm $O.${M}F.vcf* $O.$M.vcf.*
-    if [ -s $O.max.vcf ] ; then
-      fixsnpPos.pl -ref $RO -rfile $FO -file $O.max.vcf $O.$M.vcf > $O.{$M}F.vcf
-      mv $O.{$M}F.vcf $O.$M.vcf
+    if [ -s $O.max.vcf.gz ] ; then
+      echo "zcat $O.max.vcf.gz | fixsnpPos.pl -ref $RO -rfile $FO -file /dev/stdin $O.$M.vcf > $O.${M}F.vcf" 
+      zcat $O.max.vcf.gz | fixsnpPos.pl -ref $RO -rfile $FO -file /dev/stdin $O.$M.vcf > $O.${M}F.vcf
+      cp $O.${M}F.vcf $O.$M.vcf # mv before
     fi
   elif [ "$M" == "mutserve" ] && [ "$R" == "rCRS" ] ; then
     java -jar $JDIR/mutserve.jar analyse-local --input $O.bam --deletions  --insertions --level 0.01 --output $O.$M.vcf --reference $F
