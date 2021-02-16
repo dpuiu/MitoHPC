@@ -30,10 +30,10 @@ export E=300       	# extension(circularization)
 ################################################################
 #IF THE FOLLOWING LINES ARE UNCOMMENTED, THESE FOLLOWING VARIABLES WILL BE USES INSTEAD OF THE DEFAULTS OR COMMAND LINE ARGUMENTS
 
-#export HG=hs38DH.fa     # human assembly FASTA file, available under $RDIR 
-#export R=rCRS.fa        # rCRS or RSRS FASTA file, available under $RDIR 
-#export T1=03		# heteroplasmy tholds
-#export T2=05
-#export T3=10
-#export M=mutect2	# SNV calledr: mutect2 or mutserve
-#export I=2		# number of mutect2 iterations : 1 or 2
+export H=hs38DH         # human assembly, FASTA file available under $RDIR 
+export R=chrM           # chrM, rCRS or RSRS, FASTA file available under $RDIR 
+export T1=03		# heteroplasmy tholds
+export T2=05
+export T3=10
+export M=mutect2	# SNV calledr: mutect2 or mutserve
+export I=2		# number of mutect2 iterations : 1 or 2

@@ -43,9 +43,9 @@
 
     # generate an imput file which contains the list of the BAM/CRAM files to be processed 
     # ADIR=alignment directory path
-    find $ADIR -name "*.bam"  > in.txt
+    find $ADIR -name "*.bam"  | sort > in.txt
     ... or
-    find $ADIR -name "*.cram" > in.txt
+    find $ADIR -name "*.cram" | sort > in.txt
    
 ### GENERATE INDEX AND COUNT FILES ###
 

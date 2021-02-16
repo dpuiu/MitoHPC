@@ -72,8 +72,8 @@ echo "RDIR=" $RDIR >> checkInstall.log
 echo "########################"  >> checkInstall.log
 echo "REFERENCE SEQUENCES:"  >> checkInstall.log
 
-test -s $RDIR/$HG
-test -s $RDIR/$MT.fa
-test -s $RDIR/$R
+#test -s $RDIR/$HG
+#test -s $RDIR/$MT.fa
+#test -s $RDIR/$R
 
 echo Success!
