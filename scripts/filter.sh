@@ -1,4 +1,4 @@
-#!/usr/bin/env bash 
+#!/usr/bin/bash -eux
 
 #######################################################################################################################################
 
@@ -123,10 +123,9 @@ if [ ! -s $O.$M.$T3.vcf.gz ]; then
   cat $O.$M.vcf  | bcftools norm -m - | filterVcf.pl -sample $N -source $M |  grep -v "^#" | sort -k2,2n -k4,4 -k5,5 | fix${M}Vcf.pl -file $F.fa >> $O.$M.00.vcf
   #cat $O.$M.vcf | bcftools norm -m - | filterVcf.pl -sample $N -source $M | grep -v ^#  >> $O.$M.00.vcf
 
-  cat $O.$M.00.vcf | filterVcf.pl -p 0.$T1  | tee $O.$M.$T1.vcf | filterVcf.pl -p 0.$T2 | tee $O.$M.$T2.vcf | filterVcf.pl -p 0.$T3  > $O.$M.$T3.vcf
-  bgzip -f $O.$M.$T1.vcf ; tabix -f $O.$M.$T1.vcf.gz
-  bgzip -f $O.$M.$T2.vcf ; tabix -f $O.$M.$T2.vcf.gz
-  bgzip -f $O.$M.$T3.vcf ; tabix -f $O.$M.$T3.vcf.gz
+  cat $O.$M.00.vcf | filterVcf.pl -p 0.$T1  | bgzip -f -c > $O.$M.$T1.vcf.gz ; tabix -f $O.$M.$T1.vcf.gz
+  cat $O.$M.00.vcf | filterVcf.pl -p 0.$T2  | bgzip -f -c > $O.$M.$T2.vcf.gz ; tabix -f $O.$M.$T2.vcf.gz
+  cat $O.$M.00.vcf | filterVcf.pl -p 0.$T3  | bgzip -f -c > $O.$M.$T3.vcf.gz ; tabix -f $O.$M.$T3.vcf.gz
 fi
 #########################################################################################################################################
 #get new consensus

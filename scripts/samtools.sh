@@ -1,4 +1,4 @@
-#!/usr/bin/env bash 
+#!/usr/bin/bash -eux
 
 #SBATCH --job-name=samtools
 #SBATCH --partition=shared
@@ -28,9 +28,10 @@ fi
 if [ ! -s $D/$N.count ] ; then
   samtools view -@ $P $I -F 0x900 -c     | awk '{print $1,"all"}'    >  $D/$N.count
   samtools view -@ $P $I -F 0x904 -c     | awk '{print $1,"mapped"}' >> $D/$N.count
-  #samtools view -@ $P $I $MT -F 0x904 -c | awk '{print $1,"chrM"}'   >> $D/$N.count
+  samtools view -@ $P $I $MT -F 0x904 -c | awk '{print $1,"chrM"}'   >> $D/$N.count
 fi
 
-if [ ! -s $D/$N.cvg.stat ] ; then
-  samtools depth $I | grep ^$MT | tee $D/$N.cvg | cut -f3 | st  --summary --mean | sed 's|^|'"$N"'\t|' > $D/$N.cvg.stat
-fi
+#to be removed
+#if [ ! -s $D/$N.cvg.stat ] ; then
+#  samtools depth $I | grep ^$MT | tee $D/$N.cvg | cut -f3 | st  --summary --mean | sed 's|^|'"$N"'\t|' > $D/$N.cvg.stat
+#fi
