@@ -1,5 +1,4 @@
-#!/bin/bash -eux
-
+#!/usr/bin/env bash 
 #######################################################################
 
 #Program that downloads and install software prerequisites and hs38DH.fa
@@ -87,11 +86,6 @@ if [ ! -s $BDIR/fastp ] ; then
 fi
 
 ################### 
-if [ ! -s $JDIR/picard.jar ] ; then
-  wget -c https://github.com/broadinstitute/picard/releases/download/2.23.8/picard.jar
-  cp picard.jar $JDIR/
-fi
-
 if [ ! -s $JDIR/gatk.jar ] ; then
   wget -c https://github.com/broadinstitute/gatk/releases/download/4.1.9.0/gatk-4.1.9.0.zip
   unzip gatk-4.1.9.0.zip

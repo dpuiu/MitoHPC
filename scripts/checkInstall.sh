@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/usr/bin/env bash
 
 #########################################################
 
@@ -24,6 +24,7 @@ which samblaster        #install from "https://github.com/GregoryFaust/samblaste
 which circSam.pl        #available under scripts
 which filterVcf.pl      #available under scripts
 which st                #simple statistics: install from "https://github.com/nferraz/st"
+perl -e 'use App::St'
 which bcftools
 which tabix
 which vcftools
@@ -31,7 +32,6 @@ which vcftools
 test -f $JDIR/gatk.jar
 test -f $JDIR/haplogrep.jar
 test -f $JDIR/mutserve.jar
-test -f $JDIR/picard.jar
 
 ######################################################
 
@@ -55,7 +55,6 @@ echo "########################"  >> checkInstall.log
 echo "JAVA_HOME=" $JAVA_HOME >> checkInstall.log
 echo "JARS:"  >> checkInstall.log
 
-ls -l $JDIR/picard.jar    | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
 ls -l $JDIR/gatk.jar      | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
 ls -l $JDIR/haplogrep.jar | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
 ls -l $JDIR/mutserve.jar  | perl -ane 'print "$F[-1]\n";' >> checkInstall.log

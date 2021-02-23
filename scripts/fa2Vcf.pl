@@ -25,7 +25,7 @@ MAIN:
 	my $result = GetOptions();
         die "ERROR: $! " if (!$result);
 
-	print "##reference=file://$ARGV[0]>\n";
+	print "##reference=file://$ARGV[0]\n";
 
 	open(IN,"$ARGV[0].fai") or die "ERROR:$!";
 	while(<IN>)

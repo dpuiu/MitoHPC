@@ -1,4 +1,5 @@
-#!/bin/bash -eux
+#!/usr/bin/env bash 
+
 #SBATCH --job-name=samtools
 #SBATCH --partition=shared
 #SBATCH --time=12:0:0

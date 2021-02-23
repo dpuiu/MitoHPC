@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/usr/bin/env bash
 
 D=$1
 export M=$2 # source (mutect2...)
@@ -10,11 +10,15 @@ test -f $D/$M.haplogroup.tab
 #######################################################
 #catenate
 
-find $D/ -name "*.$M.$T.vcf.gz" -not -name "*.$M.$M.$T.vcf.gz" | sort > $D/$M.$T.merge.txt
+find $D/ -name "*.$M.$T.vcf.gz" -not -name "*.$M.$M.$T.vcf.gz" | sort > $D/$M.$T.txt
 
-cat $D/$M.$T.merge.txt | xargs vcf-concat | bedtools sort -header >  $D/$M.$T.concat.vcf
+cat $D/$M.$T.txt | xargs vcf-concat | bedtools sort -header | bgzip -f -c >  $D/$M.$T.concat.vcf.gz ; tabix $D/$M.$T.concat.vcf.gz
 annotateVcf.sh  $D/$M.$T.concat.vcf
-bgzip -f $D/$M.$T.concat.vcf
+
+#merge
+zcat  $D/$M.$T.concat.vcf.gz | concat2merge.pl -in $D/$M.$T.txt | bedtools sort -header | bgzip -f -c > $D/$M.$T.merge.vcf.gz ; tabix -f $D/$M.$T.merge.vcf.gz
+java -jar $JDIR/gatk.jar  MakeSitesOnlyVcf --INPUT $D/$M.$T.merge.vcf.gz  --OUTPUT $D/$M.$T.merge.sitesOnly.vcf.gz  ;           tabix -f $D/$M.$T.merge.sitesOnly.vcf.gz
+
 
 #########################################################
 #count
@@ -41,15 +45,4 @@ cut -f1  $D/$M.haplogroup.tab | \
   join.pl - $D/$M.$T.Sp.tab -empty 0 | join.pl - $D/$M.$T.sp.tab -empty 0 | \
   join.pl - $D/$M.$T.Ip.tab -empty 0 | join.pl - $D/$M.$T.ip.tab -empty 0 > $D/$M.$T.tab
 
-rm -f $D/$M.$T.?.tab $D/$M.$T.??.tab $D/$M.$T.concat.vcf.gz.tbi
-
-#################################################################
-#merge
-
-cat $D/$M.$T.merge.txt | xargs vcf-merge | fixmergeVcf.pl -in $D/$M.$T.merge.txt > $D/$M.$T.merge.vcf
-bgzip -f $D/$M.$T.merge.vcf
-tabix -f  $D/$M.$T.merge.vcf.gz
-
-java -jar $JDIR/picard.jar  MakeSitesOnlyVcf --INPUT $D/$M.$T.merge.vcf.gz  --OUTPUT $D/$M.$T.merge.sitesOnly.vcf.gz 
-tabix -f $D/$M.$T.merge.sitesOnly.vcf.gz
-
+rm -f $D/$M.$T.?.tab $D/$M.$T.??.tab 

@@ -1,5 +1,4 @@
-#!/bin/bash -e
-
+#!/usr/bin/env bash 
 #########################################################
 
 #Program that setups the environment on MARCC cluster (only)

@@ -1,4 +1,4 @@
-#!/bin/bash -eux
+#!/usr/bin/env bash 
 
 #######################################################################################################################################
 
@@ -48,11 +48,11 @@ if [ $(stat -c%s $F.fa) -lt $MSIZE ] ; then exit 1 ; fi
 #format references
 
 if [ ! -s $F.fa.fai ]    ; then samtools faidx $F.fa ; fi
-if [ ! -s $F.dict   ] ; then java -jar $JDIR/picard.jar CreateSequenceDictionary --REFERENCE $F.fa --OUTPUT $F.dict ; fi
+if [ ! -s $F.dict   ] ; then java -jar $JDIR/gatk.jar CreateSequenceDictionary --REFERENCE $F.fa --OUTPUT $F.dict ; fi
 if [ ! -s $F+.fa  ] ; then 
   cat $F.fa.fai | perl -ane 'print "$F[0]\t0\t$F[1]\n$F[0]\t0\t$ENV{E}\n";' | bedtools getfasta -fi $F.fa -bed - | grep -v "^>" | perl -ane 'BEGIN { print ">$ENV{R}\n" } ;print;' > $F+.fa
   cat $H.NUMT.fa >> $F+.fa
-  #java -jar $JDIR/picard.jar NormalizeFasta --INPUT $F+.fa --OUTPUT $F+.norm.fa --LINE_LENGTH 60
+  #java -jar $JDIR/gatk.jar NormalizeFasta --INPUT $F+.fa --OUTPUT $F+.norm.fa --LINE_LENGTH 60
   cat $F+.fa | perl -ane 'if(/^>/) { print "\n" if($.>1); print} else { chomp ;print} END{print "\n"}' > $F+.norm.fa
   mv $F+.norm.fa $F+.fa
 fi
@@ -118,8 +118,9 @@ fi
 if [ ! -s $O.$M.$T3.vcf.gz ]; then
   # filter SNPs
   cat $SDIR/$M.vcf > $O.$M.00.vcf
+  echo "##sample=$N" >> $O.$M.00.vcf
   fa2Vcf.pl $FO.fa >> $O.$M.00.vcf
-  cat $O.$M.vcf  | bcftools norm -m - | filterVcf.pl -sample $N -source $M | grep -v ^# | sort -k2,2n -k4,4 -k5,5 | fix${M}Vcf.pl -file $F.fa >> $O.$M.00.vcf
+  cat $O.$M.vcf  | bcftools norm -m - | filterVcf.pl -sample $N -source $M |  grep -v "^#" | sort -k2,2n -k4,4 -k5,5 | fix${M}Vcf.pl -file $F.fa >> $O.$M.00.vcf
   #cat $O.$M.vcf | bcftools norm -m - | filterVcf.pl -sample $N -source $M | grep -v ^#  >> $O.$M.00.vcf
 
   cat $O.$M.00.vcf | filterVcf.pl -p 0.$T1  | tee $O.$M.$T1.vcf | filterVcf.pl -p 0.$T2 | tee $O.$M.$T2.vcf | filterVcf.pl -p 0.$T3  > $O.$M.$T3.vcf
@@ -137,7 +138,7 @@ if  [ ! -s $O.fa ]  && [ ! -s $O.$M.fa ] ; then
 
   if [ $(stat -c%s " $O.$M.fa") -lt $MSIZE ] ; then exit 1 ; fi
 
-  #java -jar $JDIR/picard.jar NormalizeFasta --INPUT $O.$M.fa --OUTPUT $O.$M.norm.fa --LINE_LENGTH 60
+  #java -jar $JDIR/gatk.jar NormalizeFasta --INPUT $O.$M.fa --OUTPUT $O.$M.norm.fa --LINE_LENGTH 60
   cat $O.$M.fa | perl -ane 'if(/^>/) { print "\n" if($.>1); print} else { chomp ;print} END{print "\n"}' > $O.$M.norm.fa
   mv $O.$M.norm.fa $O.$M.fa 
   bwa index $O.$M.fa  -p $O.$M

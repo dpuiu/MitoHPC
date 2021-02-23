@@ -60,11 +60,13 @@ MAIN:
 		else
 		{
 			$F[6]=".";
-			#$F[7]=".";
-			if($F[7]=~/(.+);SM=.+?;(.+)/)  { $F[7]="$1;$2" } 
-			elsif($F[7]=~/^SM=.+?;(.+)/)   { $F[7]="$1"    } 
-			elsif($F[7]=~/(.+);SM=/)       { $F[7]="$1"    }
-			else			       { $F[7]="."     }
+
+			my ($AC,$AN);
+			$AC=$1 if($F[7]=~/AC=(\d+)/);
+			$AN=$1 if($F[7]=~/AN=(\d+)/);
+			if($AC and $AN) { $F[7]="AC=$AC;AN=$AN" }
+			elsif($AC)      { $F[7]="AC=$AC"        }
+			elsif($AN)      { $F[7]="AN=$AN"        }
 		}
 
 		print join "\t",@F; 

@@ -8,7 +8,7 @@
 ## PIPELINE PREREQUISITES ##
 
     SOFTWARE PACKAGES: bwa, samtools, bedtools, fastp, samblaster, bcftools, htslib, vcftools, st
-    JAVA JARS:         picard, mutserve, gatk, haplogrep
+    JAVA JARS:         gatk, mutserve, haplogrep
     HUMAN ASSEMBLY:    hs38DH
 
 ## INSTALL ## 
@@ -43,15 +43,16 @@
 
     # generate an imput file which contains the list of the BAM/CRAM files to be processed 
     # ADIR=alignment directory path
-    find $ADIR -name "*.bam"  | sort > in.txt
+
+    find $ADIR -name "*.bam"  | in2samples.pl | sort -k2,2 > in.txt
     ... or
-    find $ADIR -name "*.cram" | sort > in.txt
-   
+    find $ADIR -name "*.cram" | in2samples.pl | sort -k2,2 > in.txt
+
 ### GENERATE INDEX AND COUNT FILES ###
 
-     sed "s|^|$SDIR/samtools.sh |" in.txt > samtools.all.sh
+     cut -f1 in.txt | sed "s|^|$SDIR/samtools.sh |" > samtools.all.sh
      ... or (MARCC)
-     sed "s|^|sbatch --partition=shared --time=24:0:0 $SDIR/samtools.sh |" in.txt > samtools.all.sh
+     cut -f1 in.txt | sed "s|^|sbatch --partition=shared --time=24:0:0 $SDIR/samtools.sh |" > samtools.all.sh
 
      chmod a+x ./samtools.all.sh
      ./samtools.all.sh

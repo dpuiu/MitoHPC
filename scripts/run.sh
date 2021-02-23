@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
 
 export IN=$1                     # input file with .bam/.cram file path; required
 export ODIR=${2:-out}            # output dir; should be empty; required
