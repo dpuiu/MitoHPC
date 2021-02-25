@@ -19,12 +19,11 @@ H=$4  ; test -s $H.fa ; test -s $H.NUMT.fa
 FO=$5 ; test -s $FO.fa
 F=$6  ; test -s $F.fa
 
+
 ########################################################################################################################################
 #set variables
 
-export N=`basename $I .bam`        # sample name .bam or .cram
-export N=`basename $N .cram`
-
+export N=`basename $O .mutect2`        
 export RO=`basename $FO .fa`
 export R=`basename $F`
 export R=`basename $R .mutect2`
@@ -39,7 +38,6 @@ MSIZE=16500
 #test input file
 
 test -s $I
-test -s $IDIR/$N.count
 if [ ! -s $I.bai ] && [ ! -s $I.crai ] ; then exit 1 ; fi
 
 if [ $(stat -c%s $F.fa) -lt $MSIZE ] ; then exit 1 ; fi
@@ -47,16 +45,25 @@ if [ $(stat -c%s $F.fa) -lt $MSIZE ] ; then exit 1 ; fi
 #########################################################################################################################################
 #format references
 
-if [ ! -s $F.fa.fai ]    ; then samtools faidx $F.fa ; fi
-if [ ! -s $F.dict   ] ; then java -jar $JDIR/gatk.jar CreateSequenceDictionary --REFERENCE $F.fa --OUTPUT $F.dict ; fi
-if [ ! -s $F+.fa  ] ; then 
+if [ ! -s $F.fa.fai ] ; then
+  samtools faidx $F.fa
+fi
+
+if [ ! -s $F.dict   ] ; then
+  java -jar $JDIR/gatk.jar CreateSequenceDictionary --REFERENCE $F.fa --OUTPUT $F.dict
+fi
+
+if [ ! -s $F+.fa  ] ; then
   cat $F.fa.fai | perl -ane 'print "$F[0]\t0\t$F[1]\n$F[0]\t0\t$ENV{E}\n";' | bedtools getfasta -fi $F.fa -bed - | grep -v "^>" | perl -ane 'BEGIN { print ">$ENV{R}\n" } ;print;' > $F+.fa
   cat $H.NUMT.fa >> $F+.fa
   #java -jar $JDIR/gatk.jar NormalizeFasta --INPUT $F+.fa --OUTPUT $F+.norm.fa --LINE_LENGTH 60
   cat $F+.fa | perl -ane 'if(/^>/) { print "\n" if($.>1); print} else { chomp ;print} END{print "\n"}' > $F+.norm.fa
   mv $F+.norm.fa $F+.fa
 fi
-if [ ! -s $F+.bwt ] ; then bwa index $F+.fa -p $F+ ; fi
+
+if [ ! -s $F+.bwt ] ; then 
+  bwa index $F+.fa -p $F+
+fi
 
 #########################################################################################################################################
 #filter & realign reads
@@ -82,17 +89,15 @@ fi
 #count aligned reads
 
 if [ ! -s $O.count ] ; then
-  cp $IDIR/$N.count $O.count
-  samtools view $I $MT  -F 0x904 -c | awk '{print $1,"chrM" }'  >> $O.count
-  samtools view $O.bam  -F 0x904 -c | awk '{print $1,"filter"}' >> $O.count
+  samtools idxstats $O.bam | idxstats2count.pl -sample $N > $O.count # | cut -f1,2| sed 's|all|filter|' > $O.count
 fi
 
 #########################################################################################################################################
 #get covearge at each chrM position ; get overall stats
 
 if [ ! -s $O.cvg.stat ] ; then
-  cat $O.bam | bedtools bamtobed -cigar | bedtools genomecov -i - -g $F.fa.fai -d > $O.cvg 
-  cat $O.cvg | cut -f3 | st  --summary --mean | sed 's|^|'"$N"'\t|' > $O.cvg.stat
+  cat $O.bam | bedtools bamtobed -cigar | bedtools genomecov -i - -g $F.fa.fai -d > $O.cvg
+  cat $O.cvg | cut -f3 | st  --summary --mean | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{N}\t$_" }'  > $O.cvg.stat
 fi
 
 #########################################################################################################################################
@@ -103,8 +108,8 @@ if [ ! -s $O.$M.vcf ] ; then
     java -jar $JDIR/gatk.jar Mutect2           -R $F.fa -I $O.bam                             -O $O.$M.vcf
     java -jar $JDIR/gatk.jar FilterMutectCalls -R $F.fa -V $O.$M.vcf --min-reads-per-strand 2 -O $O.${M}F.vcf
     mv $O.${M}F.vcf  $O.$M.vcf ; rm $O.${M}F.vcf* $O.$M.vcf.*
-    if [ -s $O.max.vcf.gz ] ; then
-      zcat $O.max.vcf.gz | fixsnpPos.pl -ref $RO -rfile $FO.fa -file /dev/stdin $O.$M.vcf > $O.${M}F.vcf
+    if [ -s $O.max.vcf ] ; then
+      cat $O.max.vcf | fixsnpPos.pl -ref $RO -rfile $FO.fa -file /dev/stdin $O.$M.vcf > $O.${M}F.vcf
       mv $O.${M}F.vcf $O.$M.vcf
     fi
   elif [ "$M" == "mutserve" ] && [ "$R" == "rCRS" ] ; then
@@ -115,31 +120,26 @@ if [ ! -s $O.$M.vcf ] ; then
 fi
 ##########################################################################################################################################
 
-if [ ! -s $O.$M.$T3.vcf.gz ]; then
+if [ ! -s $O.$M.00.vcf ]; then
   # filter SNPs
   cat $SDIR/$M.vcf > $O.$M.00.vcf
   echo "##sample=$N" >> $O.$M.00.vcf
   fa2Vcf.pl $FO.fa >> $O.$M.00.vcf
   cat $O.$M.vcf  | bcftools norm -m - | filterVcf.pl -sample $N -source $M |  grep -v "^#" | sort -k2,2n -k4,4 -k5,5 | fix${M}Vcf.pl -file $F.fa >> $O.$M.00.vcf
-  #cat $O.$M.vcf | bcftools norm -m - | filterVcf.pl -sample $N -source $M | grep -v ^#  >> $O.$M.00.vcf
-
-  cat $O.$M.00.vcf | filterVcf.pl -p 0.$T1  | bgzip -f -c > $O.$M.$T1.vcf.gz ; tabix -f $O.$M.$T1.vcf.gz
-  cat $O.$M.00.vcf | filterVcf.pl -p 0.$T2  | bgzip -f -c > $O.$M.$T2.vcf.gz ; tabix -f $O.$M.$T2.vcf.gz
-  cat $O.$M.00.vcf | filterVcf.pl -p 0.$T3  | bgzip -f -c > $O.$M.$T3.vcf.gz ; tabix -f $O.$M.$T3.vcf.gz
 fi
 #########################################################################################################################################
 #get new consensus
 
 if  [ ! -s $O.fa ]  && [ ! -s $O.$M.fa ] ; then
-  cat $O.$M.00.vcf | maxVcf.pl | bedtools sort -header > $O.$M.max.vcf
-  bgzip -f  $O.$M.max.vcf ;  tabix -f $O.$M.max.vcf.gz
+  cat $O.$M.00.vcf | maxVcf.pl | bedtools sort -header |tee $O.$M.max.vcf | bgzip -f -c > $O.$M.max.vcf.gz ; tabix -f $O.$M.max.vcf.gz
   bcftools consensus -f $F.fa $O.$M.max.vcf.gz | perl -ane 'if($.==1) { print ">$ENV{N}\n" } else { s/N//g; print }' > $O.$M.fa
+  rm $O.$M.max.vcf.gz $O.$M.max.vcf.gz.tbi
 
   if [ $(stat -c%s " $O.$M.fa") -lt $MSIZE ] ; then exit 1 ; fi
 
   #java -jar $JDIR/gatk.jar NormalizeFasta --INPUT $O.$M.fa --OUTPUT $O.$M.norm.fa --LINE_LENGTH 60
   cat $O.$M.fa | perl -ane 'if(/^>/) { print "\n" if($.>1); print} else { chomp ;print} END{print "\n"}' > $O.$M.norm.fa
-  mv $O.$M.norm.fa $O.$M.fa 
+  mv $O.$M.norm.fa $O.$M.fa
   bwa index $O.$M.fa  -p $O.$M
   bedtools bamtofastq -i $O.bam -fq /dev/stdout | bwa mem $O.$M - -v 1 -t $P -v 1 -k 63 | samtools sort | bedtools bamtobed -tag NM -cigar | perl -ane 'print if($F[4]==0);' | bedtools merge -d -5  | bed2bed.pl > $O.$M.merge.bed
   rm -f $O.$M.*{sa,amb,ann,pac,bwt}
@@ -153,7 +153,4 @@ if  [ ! -s $O.fa ]  && [ ! -s $O.$M.fa ] ; then
   fi
 fi
 
-if [ -s $O.haplogroup ]; then
-  cp $O.haplogroup $O.$M.haplogroup
-fi
 

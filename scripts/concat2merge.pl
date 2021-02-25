@@ -8,10 +8,13 @@ MAIN:
 {
 	# define variables
 	my %opt;
+	$opt{i}=1;
+
 	my $result = GetOptions(
-		"in=s"	=>	\$opt{in}
+		"in=s"	=>	\$opt{in},
+		 "i=i"  => 	\$opt{i}
 	);
-        die "ERROR0: $! " if (!$result);
+        die "ERROR: $! " if (!$result);
 
 	#######################################################
 
@@ -19,9 +22,11 @@ MAIN:
 	open(IN,$opt{in}) or die "ERROR1: $!";
         while(<IN>)
         {
-                /.+\/(\S+)F\.mut/ or /.+\/(\S+)\.mut/ or /^(SRR\d+)$/ or die "ERROR2:$_";
-                push @samples,$1;
-		$samples{$1}=1;
+		chomp;
+		next if(/^#/ or /^$/);
+		my @F=split;
+                push @samples,$F[$opt{i}];
+		$samples{$F[$opt{i}]}=1;
         }
 	close(IN);
 

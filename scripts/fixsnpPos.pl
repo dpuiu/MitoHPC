@@ -29,6 +29,8 @@ MAIN:
 	die "ERROR: $! " if (!$result);
 	die "ERROR: $! " if (!defined($opt{ref}) or !defined($opt{rfile}) or !defined($opt{file}));
 
+	#####################################################################################
+
 	my %diff;
 	open(IN,$opt{file}) or die "ERROR:$!";
         while(<IN>)
@@ -41,11 +43,24 @@ MAIN:
         }
 	close(IN);
 
+	my $MT="";
+	open(IN,$opt{rfile}) or die "ERROR:$!";
+        while(<IN>)
+        {
+                if(/^>/){}
+		else
+		{
+			chomp;
+			$MT.=$_;
+		}
+	}
+
 	if($opt{ref} eq "rCRS" or $opt{ref} eq "chrM") 
 	{
 		$diff{3107}=-1
 	}
 
+	####################################################################################
 	my %diff2;
 	my $diff=0;
 	my @pos=(sort {$a<=>$b} keys %diff);
@@ -69,7 +84,7 @@ MAIN:
 		}
 		elsif(/^##reference/ or /^##contig/)
 		{
-			print "##reference=file://$opt{rfile}>\n";
+			print "##reference=file://$opt{rfile}\n";
 			print "##contig=<ID=$opt{ref},length=16569>\n" if($opt{ref} eq "rCRS" or $opt{ref} eq "chrM");
 		}
 		elsif(/^#/)
@@ -92,6 +107,8 @@ MAIN:
 			$F[0]=$opt{ref};
 			$F[1]-=$diff2; 
 			#$F[1]+=$diff2;
+
+			$F[3]=substr($MT,$F[1]-1,length($F[3]));	# new 02/24/2021
 			print join "\t",@F;
 			print "\n";
 		}

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export IN=$1                     # input file with .bam/.cram file path; required
+export IN=${1:-in.txt}           # input file with .bam/.cram file path; required
 export ODIR=${2:-out}            # output dir; should be empty; required
 export M=${3:-mutect2}           # or mutserve
 export H=${4:-hs38DH}            # human reference
@@ -45,29 +45,12 @@ printf "export PATH=$SDIR:$BDIR:\$PATH\n"
 printf "export PERLLIB=$LDIR:$PERLLIB\n"
 
 printf "\n######################################\n\n"
-cat $IN | perl -ane '/.+\/(.+)\./; print "$ENV{SH} $ENV{SDIR}/filter.sh  $F[0] $ENV{ODIR}/$1/$1 $ENV{M} $ENV{RDIR}/$ENV{H} $ENV{RDIR}/$ENV{R} $ENV{RDIR}/$ENV{R}\n";'
-printf "\n######################################\n"
-
-printf "\nreadCount.sh $ODIR\n"
-printf "cvgCount.sh $ODIR\n"
-printf "snpCount.sh $ODIR $M $T1 $T2 $T3\n"
-printf "find $ODIR -name *.$M.fa | sort | xargs cat > $ODIR/$M.fa\n"
-printf "join.pl $ODIR/count.tab $ODIR/$M.tab > $ODIR/count_$M.tab\n"
-
-printf "find $ODIR -name *.$M.merge.bed | sort | xargs cat > $ODIR/$M.merge.bed\n"
-
+cat $IN | perl -ane 'next unless (/^#/ or @F<3);  print "$ENV{SH} $ENV{SDIR}/filter.sh $F[0] $F[2] $ENV{M} $ENV{RDIR}/$ENV{H} $ENV{RDIR}/$ENV{R} $ENV{RDIR}/$ENV{R}\n";'
+printf "$SHS $SDIR/getSummary.sh $IN $ODIR $M $T1 $T2 $T3\n"
 ##################################################################
 
 if [ "$M" == "mutect2" ] && [ "$I" == "2" ] ; then
   printf "\n######################################\n\n"
-  cat $IN | perl -ane '/.+\/(.+)\./; print "$ENV{SH} $ENV{SDIR}/filter.sh  $F[0] $ENV{ODIR}/$1/$1.$ENV{M} $ENV{M} $ENV{RDIR}/$ENV{H} $ENV{RDIR}/$ENV{R} $ENV{ODIR}/$1/$1.$ENV{M}\n";'
-  printf "\n######################################\n"
-
-  printf "\ncp $ODIR/$M.haplogroup.tab $ODIR/$M.$M.haplogroup.tab\n";
-  printf "cvgCount.sh $ODIR $M\n"
-  printf "readCount.sh $ODIR $M\n"
-  printf "snpCount.sh $ODIR $M.$M $T1 $T2 $T3\n"
-  printf "join.pl $ODIR/count.$M.tab $ODIR/$M.$M.tab > $ODIR/count_$M.$M.tab\n"
+  cat $IN | perl -ane 'next unless (/^#/ or @F<3); print "$ENV{SH} $ENV{SDIR}/filter.sh $1 $ENV{ODIR}/$2/$2.$ENV{M} $ENV{M} $ENV{RDIR}/$ENV{H} $ENV{RDIR}/$ENV{R} $ENV{ODIR}/$2/$2.$ENV{M}\n";'
+  printf "$SHS $SDIR/getSummary.sh $IN $ODIR $M.$M $T1 $T2 $T3\n"
 fi
-
-printf "rm -f fastp.html fastp.json\n"

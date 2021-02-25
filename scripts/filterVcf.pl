@@ -19,7 +19,7 @@ MAIN:
 
 	my $result = GetOptions(
                 "percent=s" 	=> \$opt{percent},
-		"sample=s"	=> \$opt{sample},
+		"sample|Run=s"	=> \$opt{sample},
 		"source=s"	=> \$opt{source},
 		"header=s"	=> \$opt{header}
         );

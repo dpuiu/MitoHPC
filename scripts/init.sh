@@ -18,8 +18,11 @@ export LDIR=$HDIR/lib/perl5
 
 export PATH=$SDIR:$BDIR:$PATH
 export PERLLIB=$LDIR/:$PERLLIB
-export SH="bash"                 # bash, sbatch(SLURM), qsub(SGE,PBS)
+export SH="bash"                 # bash, sbatch(SLURM), qsub(SGE,PBS) : filter.pl jobs
+export SHS="bash"		 #                                      getSummary.pl job
 
+#export SH="sbatch -J HP$$ --partition=shared"                 # bash, sbatch(SLURM), qsub(SGE,PBS)
+#export SHS="sbatch -J HP$$ -d singleton --partition=shared"      
 ################################################################
 
 export MT=chrM		#

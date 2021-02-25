@@ -45,15 +45,13 @@
     # generate an imput file which contains the list of the BAM/CRAM files to be processed 
     # ADIR=alignment directory path
 
-    find $ADIR -name "*.bam"  | in2samples.pl | sort -k2,2 > in.txt
-    ... or
-    find $ADIR -name "*.cram" | in2samples.pl | sort -k2,2 > in.txt
+    find $ADIR/  | ls2in.pl  | sort > in.txt
 
 ### GENERATE INDEX AND COUNT FILES ###
 
-     cut -f1 in.txt | sed "s|^|$SDIR/samtools.sh |" > samtools.all.sh
+     cut -f2 in.txt | sed "s|^|$SDIR/samtools.sh |" > samtools.all.sh
      ... or (MARCC)
-     cut -f1 in.txt | sed "s|^|sbatch --partition=shared --time=24:0:0 $SDIR/samtools.sh |" > samtools.all.sh
+     cut -f2 in.txt | sed "s|^|sbatch --partition=shared --time=4:0:0 $SDIR/samtools.sh |" > samtools.all.sh
 
      chmod a+x ./samtools.all.sh
      ./samtools.all.sh
@@ -79,15 +77,12 @@
 
     count.tab 
  
-    {mutect2,mutserve}.{03,05,10}.{concat,merge}.vcf.gz    # SNVs; 3,5,10% minimum heteroplasmy thold
-
+    {mutect2,mutserve}.{03,05,10}.{concat,merge}.vcf       # SNVs; 3,5,10% minimum heteroplasmy thold
     cont.tab                                               # reads, mtDNA-CN counts
-    count_{mutect2,mutserve}.tab                           # reads, mtDNA-CN & SNV counts 
 
 ### 2nd ITTERATION ###
 
-    mutect2.mutect2.{03,05,10}.concat.vcf.gz	
-    count_mutect2.mutect2.tab
+    mutect2.mutect2.{03,05,10}.concat.vcf	
 
 ## EXAMPLE 1 : Usage ##
 
