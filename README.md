@@ -16,21 +16,21 @@
 
 ### DOWNLOAD PIPELINE ###
 
-    git clone https://github.com/dpuiu/HP.git
+    $ git clone https://github.com/dpuiu/HP.git
 
 ### SETUP ENVIRONMENT ###
     
-    export SDIR=$PWD/HP/scripts/   # set script directory variable
+    $ export SDIR=$PWD/HP/scripts/   # set script directory variable
  
 ### INSTALL PIPELINE PREREQUISITES (optional) ###
 
-    $SDIR/install_prerequisites.sh  
+    $ $SDIR/install_prerequisites.sh  
     
 ### CHECK INSTALL ###
   
     # if successfull => "Success message!"
-    $SDIR/checkInstall.sh
-    cat checkInstall.log
+    $ $SDIR/checkInstall.sh
+    $ cat checkInstall.log
 
 ## USAGE ##
 
@@ -39,35 +39,42 @@
     # go to the working directory
 
     # copy init.sh ; edit if necessary
-    cp -i $SDIR/init.sh .
-    nano init.sh
+    $ cp -i $SDIR/init.sh .
+    $ nano init.sh
 
     # generate an imput file which contains the list of the BAM/CRAM files to be processed 
-    # ADIR=alignment directory path
+    $ ADIR=alignment directory path
 
-    find $ADIR/  | ls2in.pl  | sort > in.txt
+    $ find $ADIR/  | ls2in.pl  | sort > in.txt
+
+    $ head in.txt
+      #sampleName     inputFile         outputPath/prefix
+      sim.A	      bams//sim.A.bam	out/sim.A/sim.A
+      sim.B	      bams//sim.B.bam	out/sim.B/sim.B
+      sim.C	      bams//sim.C.bam	out/sim.C/sim.C
+      ...
 
 ### GENERATE INDEX AND COUNT FILES ###
 
-     cut -f2 in.txt | sed "s|^|$SDIR/samtools.sh |" > samtools.all.sh
+     $ cut -f2 in.txt | sed "s|^|$SDIR/samtools.sh |" > samtools.all.sh
      ... or (MARCC)
-     cut -f2 in.txt | sed "s|^|sbatch --partition=shared --time=4:0:0 $SDIR/samtools.sh |" > samtools.all.sh
+     $ cut -f2 in.txt | sed "s|^|sbatch --partition=shared --time=4:0:0 $SDIR/samtools.sh |" > samtools.all.sh
 
-     chmod a+x ./samtools.all.sh
-     ./samtools.all.sh
+     $ chmod a+x ./samtools.all.sh
+     $ ./samtools.all.sh
 
 ### GENERATE PIPELINE SCRIPT ###
 
-    $SDIR/run.sh in.txt out/  > filter.all.sh
-    chmod u+x ./filter.all.sh
+    $ $SDIR/run.sh in.txt out/  > filter.all.sh
+    $ chmod u+x ./filter.all.sh
 
 ### RUN PIPELINE  ###
 
-    ./filter.all.sh				
+    $ ./filter.all.sh				
     ... or
-    nohup ./filter.all.sh &	                               # run in the backgroud
+    $ nohup ./filter.all.sh &	                               # run in the backgroud
     ... or (MARCC)
-    sbatch --partition=shared --time=24:0:0 ./filter.all.sh    # run using a job scheduler
+    $ sbatch --partition=shared --time=24:0:0 ./filter.all.sh    # run using a job scheduler
 
 ## OUTPUT ##
 
@@ -76,108 +83,89 @@
 ### 1st ITTERATION ### 
 
     count.tab 
- 
-    {mutect2,mutserve}.{03,05,10}.{concat,merge}.vcf       # SNVs; 3,5,10% minimum heteroplasmy thold
-    cont.tab                                               # reads, mtDNA-CN counts
+    {mutect2,mutserve}.{03,05,10}.{concat,merge[.sitesOnly]}.vcf       # SNVs; 3,5,10% minimum heteroplasmy thold
+    {mutect2,mutserve}.{03,05,10}.tab                                  # SNV counts
+    cont.tab                                                           # reads, mtDNA-CN counts
 
 ### 2nd ITTERATION ###
 
-    mutect2.mutect2.{03,05,10}.concat.vcf	
+    mutect2.mutect2.{03,05,10}.{concat,merge[.sitesOnly]}.vcf	
+    mutect2.mutect2.{03,05,10}.tab
 
 ## EXAMPLE 1 : Usage ##
 
     #script      inFile outDir   humanRef   MTRef   SNVcalller
-    $SDIR/run.sh in.txt out/    
+    $ $SDIR/run.sh in.txt out/    
     ... or
-    $SDIR/run.sh in.txt out/     hs38DH.fa  RSRS.fa mutserve
+    $ $SDIR/run.sh in.txt out/   hs38DH.fa  RSRS.fa mutserve
 
 
 ## EXAMPLE 2 : 3 simulated datasets  ##
 
 ### input file ###
-    cat in.txt 
+    $ cat in.txt 
       bams/sim.A.bam
       bams/sim.B.bam
       bams/sim.C.bam 
 
 ### after running samtools.sh ###
-    ls bams/*
+    $ ls bams/*
       bams/sim.A.bam
       bams/sim.A.bam.bai
+      bams/sim.A.idxstats
       bams/sim.A.count
-      bams/sim.B.bam
-      bams/sim.B.bam.bai
-      bams/sim.B.count
-      bams/sim.C.bam
-      bams/sim.C.bam.bai
-      bams/sim.C.count
-    
-     cat bams/sim.A.count 
-       11000 all
-       11000 mapped
-       10947 chrM
+     ...
 
 ### after running the pipeline ###
 
-    head count_mutect2.tab 
-      Run    all        mapped     chrM    filter  M        haplogroup  03%S  03%s  03%I  03%i  05%S  05%s  05%I  05%i  10%S  10%s  10%I  10%i
-      sim.A  740589366  739237125  487382  205095  256.05   A2+(64)     28    35    3     8     28    35    3     8     28    34    3     8
-      sim.B  763658318  762297733  495743  205156  252.56   B2          25    34    2     8     25    34    2     8     25    34    2     8
-      sim.C  749938586  748667901  590963  200121  306.55   C           35    35    4     8     35    35    4     8     35    35    4     8
-
-    zcat mutect2.03.concat.vcf.gz 
-      ##fileformat=VCFv4.2
-      ##source=Mutect2
-      ##reference=file://../..//RefSeq//rCRS.fa>
-      ##contig=<ID=rCRS,length=16569>
-      ##INFO=<ID=SM,Number=1,Type=String,Description="Sample">
-      ##INFO=<ID=INDEL,Number=0,Type=Flag,Description="INDEL">
-      ##INFO=<ID=HP,Number=0,Type=Flag,Description="Homoloplymer">
-      ##INFO=<ID=HV,Number=0,Type=Flag,Description="Hypervariable">
-      ...
-      ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
-      ##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
-      ##FORMAT=<ID=AF,Number=A,Type=Float,Description="Allele Frequency">
-      ...
-      #CHROM POS  ID  REF  ALT  QUAL  FILTER  INFO                  FORMAT    SAMPLE
-      rCRS   64   .   C    T    .     .       SM=sim.A;HV           GT:DP:AF  0|1:67:1
-      rCRS   73   .   A    G    .     .       SM=sim.A;HV;NUMT      GT:DP:AF  0|1:70:1
-      rCRS   73   .   A    G    .     PASS    SM=sim.C;HV           GT:DP:AF  0/1:43:1
-      rCRS   73   .   A    G    .     PASS    SM=sim.B;HV           GT:DP:AF  0/1:52:1
-      rCRS   146  .   T    C    .     .       SM=sim.A;HV           GT:DP:AF  0|1:88:1
-      rCRS   153  .   A    G    .     .       SM=sim.A;HV           GT:DP:AF  0|1:89:1
-      rCRS   235  .   A    G    .     .       SM=sim.A;HV           GT:DP:AF  0/1:74:1
-      rCRS   247  .   GA   G    .     .       SM=sim.C;INDEL;HV     GT:DP:AF  0/1:67:1
-      ...
-      rCRS   285  .   CAA  C    .     .       SM=sim.C;INDEL;HV     GT:DP:AF  0/1:61:1
-      rCRS   302  .   A    AC   .     .       SM=sim.A;INDEL;HV;HP  GT:DP:AF  0/1:71:1
-      ...
-      rCRS   375  .   C    T    .     .       SM=sim.B              GT:DP:AF  0/1:65:0.162
-      rCRS   378  .   C    T    .     .       SM=sim.C              GT:DP:AF  0/1:81:0.13
+#### output directories : 1/sample ####
+  
+    $ ls out/
+      sim.A/
+      sim.B/
+      sim.C/ 
       ...
 
-    zcat mutect2.03.merge.vcf.gz
+#### vcf files : concat & merge ####
+
+    $ cat mutect2.03.concat.vcf  
       ...
-      ##INFO=<ID=AC,Number=.,Type=Integer,Description="Allele count in genotypes">
-      ##INFO=<ID=AN,Number=1,Type=Integer,Description="Total number of alleles in called genotypes">
-      ##INFO=<ID=SF,Number=.,Type=String,Description="Source File (index to sourceFiles, f when filtered)">
-      ...
-      #CHROM POS  ID  REF  ALT  QUAL  FILTER  INFO                   FORMAT    sim.A     sim.B         sim.C
-      rCRS   64   .   C    T    .     .       AC=1;AN=2;SF=0f        GT:DP:AF  0|1:67:1  .             .
-      rCRS   73   .   A    G    .     .       AC=3;AN=6;SF=0f,1,2    GT:DP:AF  0|1:70:1  0/1:52:1      0/1:43:1
-      rCRS   146  .   T    C    .     .       AC=1;AN=2;SF=0f        GT:DP:AF  0|1:88:1  .             .
-      rCRS   153  .   A    G    .     .       AC=1;AN=2;SF=0f        GT:DP:AF  0|1:89:1  .             .
-      rCRS   235  .   A    G    .     .       AC=1;AN=2;SF=0f        GT:DP:AF  0/1:74:1  .             .
-      rCRS   247  .   GA   G    .     .       AC=1;AN=2;INDEL;SF=2f  GT:DP:AF  .         .             0/1:67:1
-      ...
-      rCRS   285  .   CAA  C    .     .       AC=1;AN=2;INDEL;SF=2f  GT:DP:AF  .         .             0/1:61:1
-      rCRS   302  .   A    AC   .     .       AC=1;AN=2;INDEL;SF=0f  GT:DP:AF  0/1:71:1  .             .
-      ...
-      rCRS   375  .   C    T    .     .       AC=1;AN=2;SF=1f        GT:DP:AF  .         0/1:65:0.162  .
-      rCRS   378  .   C    T    .     .       AC=1;AN=2;SF=2f        GT:DP:AF  .         .             0/1:81:0.13
+      #CHROM    POS  ID  REF  ALT  QUAL  FILTER                      INFO              FORMAT    SAMPLE    
+      chrM      64   .   C    T    .     clustered_events;haplotype  SM=sim.A;HV       GT:DP:AF  0|1:67:1  
+      chrM      73   .   A    G    .     PASS                        SM=sim.B;HV;NUMT  GT:DP:AF  0/1:52:1  
+      chrM      73   .   A    G    .     PASS                        SM=sim.C;HV       GT:DP:AF  0/1:43:1  
       ...
 
+    $ cat mutect2.03.merge.vcf  
+      ...  
+      #CHROM    POS  ID  REF  ALT  QUAL  FILTER  INFO               FORMAT    sim.A     chrM.B    chrM.C    
+      chrM      64   .   C    T    .     .       AC=1;AN=2;HV       GT:DP:AF  0|1:67:1  .:.:.     .:.:.     
+      chrM      73   .   A    G    .     .       AC=1;AN=2;HV;NUMT  GT:DP:AF  .:.:.     0/1:52:1  .:.:.     
+      chrM      73   .   A    G    .     .       AC=2;AN=4;HV       GT:DP:AF  0|1:70:1  .:.:.     0/1:43:1  
+      ...
 
+    $ cat mutect2.03.merge.sitesOnly.vcf
+      #CHROM    POS  ID  REF  ALT  QUAL  FILTER  INFO               
+      chrM      64   .   C    T    .     .       AC=1;AN=2;HV       
+      chrM      73   .   A    G    .     .       AC=1;AN=2;HV;NUMT  
+      chrM      73   .   A    G    .     .       AC=2;AN=4;HV       
+      ....
+     
+#### SNV counts ####
+
+    $ cat mutect2.03.tab            
+      Run                       H           h   S   s   I  i  Hp  hp  Sp  sp  Ip  ip  
+      sim.A                     31          44  28  36  3  8  3   0   0   0   3   0   
+      sim.B                     27          42  25  34  2  8  5   0   3   0   2   0   
+      sim.C                     39          43  35  35  4  8  2   0   0   0   2   0   
+
+#### Haplogroups ####
+
+    $ cat mutect2.haplogroup.tab    
+      Run                       haplogroup  
+      sim.A                     A2+(64)     
+      sim.B                     B2          
+      sim.C                     C           
 
 ### LEGEND ###
 
@@ -190,16 +178,12 @@
 
     Gcvg                          # recomputed genome coverage: Bases/3217346917
     Mcvg                          # mitochondrion covearge: chrM*rdLen/16569
-
     M                             # mtDNA copy number ; = 2*Mcvg/Gcvg
 
     haplogroup                    # sample haplogroup
-    03%S                          # homozygous SNPs, 3% heteroplasmy rate
-    03%s                          # heterozygous SNPs
-    03%I                          # homozygous INDELs
-    03%i                          # heterozygous INDELs
+    S                             # homozygous SNPs, 3% heteroplasmy rate
+    s                             # heterozygous SNPs
+    I                             # homozygous INDELs
+    i                             # heterozygous INDELs
     ...
-    05%
-    10%
-    ...
-    ??%?p                         # "p" suffix stands for non homopimeric
+    ?p                            # "p" suffix stands for non homopolimeric
