@@ -49,9 +49,9 @@
 
     $ head in.txt
       #sampleName    inputFile         outputPath/prefix
-      sim.A          bams/sim.A.bam	out/sim.A/sim.A
-      sim.B          bams/sim.B.bam	out/sim.B/sim.B
-      sim.C          bams/sim.C.bam	out/sim.C/sim.C
+      sim.A          bams/sim.A.bam    out/sim.A/sim.A
+      sim.B          bams/sim.B.bam    out/sim.B/sim.B
+      sim.C          bams/sim.C.bam    out/sim.C/sim.C
       ...
 
 ### GENERATE INDEX AND COUNT FILES ###
