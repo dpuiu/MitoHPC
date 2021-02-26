@@ -63,7 +63,18 @@
      $ chmod a+x ./samtools.all.sh
      $ ./samtools.all.sh
 
-### GENERATE PIPELINE SCRIPT ###
+
+### COMPUTE mtDNA-CN ####
+    
+     $ mkir -p out/
+     $ find $ADIR/ -name "*.count" | xargs cat | $SDIR/uniq.pl  | $SDIR/getCN.pl > out/count.tab 
+       Run      all        mapped     chrM    M       
+       sim.A    851537886  848029490  396766  181.7   
+       sim.B    884383716  882213718  506597  223.01  
+       sim.C    786560467  785208588  503241  248.9   
+       ...
+  
+### GENERATE SNV PIPELINE SCRIPT ###
 
     $ $SDIR/run.sh in.txt out/  > filter.all.sh
     $ chmod u+x ./filter.all.sh
