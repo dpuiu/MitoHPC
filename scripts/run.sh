@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
 
 export IN=${1:-in.txt}           # input file with .bam/.cram file path; required
 export ODIR=${2:-out}            # output dir; should be empty; required
@@ -16,6 +16,18 @@ export T3=${8:-10}
 ##############################################################
 
 export SDIR=`dirname $0`        # script directory
+export HDIR=`readlink -f $SDIR/..`
+export RDIR=$HDIR/RefSeq
+export BDIR=$HDIR/bin
+export JDIR=$HDIR/java
+export RDIR=$HDIR/RefSeq
+export LDIR=$HDIR/lib/perl5
+export SH="bash"
+export SHS="bash"
+export I=2
+
+##############################################################
+
 test -s ./init.sh
 source ./init.sh
 
@@ -23,7 +35,6 @@ test -s $IN
 mkdir -p $ODIR
 
 ###############################################################
-
 printf "#!/bin/bash -eux\n\n"
 printf "export SDIR=$SDIR\n"
 printf "export BDIR=$BDIR\n"
@@ -45,12 +56,12 @@ printf "export PATH=$SDIR:$BDIR:\$PATH\n"
 printf "export PERLLIB=$LDIR:$PERLLIB\n"
 
 printf "\n######################################\n\n"
-cat $IN | perl -ane 'next unless (/^#/ or @F<3);  print "$ENV{SH} $ENV{SDIR}/filter.sh $F[0] $F[2] $ENV{M} $ENV{RDIR}/$ENV{H} $ENV{RDIR}/$ENV{R} $ENV{RDIR}/$ENV{R}\n";'
+cat $IN | perl -ane 'next if(/^#/ or @F<3);  print "$ENV{SH} $ENV{SDIR}/filter.sh $F[1] $F[2] $ENV{M} $ENV{RDIR}/$ENV{H} $ENV{RDIR}/$ENV{R} $ENV{RDIR}/$ENV{R}\n";'
 printf "$SHS $SDIR/getSummary.sh $IN $ODIR $M $T1 $T2 $T3\n"
 ##################################################################
 
 if [ "$M" == "mutect2" ] && [ "$I" == "2" ] ; then
   printf "\n######################################\n\n"
-  cat $IN | perl -ane 'next unless (/^#/ or @F<3); print "$ENV{SH} $ENV{SDIR}/filter.sh $1 $ENV{ODIR}/$2/$2.$ENV{M} $ENV{M} $ENV{RDIR}/$ENV{H} $ENV{RDIR}/$ENV{R} $ENV{ODIR}/$2/$2.$ENV{M}\n";'
+  cat $IN | perl -ane 'next if(/^#/ or @F<3); print "$ENV{SH} $ENV{SDIR}/filter.sh $F[1] $F[2].$ENV{M} $ENV{M} $ENV{RDIR}/$ENV{H} $ENV{RDIR}/$ENV{R} $F[2].$ENV{M}\n";'
   printf "$SHS $SDIR/getSummary.sh $IN $ODIR $M.$M $T1 $T2 $T3\n"
 fi

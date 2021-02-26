@@ -8,7 +8,7 @@ MAIN:
 {
 	# define variables
 	my %opt;
-	$opt{i}=1;
+	$opt{i}=0;
 
 	my $result = GetOptions(
                 "in=s" 	=> \$opt{in},

@@ -89,7 +89,7 @@ fi
 #count aligned reads
 
 if [ ! -s $O.count ] ; then
-  samtools idxstats $O.bam | idxstats2count.pl -sample $N > $O.count # | cut -f1,2| sed 's|all|filter|' > $O.count
+  samtools idxstats $O.bam | idxstats2count.pl -sample $N > $O.count
 fi
 
 #########################################################################################################################################
