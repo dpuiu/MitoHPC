@@ -18,14 +18,10 @@ T3=$6
 #cat IN.txt  | perl -ane 'print "ls $ENV{D}/$F[1]/$F[1].\n";'
 
 #read counts
-#if [ ! -s $D/filter.tab ] ; then
-  cut -f3 $IN | sed "s|$|.count|" | xargs cat | uniq.pl -i 0  | sed 's|^sample|Run|' > $D/filter.tab
-#fi 
+cut -f3 $IN | sed "s|$|.count|" | xargs cat | uniq.pl -i 0  | sed 's|^sample|Run|' > $D/filter.tab
 
 #cvg
-#if [ ! -s $D/cvg.tab ] ; then
-  cut -f3 in.txt | sed "s|$|.cvg.stat|" | xargs cat | uniq.pl -i 0  > $D/cvg.tab
-#fi
+cut -f3 in.txt | sed "s|$|.cvg.stat|" | xargs cat | uniq.pl -i 0  > $D/cvg.tab
 
 #snv annotation
 cut -f3 $IN | sed "s|$|.$M.00.vcf|" | xargs cat | bedtools sort -header | sed 's|rCRS|chrM|g'  > $D/$M.00.concat.vcf
@@ -38,6 +34,9 @@ annotateVcf.sh $D/$M.00.concat.vcf
 snpCount.sh $IN $D $M $T1
 snpCount.sh $IN $D $M $T2
 snpCount.sh $IN $D $M $T3
+
+#cleanup
+rm -f fastp.html fastp.json
 
 ##########################################################
 
@@ -53,9 +52,5 @@ cut -f3 $IN | sed "s|$|.$M.haplogroup|" | xargs cat | grep -v SampleID | sed 's|
 cut -f3 $IN | sed "s|$|.$M.fa|"        | xargs cat > $D/$M.fa
 samtools faidx  $D/$M.fa
 
-#consensus cvg
-cut -f3 $IN | sed "s|$|.$M.merge.bed|"  | xargs cat > $D/$M.merge.bed
-
-#cleanup
-rm -f fastp.html fastp.json
-
+#consensus cvg; tmp
+#cut -f3 $IN | sed "s|$|.$M.merge.bed|"  | xargs cat > $D/$M.merge.bed

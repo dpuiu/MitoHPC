@@ -27,7 +27,6 @@ if [ ! -s $I.bai ] && [ ! -s $I.crai ]; then
   samtools index -@ $P $I
 fi
 
-
 if [ ! -s $D/$N.idxstats ] ; then
   #samtools view -@ $P $I -F 0x900 -c     | awk '{print $1,"all"}'    >  $D/$N.count
   #samtools view -@ $P $I -F 0x904 -c     | awk '{print $1,"mapped"}' >> $D/$N.count
@@ -35,9 +34,9 @@ if [ ! -s $D/$N.idxstats ] ; then
   samtools idxstats -@ $P $I > $D/$N.idxstats
 fi
 
-if [ ! -s $D/$N.count ] ; then
+#if [ ! -s $D/$N.count ] ; then
   cat $D/$N.idxstats | idxstats2count.pl -sample $N >  $D/$N.count
-fi
+#fi
 
 #to be removed; only for the paper
 #if [ ! -s $D/$N.cvg.stat ] ; then

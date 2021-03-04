@@ -12,7 +12,7 @@
 #5: FO: target sequence path : rCRS (default)    
 #6: F:  target sequence path : rCRS (default) or sampleConsensus(2nd itteration)
 
-I=$1  ; test -s $I
+I=$1  ; test -s $I #tmp
 O=$2
 M=$3
 H=$4  ; test -s $H.fa ; test -s $H.NUMT.fa
@@ -37,7 +37,6 @@ MSIZE=16500
 #########################################################################################################################################
 #test input file
 
-test -s $I
 if [ ! -s $I.bai ] && [ ! -s $I.crai ] ; then exit 1 ; fi
 
 if [ $(stat -c%s $F.fa) -lt $MSIZE ] ; then exit 1 ; fi
@@ -89,7 +88,7 @@ fi
 #count aligned reads
 
 if [ ! -s $O.count ] ; then
-  samtools idxstats $O.bam | idxstats2count.pl -sample $N > $O.count
+  samtools idxstats $O.bam | idxstats2count.pl -sample $N -chrM $R > $O.count
 fi
 
 #########################################################################################################################################
@@ -135,7 +134,7 @@ if  [ ! -s $O.fa ]  && [ ! -s $O.$M.fa ] ; then
   bcftools consensus -f $F.fa $O.$M.max.vcf.gz | perl -ane 'if($.==1) { print ">$ENV{N}\n" } else { s/N//g; print }' > $O.$M.fa
   rm $O.$M.max.vcf.gz $O.$M.max.vcf.gz.tbi
 
-  if [ $(stat -c%s " $O.$M.fa") -lt $MSIZE ] ; then exit 1 ; fi
+  #if [ $(stat -c%s " $O.$M.fa") -lt $MSIZE ] ; then exit 1 ; fi
 
   #java -jar $JDIR/gatk.jar NormalizeFasta --INPUT $O.$M.fa --OUTPUT $O.$M.norm.fa --LINE_LENGTH 60
   cat $O.$M.fa | perl -ane 'if(/^>/) { print "\n" if($.>1); print} else { chomp ;print} END{print "\n"}' > $O.$M.norm.fa

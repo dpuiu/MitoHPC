@@ -9,9 +9,11 @@ MAIN:
 	# define variables
 	my %opt;
 	my %count;
+	$opt{chrM}="chrM";
 
 	my $result = GetOptions(
-		"sample|Run=s"	=> \$opt{sample}
+		"sample|Run=s"	=> \$opt{sample},
+		"chrM=s"	=> \$opt{chrM}
 	);
         die "ERROR: $! " if (!$result);
 
@@ -25,7 +27,7 @@ MAIN:
 		my @F=split;
 		$count{all}+=$F[2]+$F[3];
 		$count{mapped}+=$F[2];
-		$count{chrM}=$F[2] if($F[0] eq "chrM") 
+		$count{chrM}=$F[2] if($F[0] eq $opt{chrM}); 
 	}
 
 	print join "\t",("Run","all","mapped","chrM"); print "\n";

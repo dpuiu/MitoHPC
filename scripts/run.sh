@@ -28,7 +28,7 @@ export I=2
 
 ##############################################################
 
-test -s ./init.sh
+if [ ! -s ./init.sh ] ; then cp $SDIR/init.sh . ; fi
 source ./init.sh
 
 test -s $IN

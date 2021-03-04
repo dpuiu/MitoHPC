@@ -53,7 +53,7 @@ MAIN:
 				if($F[7]!~/;INDEL/)  { $count{$sample}{s}++ } else { $count{$sample}{i}++ }
 			}
 
-			if($F[7]=~/;HP/)
+			if($F[7]!~/;HP/)
 			{
 	        	        if($F[-1]=~/.+:1$/)
         	        	{

@@ -28,7 +28,7 @@ MAIN:
 		#MH0162809.final  763658318  762297733  495743  205156
 
 		my @F=split;
-		if(/^Run/)
+		if(/^Run/ or /^sample/)
 		{
 			push @F,"M";
 		}
