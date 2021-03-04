@@ -95,7 +95,7 @@
 
     {mutect2,mutserve}.{03,05,10}.{concat,merge[.sitesOnly]}.vcf       # SNVs; 3,5,10% minimum heteroplasmy thold
     {mutect2,mutserve}.{03,05,10}.tab                                  # SNV counts
-    {mutect2,mutserve}.{03,05,10}.summary                              # SNV counts summaries
+    {mutect2,mutserve}.{03,05,10}.summary                              # SNV count summaries
 
     {mutect2,mutserve}.fa                                              # consensus sequence
     {mutect2,mutserve}.haplogroup[1].tab                               # haplogroup
