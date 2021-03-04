@@ -89,19 +89,28 @@
 
 ## OUTPUT ##
 
-    TAB/VCF Files: 
+    VCF/TAB/SUMMARY/FASTA Files: 
 
 ### 1st ITTERATION ### 
 
-    count.tab 
     {mutect2,mutserve}.{03,05,10}.{concat,merge[.sitesOnly]}.vcf       # SNVs; 3,5,10% minimum heteroplasmy thold
     {mutect2,mutserve}.{03,05,10}.tab                                  # SNV counts
-    cont.tab                                                           # reads, mtDNA-CN counts
+    {mutect2,mutserve}.{03,05,10}.summary                              # SNV counts summaries
+
+    {mutect2,mutserve}.fa                                              # consensus sequence
+    {mutect2,mutserve}.haplogroup[1].tab                               # haplogroup
+    count.tab                                                          # reads (all,mapped,chrM,filter) & mtDNA-CN counts
+    cvg.tab                                                            # coverage stats
+    
 
 ### 2nd ITTERATION ###
 
     mutect2.mutect2.{03,05,10}.{concat,merge[.sitesOnly]}.vcf	
     mutect2.mutect2.{03,05,10}.tab
+
+## noNUMT ##
+
+   removed the NUMT labeled SNV's
 
 ## EXAMPLE 1 : Usage ##
 
