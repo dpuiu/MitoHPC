@@ -46,6 +46,7 @@ printf "export H=$H\n"
 printf "export MT=$MT\n"
 printf "export NUMT=\"$NUMT\"\n"
 printf "export E=$E\n"
+printf "export L=$L\n"
 
 printf "export M=$M\n"
 printf "export T1=$T1\n"

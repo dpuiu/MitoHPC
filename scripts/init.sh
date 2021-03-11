@@ -18,11 +18,16 @@ export LDIR=$HDIR/lib/perl5
 
 export PATH=$SDIR:$BDIR:$PATH
 export PERLLIB=$LDIR/:$PERLLIB
-export SH="bash"                 # bash, sbatch(SLURM), qsub(SGE,PBS) : filter.pl jobs
-export SHS="bash"		 #                                      getSummary.pl job
 
-#export SH="sbatch -J HP$$ --partition=shared"                 # bash, sbatch(SLURM), qsub(SGE,PBS)
-#export SHS="sbatch -J HP$$ -d singleton --partition=shared"      
+export SH="bash"                                               # parallel : filter.pl jobs
+export SHS="bash"		                               # singleton :  getSummary.pl job
+
+#export SH= "sbatch -J HP$$ --partition=shared"                # SLURM
+#export SHS="sbatch -J HP$$ -d singleton --partition=shared"   # SLURM
+
+#export SH= "qsub -N HP$$ -cwd "                               # SGE
+#export SHS="qsub -hold_jid HP$$ -cwd "                        # SGE
+
 ################################################################
 
 export MT=chrM		#

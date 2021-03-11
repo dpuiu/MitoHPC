@@ -8,7 +8,8 @@ MAIN:
 {
 	# define variables
 	my %opt;
-	$opt{ref}=   3217346917;
+	$opt{ref}=   3217346917;	#hs38DH size (3355 sequences) 
+	#$opt{ref}=  3099922541;	#hs38DH size (195 sequences)
 	$opt{female}=3160119502;
 	$opt{male}=  3110712762;
 	$opt{chrM}=  16569;
@@ -19,6 +20,9 @@ MAIN:
 		"male=i" =>     \$opt{male},
         );
         die "ERROR: $! " if (!$result);
+
+	if($opt{female})  { $opt{ref}=$opt{female} }
+	elsif($opt{male}) { $opt{ref}=$opt{male}   }
 
 	while(<>)
 	{
