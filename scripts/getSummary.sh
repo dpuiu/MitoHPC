@@ -21,7 +21,7 @@ T3=$6
 cut -f3 $IN | sed "s|$|.count|" | xargs cat | uniq.pl -i 0  | sed 's|^sample|Run|' > $D/filter.tab
 
 #cvg
-cut -f3 in.txt | sed "s|$|.cvg.stat|" | xargs cat | uniq.pl -i 0  > $D/cvg.tab
+cut -f3 $IN | sed "s|$|.cvg.stat|" | xargs cat | uniq.pl -i 0  > $D/cvg.tab
 
 #snv annotation
 cut -f3 $IN | sed "s|$|.$M.00.vcf|" | xargs cat | bedtools sort -header | sed 's|rCRS|chrM|g'  > $D/$M.00.concat.vcf

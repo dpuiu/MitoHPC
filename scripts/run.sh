@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-export IN=${1:-in.txt}           # input file with .bam/.cram file path; required
+export IN=${1:-$PWD/in.txt}           # input file with .bam/.cram file path; required
 export ODIR=${2:-out}            # output dir; should be empty; required
 export M=${3:-mutect2}           # or mutserve
 export H=${4:-hs38DH}            # human reference
@@ -35,7 +35,7 @@ test -s $IN
 mkdir -p $ODIR
 
 ###############################################################
-printf "#!/bin/bash -eux\n\n"
+printf "#!/usr/bin/bash -eux\n\n"
 printf "export SDIR=$SDIR\n"
 printf "export BDIR=$BDIR\n"
 printf "export JDIR=$JDIR\n"
@@ -55,6 +55,7 @@ printf "export T3=$T3\n"
 
 printf "export PATH=$SDIR:$BDIR:\$PATH\n"
 printf "export PERLLIB=$LDIR:$PERLLIB\n"
+printf "export PERL5LIB=$LDIR:$PERL5LIB\n"
 
 printf "\n######################################\n\n"
 cat $IN | perl -ane 'next if(/^#/ or @F<3);  print "$ENV{SH} $ENV{SDIR}/filter.sh $F[1] $F[2] $ENV{M} $ENV{RDIR}/$ENV{H} $ENV{RDIR}/$ENV{R} $ENV{RDIR}/$ENV{R}\n";'

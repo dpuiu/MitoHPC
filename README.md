@@ -49,9 +49,9 @@
 
     $ head in.txt
       #sampleName    inputFile         outputPath/prefix
-      sim.A          bams/sim.A.bam    out/sim.A/sim.A
-      sim.B          bams/sim.B.bam    out/sim.B/sim.B
-      sim.C          bams/sim.C.bam    out/sim.C/sim.C
+      chrM.A          bams/sim.A.bam    out/sim.A/sim.A
+      chrM.B          bams/sim.B.bam    out/sim.B/sim.B
+      chrM.C          bams/sim.C.bam    out/sim.C/sim.C
       ...
 
 ### GENERATE INDEX AND COUNT FILES ###
@@ -68,10 +68,10 @@
     
      $ mkir -p out/
      $ find $ADIR/ -name "*.count" | xargs cat | $SDIR/uniq.pl  | $SDIR/getCN.pl > out/count.tab 
-       Run      all        mapped     chrM    M       
-       sim.A    851537886  848029490  396766  181.7   
-       sim.B    884383716  882213718  506597  223.01  
-       sim.C    786560467  785208588  503241  248.9   
+       Run       all        mapped     chrM    M       
+       chrM.A    851537886  848029490  396766  181.7   
+       chrM.B    884383716  882213718  506597  223.01  
+       chrM.C    786560467  785208588  503241  248.9   
        ...
   
 ### GENERATE SNV PIPELINE SCRIPT ###
@@ -120,20 +120,20 @@
     $ $SDIR/run.sh in.txt out/   hs38DH.fa  RSRS.fa mutserve
 
 
-## EXAMPLE 2 : 3 simulated datasets  ##
+## EXAMPLE 2 : 3 chrMulated datasets  ##
 
 ### input file ###
     $ cat in.txt 
-      bams/sim.A.bam
-      bams/sim.B.bam
-      bams/sim.C.bam 
+      bams/chrM.A.bam
+      bams/chrM.B.bam
+      bams/chrM.C.bam 
 
 ### after running samtools.sh ###
     $ ls bams/*
-      bams/sim.A.bam
-      bams/sim.A.bam.bai
-      bams/sim.A.idxstats
-      bams/sim.A.count
+      bams/chrM.A.bam
+      bams/chrM.A.bam.bai
+      bams/chrM.A.idxstats
+      bams/chrM.A.count
      ...
 
 ### after running the pipeline ###
@@ -141,27 +141,27 @@
 #### output directories : 1/sample ####
   
     $ ls out/
-      sim.A/
-      sim.B/
-      sim.C/ 
+      chrM.A/
+      chrM.B/
+      chrM.C/ 
       ...
 
 #### vcf files : concat & merge ####
 
     $ cat mutect2.03.concat.vcf  
       ...
-      #CHROM    POS  ID  REF  ALT  QUAL  FILTER                      INFO              FORMAT    SAMPLE    
-      chrM      64   .   C    T    .     clustered_events;haplotype  SM=sim.A;HV       GT:DP:AF  0|1:67:1  
-      chrM      73   .   A    G    .     PASS                        SM=sim.B;HV;NUMT  GT:DP:AF  0/1:52:1  
-      chrM      73   .   A    G    .     PASS                        SM=sim.C;HV       GT:DP:AF  0/1:43:1  
+      #CHROM    POS  ID  REF  ALT  QUAL  FILTER                      INFO               FORMAT    SAMPLE    
+      chrM      64   .   C    T    .     clustered_events;haplotype  SM=chrM.A;HV       GT:DP:AF  0|1:67:1  
+      chrM      73   .   A    G    .     PASS                        SM=chrM.B;HV;NUMT  GT:DP:AF  0/1:52:1  
+      chrM      73   .   A    G    .     PASS                        SM=chrM.C;HV       GT:DP:AF  0/1:43:1  
       ...
 
     $ cat mutect2.03.merge.vcf  
       ...  
-      #CHROM    POS  ID  REF  ALT  QUAL  FILTER  INFO               FORMAT    sim.A     chrM.B    chrM.C    
-      chrM      64   .   C    T    .     .       AC=1;AN=2;HV       GT:DP:AF  0|1:67:1  .:.:.     .:.:.     
-      chrM      73   .   A    G    .     .       AC=1;AN=2;HV;NUMT  GT:DP:AF  .:.:.     0/1:52:1  .:.:.     
-      chrM      73   .   A    G    .     .       AC=2;AN=4;HV       GT:DP:AF  0|1:70:1  .:.:.     0/1:43:1  
+      #CHROM    POS  ID  REF  ALT  QUAL  FILTER  INFO               FORMAT    chrM.A     chrM.B    chrM.C    
+      chrM      64   .   C    T    .     .       AC=1;AN=2;HV       GT:DP:AF  0|1:67:1   .:.:.     .:.:.     
+      chrM      73   .   A    G    .     .       AC=1;AN=2;HV;NUMT  GT:DP:AF  .:.:.      0/1:52:1  .:.:.     
+      chrM      73   .   A    G    .     .       AC=2;AN=4;HV       GT:DP:AF  0|1:70:1   .:.:.     0/1:43:1  
       ...
 
     $ cat mutect2.03.merge.sitesOnly.vcf
@@ -174,18 +174,18 @@
 #### SNV counts ####
 
     $ cat mutect2.03.tab            
-      Run                       H           h   S   s   I  i  Hp  hp  Sp  sp  Ip  ip  
-      sim.A                     31          44  28  36  3  8  3   0   0   0   3   0   
-      sim.B                     27          42  25  34  2  8  5   0   3   0   2   0   
-      sim.C                     39          43  35  35  4  8  2   0   0   0   2   0   
+      Run                        H           h   S   s   I  i  Hp  hp  Sp  sp  Ip  ip  
+      chrM.A                     31          44  28  36  3  8  3   0   0   0   3   0   
+      chrM.B                     27          42  25  34  2  8  5   0   3   0   2   0   
+      chrM.C                     39          43  35  35  4  8  2   0   0   0   2   0   
 
 #### Haplogroups ####
 
     $ cat mutect2.haplogroup.tab    
-      Run                       haplogroup  
-      sim.A                     A2+(64)     
-      sim.B                     B2          
-      sim.C                     C           
+      Run                        haplogroup  
+      chrM.A                     A2+(64)     
+      chrM.B                     B2          
+      chrM.C                     C           
 
 ### LEGEND ###
 

@@ -33,6 +33,9 @@ IDIR=`dirname $I`
 ODIR=`dirname $O`; mkdir -p $ODIR
 P=1                						# number of processors
 MSIZE=16500
+MM=4g
+MS=2g
+MX=2g
 
 #########################################################################################################################################
 #test input file
@@ -53,7 +56,7 @@ if [ ! -s $F.dict   ] ; then
 fi
 
 if [ ! -s $F+.fa  ] ; then
-  cat $F.fa.fai | perl -ane 'print "$F[0]\t0\t$F[1]\n$F[0]\t0\t$ENV{E}\n";' | bedtools getfasta -fi $F.fa -bed - | grep -v "^>" | perl -ane 'BEGIN { print ">$ENV{R}\n" } ;print;' > $F+.fa
+  cat $F.fa.fai | perl -ane 'print "$F[0]\t0\t$F[1]\n$F[0]\t0\t$ENV{E}\n";' | bedtools getfasta -fi $F.fa -bed - -fo /dev/stdout | grep -v "^>" | perl -ane 'BEGIN { print ">$ENV{R}\n" } ;print;' > $F+.fa
   cat $H.NUMT.fa >> $F+.fa
   #java -jar $JDIR/gatk.jar NormalizeFasta --INPUT $F+.fa --OUTPUT $F+.norm.fa --LINE_LENGTH 60
   cat $F+.fa | perl -ane 'if(/^>/) { print "\n" if($.>1); print} else { chomp ;print} END{print "\n"}' > $F+.norm.fa
@@ -69,7 +72,7 @@ fi
 
 if  [ ! -s $O.bam.bai ] ; then
   samtools view $I $MT $NUMT -bu -F 0x900 -T $H.fa | \
-    samtools sort -n -O SAM | \
+    samtools sort -n -O SAM -m $MM | \
     perl -ane 'if(/^@/) {print} elsif($L>$ENV{L}) {last} elsif($P[0] eq $F[0]) {print $p,$_ ; $L+=2}; @P=@F; $p=$_;' | \
     samtools view -bu | \
     bedtools bamtofastq  -i /dev/stdin -fq /dev/stdout -fq2 /dev/stdout | \
@@ -80,7 +83,7 @@ if  [ ! -s $O.bam.bai ] ; then
     circSam.pl -ref_len $F.fa.fai | grep -v "^$" | \
     grep -v -P '^\@SQ\tSN:chr1' | \
     samtools view -bu | \
-    samtools sort > $O.bam
+    samtools sort -m $MM > $O.bam
 
   samtools index $O.bam
 fi
@@ -104,15 +107,15 @@ fi
 
 if [ ! -s $O.$M.vcf ] ; then
   if [ "$M" == "mutect2" ] ; then
-    java -jar $JDIR/gatk.jar Mutect2           -R $F.fa -I $O.bam                             -O $O.$M.vcf
-    java -jar $JDIR/gatk.jar FilterMutectCalls -R $F.fa -V $O.$M.vcf --min-reads-per-strand 2 -O $O.${M}F.vcf
+    java -Xms$MS -Xmx$MX -jar $JDIR/gatk.jar Mutect2           -R $F.fa -I $O.bam                             -O $O.$M.vcf
+    java -Xms$MS -Xmx$MX -jar $JDIR/gatk.jar FilterMutectCalls -R $F.fa -V $O.$M.vcf --min-reads-per-strand 2 -O $O.${M}F.vcf
     mv $O.${M}F.vcf  $O.$M.vcf ; rm $O.${M}F.vcf* $O.$M.vcf.*
     if [ -s $O.max.vcf ] ; then
       cat $O.max.vcf | fixsnpPos.pl -ref $RO -rfile $FO.fa -file /dev/stdin $O.$M.vcf > $O.${M}F.vcf
       mv $O.${M}F.vcf $O.$M.vcf
     fi
   elif [ "$M" == "mutserve" ] && [ "$R" == "rCRS" ] ; then
-    java -jar $JDIR/mutserve.jar analyse-local --input $O.bam --deletions  --insertions --level 0.01 --output $O.$M.vcf --reference $F
+    java -Xms$MS -Xmx$MX -jar $JDIR/mutserve.jar analyse-local --input $O.bam --deletions  --insertions --level 0.01 --output $O.$M.vcf --reference $F
     cat $O.$M.vcf | perl -ane 'if(/^##/) { print } else { print join "\t",@F[0..9]; print "\n"}' | sed 's|^chrM|rCRS|g' | sed 's|.bam$||'  > $O.${M}F.vcf
     mv $O.${M}F.vcf $O.$M.vcf ; rm -f ${O}_raw.txt $O.txt
   fi
@@ -140,13 +143,13 @@ if  [ ! -s $O.fa ]  && [ ! -s $O.$M.fa ] ; then
   cat $O.$M.fa | perl -ane 'if(/^>/) { print "\n" if($.>1); print} else { chomp ;print} END{print "\n"}' > $O.$M.norm.fa
   mv $O.$M.norm.fa $O.$M.fa
   bwa index $O.$M.fa  -p $O.$M
-  bedtools bamtofastq -i $O.bam -fq /dev/stdout | bwa mem $O.$M - -v 1 -t $P -v 1 -k 63 | samtools sort | bedtools bamtobed -tag NM -cigar | perl -ane 'print if($F[4]==0);' | bedtools merge -d -5  | bed2bed.pl > $O.$M.merge.bed
+  bedtools bamtofastq -i $O.bam -fq /dev/stdout | bwa mem $O.$M - -v 1 -t $P -v 1 -k 63 | samtools sort -m $MM | bedtools bamtobed -tag NM -cigar | perl -ane 'print if($F[4]==0);' | bedtools merge -d -5  | bed2bed.pl > $O.$M.merge.bed
   rm -f $O.$M.*{sa,amb,ann,pac,bwt}
 
   ########################################################################################################################################
   # get haplogroup
   if [ "$R" == "rCRS" ] ||  [ "$R" == "chrM" ] ; then
-    java -jar $JDIR/haplogrep.jar classify --in $O.$M.vcf  --format  vcf  --out $O.$M.haplogroup
+    java -Xms$MS -Xmx$MX -jar $JDIR/haplogrep.jar classify --in $O.$M.vcf  --format  vcf  --out $O.$M.haplogroup
   elif [ "$R" == "RSRS" ] ; then
     java -jar $JDIR/haplogrep.jar classify --in $O.$M.vcf  --format  vcf  --out $O.$M.haplogroup --rsrs
   fi
