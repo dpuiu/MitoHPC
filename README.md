@@ -81,9 +81,9 @@
 
 ### RUN PIPELINE  ###
 
-    $ ./filter.all.sh				
+    $ ./filter.all.sh                                            # run interactively	
     ... or
-    $ nohup ./filter.all.sh &	                                 # run in the backgroud
+    $ nohup ./filter.all.sh &                                    # run in the backgroud
     ... or (MARCC)
     $ sbatch --partition=shared --time=24:0:0 ./filter.all.sh    # run using a SLURM job scheduler
     ... or (JHPCE)
