@@ -48,7 +48,7 @@
     $ find $ADIR/  | ls2in.pl  | sort > in.txt
 
     $ head in.txt
-      #sampleName    inputFile         outputPath/prefix
+      #sampleName     inputFile          outputPath/prefix
       chrM.A          bams/chrM.A.bam    out/chrM.A/chrM.A
       chrM.B          bams/chrM.B.bam    out/chrM.B/chrM.B
       chrM.C          bams/chrM.C.bam    out/chrM.C/chrM.C
