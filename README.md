@@ -49,9 +49,9 @@
 
     $ head in.txt
       #sampleName    inputFile         outputPath/prefix
-      chrM.A          bams/sim.A.bam    out/sim.A/sim.A
-      chrM.B          bams/sim.B.bam    out/sim.B/sim.B
-      chrM.C          bams/sim.C.bam    out/sim.C/sim.C
+      chrM.A          bams/chrM.A.bam    out/chrM.A/chrM.A
+      chrM.B          bams/chrM.B.bam    out/chrM.B/chrM.B
+      chrM.C          bams/chrM.C.bam    out/chrM.C/chrM.C
       ...
 
 ### GENERATE INDEX AND COUNT FILES ###
@@ -83,10 +83,12 @@
 
     $ ./filter.all.sh				
     ... or
-    $ nohup ./filter.all.sh &	                               # run in the backgroud
+    $ nohup ./filter.all.sh &	                                 # run in the backgroud
     ... or (MARCC)
-    $ sbatch --partition=shared --time=24:0:0 ./filter.all.sh    # run using a job scheduler
-
+    $ sbatch --partition=shared --time=24:0:0 ./filter.all.sh    # run using a SLURM job scheduler
+    ... or (JHPCE)
+    qsub -wd $MYSCRATCH -V ./filter.all.sh                       # run using an SGE job scheduler; run under $MYSCRATCH
+     
 ## OUTPUT ##
 
     VCF/TAB/SUMMARY/FASTA Files: 
