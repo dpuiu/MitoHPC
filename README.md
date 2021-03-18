@@ -21,9 +21,8 @@
 ### SETUP ENVIRONMENT ###
     
     $ export SDIR=$PWD/HP/scripts/   # set script directory variable
-    
-    $ ADIR=alignment directory path
-    $ ODIR=output directory  :  "out" or "$MYSCRATCH/out"
+    $ export ADIR=alignment directory path
+    $ export ODIR=output directory  :  "out" or "$MYSCRATCH/out"
 
 ### INSTALL PIPELINE PREREQUISITES (optional) ###
 
@@ -46,7 +45,7 @@
     $ nano init.sh
 
     # generate an imput file which contains the list of the BAM/CRAM files to be processed 
-    $ find $ADIR/  | $SDIR/ls2in.pl  | sort > in.txt
+    $ find $ADIR/  | $SDIR/ls2in.pl -out $ODIR | sort > in.txt
 
     $ head in.txt
       #sampleName     inputFile          outputPath/prefix
