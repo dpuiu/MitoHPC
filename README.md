@@ -21,8 +21,6 @@
 ### SETUP ENVIRONMENT ###
     
     $ export SDIR=$PWD/HP/scripts/   # set script directory variable
-    $ export ADIR=alignment directory path
-    $ export ODIR=output directory  :  "out" or "$MYSCRATCH/out"
 
 ### INSTALL PIPELINE PREREQUISITES (optional) ###
 
@@ -36,7 +34,7 @@
 
 ## USAGE ##
 
-### COPY init.sh & GENERATE INPUT FILE  ###
+### COPY init.sh ###
 
     # go to the working directory
 
@@ -44,10 +42,19 @@
     $ cp -i $SDIR/init.sh .
     $ nano init.sh
 
-    # generate an imput file which contains the list of the BAM/CRAM files to be processed 
-    $ find $ADIR/  | $SDIR/ls2in.pl -out $ODIR | sort > in.txt
+### SETUP ENVIRONMENT ###
 
-    $ head in.txt
+* Examples 
+    $ export ADIR=$PWD/bams/         # alignment directory path
+    $ export ODIR=$PWD/out/          # output directory  :  "out" or "$MYSCRATCH/out"
+    $ export IN=$PWD/in.txt          # input file
+
+### GENERATE INPUT FILE  ###
+
+    # generate an imput file which contains the list of the BAM/CRAM files to be processed 
+    $ find $ADIR/  | $SDIR/ls2in.pl -out $ODIR | sort > $IN
+
+    $ head $IN
       #sampleName     inputFile          outputPath/prefix
       chrM.A          bams/chrM.A.bam    out/chrM.A/chrM.A
       chrM.B          bams/chrM.B.bam    out/chrM.B/chrM.B
@@ -56,11 +63,11 @@
 
 ### GENERATE INDEX AND COUNT FILES ###
 
-     $ cut -f2 in.txt | sed "s|^|$SDIR/samtools.sh |" > samtools.all.sh
+     $ cut -f2 $IN | sed "s|^|$SDIR/samtools.sh |" > samtools.all.sh
      ... or (MARCC)
-     $ cut -f2 in.txt | sed "s|^|sbatch --partition=shared --time=4:0:0 $SDIR/samtools.sh |" > samtools.all.sh
+     $ cut -f2 $IN | sed "s|^|sbatch --partition=shared --time=4:0:0 $SDIR/samtools.sh |" > samtools.all.sh
      ... or (JHPCE)
-     $ cut -f2 in.txt | sed "s|^|qsub -cwd -V -l walltime=4:0:0  $SDIR/samtools.sh |" > samtools.all.sh
+     $ cut -f2 $IN | sed "s|^|qsub -cwd -V -l walltime=4:0:0  $SDIR/samtools.sh |" > samtools.all.sh
 
      $ chmod a+x ./samtools.all.sh
      $ ./samtools.all.sh
@@ -77,7 +84,7 @@
   
 ### GENERATE SNV PIPELINE SCRIPT ###
 
-    $ $SDIR/run.sh in.txt $ODIR  > filter.all.sh
+    $ $SDIR/run.sh $PWD/$IN $ODIR  > filter.all.sh
     $ chmod u+x ./filter.all.sh
 
 ### RUN PIPELINE  ###
@@ -120,21 +127,21 @@
 ## EXAMPLE 1 : Usage ##
 
     #script      inFile outDir   humanRef   MTRef   SNVcalller
-    $ $SDIR/run.sh in.txt out/    
+    $ $SDIR/run.sh $IN $ODIR    
     ... or
-    $ $SDIR/run.sh in.txt out/   hs38DH.fa  RSRS.fa mutserve
+    $ $SDIR/run.sh $IN $ODIR hs38DH.fa  RSRS.fa mutserve
 
 
 ## EXAMPLE 2 : 3 chrMulated datasets  ##
 
 ### input file ###
-    $ cat in.txt 
+    $ cat $IN 
       bams/chrM.A.bam
       bams/chrM.B.bam
       bams/chrM.C.bam 
 
 ### after running samtools.sh ###
-    $ ls bams/*
+    $ ls $ADIR/*
       bams/chrM.A.bam
       bams/chrM.A.bam.bai
       bams/chrM.A.idxstats

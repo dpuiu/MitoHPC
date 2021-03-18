@@ -22,12 +22,12 @@ export PERLLIB=$LDIR/:$PERLLIB
 export SH="bash"                                               # parallel : filter.pl jobs
 export SHS="bash"		                               # singleton :  getSummary.pl job
 
-#export SH= "sbatch -J HP$$ --partition=shared"                # SLURM (MARCC)
-#export SHS="sbatch -J HP$$ -d singleton --partition=shared"   # SLURM
+#export SH= "sbatch -J HP$$ --partition=shared -D $ODIR"                # SLURM (MARCC)
+#export SHS="sbatch -J HP$$ -d singleton --partition=shared -D $ODIR"   # SLURM
 
 #define MYSCRATCH unless defined 
-#export SH="qsub -wd $MYSCRATCH -o logs/ -e logs/ -V -N HP$$ "          # SGE (JHPCE)
-#export SHS="qsub -wd $MYSCRATCH -o logs/ -e logs/ -V -hold_jid HP$$ "
+#export SH="qsub -wd $ODIR -V -N HP$$ "          # SGE (JHPCE)
+#export SHS="qsub -wd $ODIR -V -hold_jid HP$$ -N HPS$$ "
 
 ################################################################
 
