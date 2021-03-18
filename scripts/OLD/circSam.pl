@@ -55,7 +55,7 @@ MAIN:
 		elsif(/^\@/)
                 {
                 }
-		elsif($F[5]=~/M/)	# new
+		else
 		{
 			if($F[7])
 			{
@@ -143,13 +143,11 @@ MAIN:
 				}
 
 			}
+			elsif($F[3] and $len{$F[2]} and $F[3]>$len{$F[2]})
+			{
+				$F[3]=$F[3]%$len{$F[2]};
+			}
 		}
-
-		if($F[3]=~/^\d+$/ and $len{$F[2]} and $F[3]>$len{$F[2]})
-		{
-			$F[3]=$F[3]%$len{$F[2]};
-		}
-		
 		print join "\t",@F if(@F);
 		print "\n";
 	}

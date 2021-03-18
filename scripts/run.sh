@@ -53,6 +53,12 @@ printf "export T1=$T1\n"
 printf "export T2=$T2\n"
 printf "export T3=$T3\n"
 
+printf "export FNAME=\"$FNAME\"\n"
+printf "export FRULE=\"$FRULE\"\n"
+
+printf "export QM=$QM\n"
+printf "export QA=$QA\n"
+
 printf "export PATH=$SDIR:$BDIR:\$PATH\n"
 printf "export PERLLIB=$LDIR:$PERLLIB\n"
 printf "export PERL5LIB=$LDIR:$PERL5LIB\n"

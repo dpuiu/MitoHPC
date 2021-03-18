@@ -19,6 +19,7 @@ H=$4  ; test -s $H.fa ; test -s $H.NUMT.fa
 FO=$5 ; test -s $FO.fa
 F=$6  ; test -s $F.fa
 
+
 ########################################################################################################################################
 #set variables
 
@@ -32,9 +33,10 @@ IDIR=`dirname $I`
 ODIR=`dirname $O`; mkdir -p $ODIR
 P=1                						# number of processors
 MSIZE=16500
-MM=4g	# new (samtools : sorting mem mem)
-MS=2g	# new (java vm gatk)
+MM=4g
+MS=2g
 MX=2g
+
 #########################################################################################################################################
 #test input file
 
@@ -71,13 +73,13 @@ fi
 if  [ ! -s $O.bam.bai ] ; then
   samtools view $I $MT $NUMT -bu -F 0x900 -T $H.fa | \
     samtools sort -n -O SAM -m $MM | \
-    perl -ane 'if(/^@/) {print} elsif($P[0] eq $F[0]) {print $p,$_}; @P=@F; $p=$_;' | \
+    perl -ane 'if(/^@/) {print} elsif($L>$ENV{L}) {last} elsif($P[0] eq $F[0]) {print $p,$_ ; $L+=2}; @P=@F; $p=$_;' | \
     samtools view -bu | \
     bedtools bamtofastq  -i /dev/stdin -fq /dev/stdout -fq2 /dev/stdout | \
-    fastp --stdin --interleaved_in --stdout -q $QM -e $QA | \
+    fastp --stdin --interleaved_in --stdout | \
     bwa mem $F+ - -p -v 1 -t $P -Y -R "@RG\tID:$N\tSM:$N\tPL:ILLUMINA" -v 1 | \
     samblaster --removeDups --addMateTags  | \
-    perl -ane 'if(/^@/) { print } else { last if($P[0] ne $F[0] and $L>$ENV{L}) ;  print if($F[2] eq $ENV{R} and $F[6] eq "="); @P=@F ; $L++}' | \
+    perl -ane 'print if(/^@/ or $F[2] eq $ENV{R} and $F[6] eq "=");' | \
     circSam.pl -ref_len $F.fa.fai | grep -v "^$" | \
     grep -v -P '^\@SQ\tSN:chr1' | \
     samtools view -bu | \
@@ -149,7 +151,7 @@ if  [ ! -s $O.fa ]  && [ ! -s $O.$M.fa ] ; then
   if [ "$R" == "rCRS" ] ||  [ "$R" == "chrM" ] ; then
     java -Xms$MS -Xmx$MX -jar $JDIR/haplogrep.jar classify --in $O.$M.vcf  --format  vcf  --out $O.$M.haplogroup
   elif [ "$R" == "RSRS" ] ; then
-    java -Xms$MS -Xmx$MX -jar $JDIR/haplogrep.jar classify --in $O.$M.vcf  --format  vcf  --out $O.$M.haplogroup --rsrs
+    java -jar $JDIR/haplogrep.jar classify --in $O.$M.vcf  --format  vcf  --out $O.$M.haplogroup --rsrs
   fi
 fi
 

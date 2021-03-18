@@ -21,7 +21,10 @@
 ### SETUP ENVIRONMENT ###
     
     $ export SDIR=$PWD/HP/scripts/   # set script directory variable
- 
+    
+    $ ADIR=alignment directory path
+    $ ODIR=output directory  :  "out" or "$MYSCRATCH/out"
+
 ### INSTALL PIPELINE PREREQUISITES (optional) ###
 
     $ $SDIR/install_prerequisites.sh  
@@ -43,9 +46,7 @@
     $ nano init.sh
 
     # generate an imput file which contains the list of the BAM/CRAM files to be processed 
-    $ ADIR=alignment directory path
-
-    $ find $ADIR/  | ls2in.pl  | sort > in.txt
+    $ find $ADIR/  | $SDIR/ls2in.pl  | sort > in.txt
 
     $ head in.txt
       #sampleName     inputFile          outputPath/prefix
@@ -59,15 +60,16 @@
      $ cut -f2 in.txt | sed "s|^|$SDIR/samtools.sh |" > samtools.all.sh
      ... or (MARCC)
      $ cut -f2 in.txt | sed "s|^|sbatch --partition=shared --time=4:0:0 $SDIR/samtools.sh |" > samtools.all.sh
+     ... or (JHPCE)
+     $ cut -f2 in.txt | sed "s|^|qsub -cwd -V -l walltime=4:0:0  $SDIR/samtools.sh |" > samtools.all.sh
 
      $ chmod a+x ./samtools.all.sh
      $ ./samtools.all.sh
 
-
 ### COMPUTE mtDNA-CN ####
     
-     $ mkir -p out/
-     $ find $ADIR/ -name "*.count" | xargs cat | $SDIR/uniq.pl  | $SDIR/getCN.pl > out/count.tab 
+     $ mkir -p $ODIR/
+     $ find $ADIR/ -name "*.count" | xargs cat | $SDIR/uniq.pl  | $SDIR/getCN.pl > $ODIR/count.tab 
        Run       all        mapped     chrM    M       
        chrM.A    851537886  848029490  396766  181.7   
        chrM.B    884383716  882213718  506597  223.01  
@@ -76,20 +78,22 @@
   
 ### GENERATE SNV PIPELINE SCRIPT ###
 
-    $ $SDIR/run.sh in.txt out/  > filter.all.sh
+    $ $SDIR/run.sh in.txt $ODIR  > filter.all.sh
     $ chmod u+x ./filter.all.sh
 
 ### RUN PIPELINE  ###
 
-    $ ./filter.all.sh                                            # run interactively	
+    $ ./filter.all.sh                                                    # run interactively	
     ... or
-    $ nohup ./filter.all.sh &                                    # run in the backgroud
+    $ nohup ./filter.all.sh &                                            # run in the backgroud
     ... or (MARCC)
-    $ sbatch --partition=shared --time=24:0:0 ./filter.all.sh    # run using a SLURM job scheduler
+    $ sbatch -D $ODIR --partition=shared --time=24:0:0 ./filter.all.sh   # run using a SLURM job scheduler
     ... or (JHPCE)
-    qsub -wd $MYSCRATCH -V ./filter.all.sh                       # run using an SGE job scheduler; run under $MYSCRATCH
+    qsub -wd $ODIR -V -l walltime=24:0:0 ./filter.all.sh                 # run using an SGE job scheduler; run under $MYSCRATCH
      
 ## OUTPUT ##
+
+    under $ODIR:
 
     VCF/TAB/SUMMARY/FASTA Files: 
 
