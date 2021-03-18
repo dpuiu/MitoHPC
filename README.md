@@ -85,7 +85,7 @@
   
 ### GENERATE SNV PIPELINE SCRIPT ###
 
-    $ $SDIR/run.sh $PWD/$IN $ODIR  > filter.all.sh
+    $ $SDIR/run.sh $IN $ODIR  > filter.all.sh
     $ chmod u+x ./filter.all.sh
 
 ### RUN PIPELINE  ###
