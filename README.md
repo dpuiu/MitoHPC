@@ -223,7 +223,7 @@
 
 ## EXAMPLE 3 : CUSTOM FILTERING ##
 
-### usining init.sh ###
+### using init.sh ###
 
     $ nano init.sh
       export FNAME="no_qual_haplotype_strand"
