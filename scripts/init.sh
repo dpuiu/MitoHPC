@@ -18,6 +18,7 @@ export LDIR=$HDIR/lib/perl5
 
 export PATH=$SDIR:$BDIR:$PATH
 export PERLLIB=$LDIR/:$PERLLIB
+export PERL5LIB=$LDIR/:$PERL5LIB
 
 export SH="bash"                                               # parallel : filter.pl jobs
 export SHS="bash"		                               # singleton :  getSummary.pl job

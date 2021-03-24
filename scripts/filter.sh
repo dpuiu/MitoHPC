@@ -12,7 +12,7 @@
 #5: FO: target sequence path : rCRS (default)    
 #6: F:  target sequence path : rCRS (default) or sampleConsensus(2nd itteration)
 
-I=$1  ; test -s $I #tmp
+I=$1 
 O=$2
 M=$3
 H=$4  ; test -s $H.fa ; test -s $H.NUMT.fa
@@ -37,8 +37,8 @@ MS=2g	# new (java vm gatk)
 MX=2g
 #########################################################################################################################################
 #test input file
-
-if [ ! -s $I.bai ] && [ ! -s $I.crai ] ; then exit 1 ; fi
+#test -s $I
+#if [ ! -s $I.bai ] && [ ! -s $I.crai ] ; then exit 1 ; fi
 
 if [ $(stat -c%s $F.fa) -lt $MSIZE ] ; then exit 1 ; fi
 
@@ -68,7 +68,11 @@ fi
 #########################################################################################################################################
 #filter & realign reads
 
+echo $O.bam.bai 
 if  [ ! -s $O.bam.bai ] ; then
+  test -s $I
+  if [ ! -s $I.bai ] && [ ! -s $I.crai ] ; then exit 1 ; fi
+
   samtools view $I $MT $NUMT -bu -F 0x900 -T $H.fa | \
     samtools sort -n -O SAM -m $MM | \
     perl -ane 'if(/^@/) {print} elsif($P[0] eq $F[0]) {print $p,$_}; @P=@F; $p=$_;' | \
@@ -85,6 +89,20 @@ if  [ ! -s $O.bam.bai ] ; then
 
   samtools index $O.bam
 fi
+
+#new
+#samtools view -F 20 $O.bam -b > $O.fwd.bam
+#samtools index $O.fwd.bam
+#java -Xms$MS -Xmx$MX -jar $JDIR/gatk.jar Mutect2           -R $F.fa -I $O.fwd.bam                             -O $O.fwd.$M.vcf
+#java -Xms$MS -Xmx$MX -jar $JDIR/gatk.jar FilterMutectCalls -R $F.fa -V $O.fwd.$M.vcf --min-reads-per-strand 2 -O $O.fwd.${M}F.vcf
+#mv $O.fwd.${M}F.vcf  $O.fwd.$M.vcf ; rm $O.fwd.${M}F.vcf* $O.fwd.$M.vcf.*
+
+#samtools view -f 0x10 $O.bam -b > $O.rev.bam
+#samtools index $O.rev.bam
+#java -Xms$MS -Xmx$MX -jar $JDIR/gatk.jar Mutect2           -R $F.fa -I $O.rev.bam                             -O $O.rev.$M.vcf
+#java -Xms$MS -Xmx$MX -jar $JDIR/gatk.jar FilterMutectCalls -R $F.fa -V $O.rev.$M.vcf --min-reads-per-strand 2 -O $O.rev.${M}F.vcf
+#mv $O.rev.${M}F.vcf  $O.rev.$M.vcf ; rm $O.rev.${M}F.vcf* $O.rev.$M.vcf.*
+
 #########################################################################################################################################
 #count aligned reads
 
@@ -113,9 +131,16 @@ if [ ! -s $O.$M.vcf ] ; then
       mv $O.${M}F.vcf $O.$M.vcf
     fi
   elif [ "$M" == "mutserve" ] && [ "$R" == "rCRS" ] ; then
-    java -Xms$MS -Xmx$MX -jar $JDIR/mutserve.jar analyse-local --input $O.bam --deletions  --insertions --level 0.01 --output $O.$M.vcf --reference $F
+    java -Xms$MS -Xmx$MX -jar $JDIR/mutserve.jar analyse-local --input $O.bam --deletions  --insertions --level 0.01 --output $O.$M.vcf --reference $F.fa
     cat $O.$M.vcf | perl -ane 'if(/^##/) { print } else { print join "\t",@F[0..9]; print "\n"}' | sed 's|^chrM|rCRS|g' | sed 's|.bam$||'  > $O.${M}F.vcf
     mv $O.${M}F.vcf $O.$M.vcf ; rm -f ${O}_raw.txt $O.txt
+  elif [ "$M" == "mutserve2" ] ; then
+    java -Xms$MS -Xmx$MX -jar $JDIR/mutserve2.jar call --deletions --insertions --level 0.01 --output $O.$M.vcf --reference $F.fa $O.bam
+    cat $O.$M.vcf | perl -ane 'if(/^##/) { print } else { print join "\t",@F[0..9]; print "\n"}' | sed 's|^chrM|rCRS|g' | sed 's|.bam$||'  > $O.${M}F.vcf
+    mv $O.${M}F.vcf $O.$M.vcf ; rm -f ${O}_raw.txt $O.txt
+  else
+    echo "Wrong combination of mutect2/mutserve[12] and reference"
+    exit 1
   fi
 fi
 ##########################################################################################################################################
@@ -127,6 +152,9 @@ if [ ! -s $O.$M.00.vcf ]; then
   fa2Vcf.pl $FO.fa >> $O.$M.00.vcf
   cat $O.$M.vcf  | bcftools norm -m - | filterVcf.pl -sample $N -source $M |  grep -v "^#" | sort -k2,2n -k4,4 -k5,5 | fix${M}Vcf.pl -file $F.fa >> $O.$M.00.vcf
 fi
+
+cat  $O.$M.00.vcf | filterVcf.pl -p 0.03 | tee $O.$M.03.vcf  | filterVcf.pl -p 0.05  | tee $O.$M.05.vcf  | filterVcf.pl -p 0.10 > $O.$M.10.vcf 
+
 #########################################################################################################################################
 #get new consensus
 

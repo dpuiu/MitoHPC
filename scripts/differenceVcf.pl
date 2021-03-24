@@ -1,4 +1,4 @@
-#!/usr/bin/env perl -w
+#!/usr/bin/env perl 
 
 use strict;
 use warnings;
@@ -12,18 +12,10 @@ use Getopt::Long;
 
 MAIN:
 {
-        my ($i0,$i1)=(1,-1);
-        my ($j0,$j1)=(1,-1);
         my %h;
 
         # validate input parameters
-        my $result = GetOptions(
-                "i0=i"  => \$i0,
-                "i1=i"  => \$i1,
-
-                "j0=i"  => \$j0,
-                "j1=i"  => \$j1,
-        );
+        my $result = GetOptions();
 
 	die "ERROR: $! " if (!$result);
 
@@ -32,11 +24,14 @@ MAIN:
         open(IN,$ARGV[1]) or die("ERROR: Cannot open input file".$!) ;
         while(<IN>)
         {
+		#0	1	2	3	4	5	6	7				8	9
+		#chrM	73	.	A	G	.	PASS	HV;GT=0/1;DP=360;AF=0.354	SM	M1-53_S82_L001_sorted
+
                 next if(/^$/ or /^#/);
 
                 my @F=split;
-                die "ERROR:$_" if(@F<2);
-                $h{"$F[$j0] $F[$j1]"}=1;
+                die "ERROR:$_" if(@F<10 and $F[8] ne "SM");
+                $h{"$F[0] $F[1] $F[3] $F[4] $F[9]"}=1;
         }
 	close(IN);
         last unless(%h);
@@ -50,8 +45,8 @@ MAIN:
                 if(/^$/ or /^#/) { print; next}
 
                 my @F=split;
-                die "ERROR:$_" if(@F<2);
-                print unless $h{"$F[$i0] $F[$i1]"};
+                die "ERROR:$_" if(@F<10 and $F[8] ne "SM");
+                print unless $h{"$F[0] $F[1] $F[3] $F[4] $F[9]"};
         }
 
 	exit 0;

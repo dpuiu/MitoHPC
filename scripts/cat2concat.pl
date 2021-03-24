@@ -30,14 +30,21 @@ MAIN:
 			next
 		}
 		my @F=split;
-		my ($POS,$SM,$DP,$AF,$GT,$ANNOTATION,$INDEL)=(@F[1,-1],0,1,"0/","",0);
+		my ($POS,$SM,$DP,$AF,$ANNOTATION,$INDEL,$GT)=(@F[1,-1],0,1,"",0);
 
-		$GT{$POS}{$SM}++;
 
-		foreach (1..$GT{$POS}{$SM}-1) { $GT.="0/" }
-		$GT.="1";
+		if($F[7]=~/INDEL/) { $INDEL=1 }
 
-		$INDEL=1 if($F[7]=~/INDEL/);
+		if($F[7]=~/GT=(\S+?);/) { $GT=$1 }
+		else
+		{
+		       $GT="0/";
+	               $GT{$POS}{$SM}++;
+
+	               foreach (1..$GT{$POS}{$SM}-1) { $GT.="0/" }
+        	       $GT.="1";
+		}
+	
 		if($F[7]=~/DP=(\d+);AF=(\d+\.\d+)(.*)/ or $F[7]=~/DP=(\d+);AF=(\d+)(.*)/)
 		{
 			$DP=$1;

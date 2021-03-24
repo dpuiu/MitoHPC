@@ -145,7 +145,7 @@ MAIN:
 			}
 		}
 
-		if($F[3]=~/^\d+$/ and $len{$F[2]} and $F[3]>$len{$F[2]})
+		if(!/^@/ and $F[3]=~/^\d+$/ and $len{$F[2]} and $F[3]>$len{$F[2]})
 		{
 			$F[3]=$F[3]%$len{$F[2]};
 		}
