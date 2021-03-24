@@ -133,7 +133,7 @@
     $ $SDIR/run.sh $IN $ODIR hs38DH.fa  RSRS.fa mutserve
 
 
-## EXAMPLE 2 : 3 chrMulated datasets  ##
+## EXAMPLE 2 : 3 simulated datasets  ##
 
 ### input file ###
     $ cat $IN 
@@ -220,3 +220,21 @@
     i                             # heterozygous INDELs
     ...
     ?p                            # "p" suffix stands for non homopolimeric
+
+## EXAMPLE 3 : CUSTOM FILTERING ##
+
+### usining init.sh ###
+
+    $ nano init.sh
+      export FNAME="no_qual_haplotype_strand"
+      export FRULE="egrep -v \"qual|haplotype|strand\""
+    # rerun run.sh ...
+
+### command line ###    
+
+    $ M=mutect2
+    $ cat $ODIR/$M.00.concat.vcf  | egrep -v 'qual|haplotype|strand'  > $ODIR/$M.no_qual_haplotype_strand.00.concat.vcf
+    $ $SDIR/snpCount.sh $IN $ODIR $M.no_qual_haplotype_strand 03
+    $ $SDIR/snpCount.sh $IN $ODIR $M.no_qual_haplotype_strand 05
+    $ $SDIR/snpCount.sh $IN $ODIR $M.no_qual_haplotype_strand 10
+
