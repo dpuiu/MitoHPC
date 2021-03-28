@@ -62,9 +62,9 @@ if [ ! -s $BDIR/vcftools ] ; then
   cd -
 fi
 
-wget -N -c https://github.com/nferraz/st/archive/v1.1.4.tar.gz -O st-1.1.4.tar.gz
+wget -N -c https://github.com/nferraz/st/archive/v1.1.4.tar.gz #-O st-1.1.4.tar.gz
 if [ ! -s $BDIR/st ] ; then
-  tar -xzvf st-1.1.4.tar.gz
+  tar -xzvf v1.1.4.tar.gz # st-1.1.4.tar.gz
   cd st-1.1.4
   perl ./Makefile.PL INSTALL_BASE=$HDIR/ ; make ; make test ; make install
   cd -
@@ -78,9 +78,9 @@ if [ ! -s $BDIR/bedtools ] ; then
   cd -
 fi
 
-wget -N -c https://github.com/OpenGene/fastp/archive/v0.20.1.tar.gz -O fastp-0.20.1.tar.gz
+wget -N -c https://github.com/OpenGene/fastp/archive/v0.20.1.tar.gz #-O fastp-0.20.1.tar.gz
 if [ ! -s $BDIR/fastp ] ; then
-  tar -xzvf fastp-0.20.1.tar.gz
+  tar -xzvf v0.20.1.tar.gz # fastp-0.20.1.tar.gz
   cd fastp-0.20.1/
   make ; cp fastp $BDIR/
   cd -
@@ -117,7 +117,8 @@ fi
 #############
 
 cd $RDIR/
-wget -N -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa -O hs38DH.fa
+wget -N -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa #-O hs38DH.fa
+cp -i GRCh38_full_analysis_set_plus_decoy_hla.fa hs38DH.fa
 if [ ! -s $RDIR/hs38DH.fa ] ; then
   $BDIR/samtools faidx hs38DH.fa
   cd -
