@@ -46,9 +46,9 @@
 
     # Examples 
 
-    $ export ADIR=$PWD/bams/         # alignment directory path
-    $ export ODIR=$PWD/out/          # output directory  :  "out" or "$MYSCRATCH/out"
-    $ export IN=$PWD/in.txt          # input file
+    $ export ADIR=$PWD/bams/                          # alignment directory path
+    $ export ODIR=$PWD/out/ ; mkdir -p $ODIR          # output directory  :  "out" or "$MYSCRATCH/out"
+    $ export IN=$PWD/in.txt                           # input file
 
 ### GENERATE INPUT FILE  ###
 

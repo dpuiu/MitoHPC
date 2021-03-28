@@ -92,7 +92,7 @@ if [ ! -s $JDIR/gatk.jar ] ; then
   #unzip gatk-4.1.9.0.zip
   #cp gatk-4.1.9.0/gatk-package-4.1.9.0-local.jar $JDIR/gatk.jar
   unzip -o gatk-4.2.0.0.zip
-  cp gatk-4.1.9.0/gatk-package-4.1.9.0-local.jar $JDIR/gatk.jar
+  cp gatk-4.2.0.0/gatk-package-4.2.0.0-local.jar $JDIR/gatk.jar
 fi
 
 wget -N -c https://github.com/seppinho/haplogrep-cmd/releases/download/v2.2.9/haplogrep.zip
