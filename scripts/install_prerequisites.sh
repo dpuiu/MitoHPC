@@ -34,7 +34,7 @@ wget -N -c https://github.com/samtools/bcftools/releases/download/1.11/bcftools-
 if [ ! -s $BDIR/bcftools ] ; then
   tar -xjvf  bcftools-1.11.tar.bz2
   cd bcftools-1.11
-  ./configure --prefix=$HDIR/ ; make ; make test; make install
+  ./configure --prefix=$HDIR/ ; make ; make install
   cd -
 fi
 
@@ -42,7 +42,7 @@ wget -N -c https://github.com/samtools/htslib/releases/download/1.11/htslib-1.11
 if [ ! -s $BDIR/tabix ] ; then
   tar -xjvf htslib-1.11.tar.bz2
   cd htslib-1.11
-  ./configure --prefix=$HDIR/ ; make ; make test; make install
+  ./configure --prefix=$HDIR/ ; make ; make install
   cd -
 fi
 
@@ -66,7 +66,7 @@ wget -N -c https://github.com/nferraz/st/archive/v1.1.4.tar.gz #-O st-1.1.4.tar.
 if [ ! -s $BDIR/st ] ; then
   tar -xzvf v1.1.4.tar.gz # st-1.1.4.tar.gz
   cd st-1.1.4
-  perl ./Makefile.PL INSTALL_BASE=$HDIR/ ; make ; make test ; make install
+  perl ./Makefile.PL INSTALL_BASE=$HDIR/ ; make ; make install
   cd -
 fi
 
