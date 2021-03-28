@@ -118,8 +118,8 @@ fi
 
 cd $RDIR/
 wget -N -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa #-O hs38DH.fa
-cp -i GRCh38_full_analysis_set_plus_decoy_hla.fa hs38DH.fa
 if [ ! -s $RDIR/hs38DH.fa ] ; then
+  cp GRCh38_full_analysis_set_plus_decoy_hla.fa hs38DH.fa
   $BDIR/samtools faidx hs38DH.fa
   cd -
 fi
