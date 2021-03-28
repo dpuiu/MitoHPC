@@ -12,6 +12,7 @@ export HDIR=`readlink -f $SDIR/..`
 export LDIR=$HDIR/lib/perl5
 export PERLLIB=$LDIR:$PERLLIB
 export PERL5LIB=$LDIR:$PERL5LIB
+export JDIR=$HDIR/java
 
 #test -f  $SDIR/init.sh
 #source $SDIR/init.sh
