@@ -30,8 +30,15 @@ MAIN:
                 next if(/^$/ or /^#/);
 
                 my @F=split;
-                die "ERROR:$_" if(@F<10 and $F[8] ne "SM");
-                $h{"$F[0] $F[1] $F[3] $F[4] $F[9]"}=1;
+		my $SM="";
+
+                if(@F>=10)
+		{
+			if($F[8] eq "SM")                                 { $SM=$F[9] }
+			elsif($F[7]=~/SM=(\S+?);/ or $F[7]=~/SM=(\S+?)$/) { $SM=$1 }
+		}
+
+                $h{"$F[0] $F[1] $F[3] $F[4] $SM"}=1;
         }
 	close(IN);
         last unless(%h);
@@ -45,8 +52,15 @@ MAIN:
                 if(/^$/ or /^#/) { print; next}
 
                 my @F=split;
-                die "ERROR:$_" if(@F<10 and $F[8] ne "SM");
-                print unless $h{"$F[0] $F[1] $F[3] $F[4] $F[9]"};
+               	my $SM="";
+
+                if(@F>=10)
+               	{
+                        if($F[8] eq "SM")                                 { $SM=$F[9] }
+                        elsif($F[7]=~/SM=(\S+?);/ or $F[7]=~/SM=(\S+?)$/) { $SM=$1 }
+               	}
+
+                print unless $h{"$F[0] $F[1] $F[3] $F[4] $SM"};
         }
 
 	exit 0;

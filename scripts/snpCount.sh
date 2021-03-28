@@ -22,7 +22,7 @@ cat $D/$M.$T.concat.vcf | snpCount.pl -in $IN | tee $D/$M.$T.tab | getSummaryN.p
 
 #######################################################
 #if [[ -z "${FNAME}" ]]; then exit 0;  fi
-#cat $D/$M.$T.concat.vcf | $FRULE > $D/$M.$T.$FNAME.concat.vcf
+#cat $D/$M.$T.concat.vcf | eval $FRULE > $D/$M.$T.$FNAME.concat.vcf
 #cat $D/$M.$T.$FNAME.concat.vcf | concat2merge.pl -in $IN | bedtools sort -header | tee $D/$M.$T.$FNAME.merge.vcf | vcf2sitesOnly.pl >  $D/$M.$T.$FNAME.merge.sitesOnly.vcf
 #cat $D/$M.$T.$FNAME.concat.vcf | snpCount.pl -in $IN | tee $D/$M.$T.$FNAME.tab | getSummaryN.pl > $D/$M.$T.$FNAME.summary
 

@@ -66,9 +66,7 @@ if [ ! -s $F+.bwt ] ; then
 fi
 
 #########################################################################################################################################
-#filter & realign reads
-
-echo $O.bam.bai 
+#filter & realign reads   ##   -F 20 (fwd); -f 0x10 (rev)
 if  [ ! -s $O.bam.bai ] ; then
   test -s $I
   if [ ! -s $I.bai ] && [ ! -s $I.crai ] ; then exit 1 ; fi
@@ -78,7 +76,7 @@ if  [ ! -s $O.bam.bai ] ; then
     perl -ane 'if(/^@/) {print} elsif($P[0] eq $F[0]) {print $p,$_}; @P=@F; $p=$_;' | \
     samtools view -bu | \
     bedtools bamtofastq  -i /dev/stdin -fq /dev/stdout -fq2 /dev/stdout | \
-    fastp --stdin --interleaved_in --stdout -q $QM -e $QA | \
+    fastp --stdin --interleaved_in --stdout -q $QM -e $QA -j $O.json  -h $O.html | \
     bwa mem $F+ - -p -v 1 -t $P -Y -R "@RG\tID:$N\tSM:$N\tPL:ILLUMINA" -v 1 | \
     samblaster --removeDups --addMateTags  | \
     perl -ane 'if(/^@/) { print } else { last if($P[0] ne $F[0] and $L>$ENV{L}) ;  print if($F[2] eq $ENV{R} and $F[6] eq "="); @P=@F ; $L++}' | \
@@ -89,19 +87,6 @@ if  [ ! -s $O.bam.bai ] ; then
 
   samtools index $O.bam
 fi
-
-#new
-#samtools view -F 20 $O.bam -b > $O.fwd.bam
-#samtools index $O.fwd.bam
-#java -Xms$MS -Xmx$MX -jar $JDIR/gatk.jar Mutect2           -R $F.fa -I $O.fwd.bam                             -O $O.fwd.$M.vcf
-#java -Xms$MS -Xmx$MX -jar $JDIR/gatk.jar FilterMutectCalls -R $F.fa -V $O.fwd.$M.vcf --min-reads-per-strand 2 -O $O.fwd.${M}F.vcf
-#mv $O.fwd.${M}F.vcf  $O.fwd.$M.vcf ; rm $O.fwd.${M}F.vcf* $O.fwd.$M.vcf.*
-
-#samtools view -f 0x10 $O.bam -b > $O.rev.bam
-#samtools index $O.rev.bam
-#java -Xms$MS -Xmx$MX -jar $JDIR/gatk.jar Mutect2           -R $F.fa -I $O.rev.bam                             -O $O.rev.$M.vcf
-#java -Xms$MS -Xmx$MX -jar $JDIR/gatk.jar FilterMutectCalls -R $F.fa -V $O.rev.$M.vcf --min-reads-per-strand 2 -O $O.rev.${M}F.vcf
-#mv $O.rev.${M}F.vcf  $O.rev.$M.vcf ; rm $O.rev.${M}F.vcf* $O.rev.$M.vcf.*
 
 #########################################################################################################################################
 #count aligned reads
@@ -152,8 +137,6 @@ if [ ! -s $O.$M.00.vcf ]; then
   fa2Vcf.pl $FO.fa >> $O.$M.00.vcf
   cat $O.$M.vcf  | bcftools norm -m - | filterVcf.pl -sample $N -source $M |  grep -v "^#" | sort -k2,2n -k4,4 -k5,5 | fix${M}Vcf.pl -file $F.fa >> $O.$M.00.vcf
 fi
-
-cat  $O.$M.00.vcf | filterVcf.pl -p 0.03 | tee $O.$M.03.vcf  | filterVcf.pl -p 0.05  | tee $O.$M.05.vcf  | filterVcf.pl -p 0.10 > $O.$M.10.vcf 
 
 #########################################################################################################################################
 #get new consensus

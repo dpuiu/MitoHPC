@@ -87,8 +87,10 @@ fi
 
 ################### 
 if [ ! -s $JDIR/gatk.jar ] ; then
-  wget -c https://github.com/broadinstitute/gatk/releases/download/4.1.9.0/gatk-4.1.9.0.zip
-  unzip gatk-4.1.9.0.zip
+  #wget -c https://github.com/broadinstitute/gatk/releases/download/4.1.9.0/gatk-4.1.9.0.zip
+  #unzip gatk-4.1.9.0.zip
+  wget -c https://github.com/broadinstitute/gatk/releases/download/4.2.0.0/gatk-4.2.0.0.zip
+  unzip gatk-4.2.0.0.zip
   cp gatk-4.1.9.0/gatk-package-4.1.9.0-local.jar $JDIR/gatk.jar
 fi
 
@@ -101,7 +103,13 @@ fi
 if [ ! -s $JDIR/mutserve.jar ] ; then
   wget -N https://github.com/seppinho/mutserve/releases/download/v1.3.4/mutserve-1.3.4.jar
   cp mutserve-1.3.4.jar $JDIR/mutserve.jar
-  cd ../
+  #cd ../
+fi
+
+if [ ! -s $JDIR/mutserve.jar ] ; then
+  wget https://github.com/seppinho/mutserve/releases/download/v2.0.0-rc12/mutserve.zip
+  unzip mutserve.zip
+  cp mutserve.jar $JDIR/mutserve2.jar
 fi
 
 cd -

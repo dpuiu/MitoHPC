@@ -48,8 +48,10 @@ export T3=10
 export M=mutect2	# SNV calledr: mutect2 or mutserve
 export I=2		# number of mutect2 iterations : 1 or 2
 
-export FNAME="noNUMT"	      # SNV filter (optional)
-export FRULE="grep -v NUMT"
+#export FNAME="noNUMT"	      # SNV filter (optional)
+#export FRULE="grep -v NUMT"
+#export FNAME="PASS_clustered_events"
+#export FRULE='grep -P "PASS\t|clustered_events\t"' 
 
 export QM=0		# fastp quality trimming -q param [20]; use 0 if no quality provided
 export QA=0		# 			 -e       [30]

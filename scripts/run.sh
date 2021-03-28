@@ -68,7 +68,8 @@ cat $IN | perl -ane 'next if(/^#/ or @F<3);  print "$ENV{SH} $ENV{SDIR}/filter.s
 printf "$SHS $SDIR/getSummary.sh $IN $ODIR $M $T1 $T2 $T3\n"
 ##################################################################
 
-if [ "$M" == "mutect2" ] && [ "$I" == "2" ] ; then
+#if [ "$M" == "mutect2" ] && [ "$I" == "2" ] ; then
+if [ "$M" != "mutserve" ] && [ "$I" == "2" ] ; then
   printf "\n######################################\n\n"
   cat $IN | perl -ane 'next if(/^#/ or @F<3); print "$ENV{SH} $ENV{SDIR}/filter.sh $F[1] $F[2].$ENV{M} $ENV{M} $ENV{RDIR}/$ENV{H} $ENV{RDIR}/$ENV{R} $F[2].$ENV{M}\n";'
   printf "$SHS $SDIR/getSummary.sh $IN $ODIR $M.$M $T1 $T2 $T3\n"
