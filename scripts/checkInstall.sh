@@ -8,6 +8,11 @@
 ##########################################################
 
 export SDIR=`dirname $0`        # script directory
+export HDIR=`readlink -f $SDIR/..`
+export LDIR=$HDIR/lib/perl5
+export PERLLIB=$LDIR:$PERLLIB
+export PERL5LIB=$LDIR:$PERL5LIB
+
 #test -f  $SDIR/init.sh
 #source $SDIR/init.sh
 
