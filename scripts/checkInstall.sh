@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 #########################################################
 
@@ -13,6 +14,12 @@ export LDIR=$HDIR/lib/perl5
 export PERLLIB=$LDIR:$PERLLIB
 export PERL5LIB=$LDIR:$PERL5LIB
 export JDIR=$HDIR/java
+export BDIR=$HDIR/bin
+export RDIR=$HDIR/RefSeq
+
+export PATH=$SDIR:$BDIR:$PATH
+export PERLLIB=$LDIR/:$PERLLIB
+export PERL5LIB=$LDIR/:$PERL5LIB
 
 #test -f  $SDIR/init.sh
 #source $SDIR/init.sh
