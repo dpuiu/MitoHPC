@@ -43,9 +43,9 @@ which tabix
 which vcftools
 
 test -f $JDIR/gatk.jar
-test -f $JDIR/haplogrep.jar
 test -f $JDIR/mutserve.jar
-
+test -f $JDIR/haplogrep.jar
+test -f $JDIR/haplocheck.jar
 ######################################################
 
 echo "########################"  > checkInstall.log

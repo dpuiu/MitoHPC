@@ -27,46 +27,49 @@ MAIN:
 
 			print "##FORMAT=<ID=GT,Number=1,Type=String,Description=\"Genotype\">\n" if(/^##FORMAT=<ID=DP,/);
 			print;
-			next
+			next;
 		}
+		
 		my @F=split;
-		my ($POS,$SM,$DP,$AF,$ANNOTATION,$INDEL,$GT)=(@F[1,-1],0,1,"",0);
-
-
-		if($F[7]=~/INDEL/) { $INDEL=1 }
-
-		if($F[7]=~/GT=(\S+?);/) { $GT=$1 }
-		else
+		if($F[8] eq "SM")
 		{
-		       $GT="0/";
-	               $GT{$POS}{$SM}++;
+			my ($POS,$SM,$DP,$AF,$ANNOTATION,$INDEL,$GT)=(@F[1,-1],0,1,"",0);
 
-	               foreach (1..$GT{$POS}{$SM}-1) { $GT.="0/" }
-        	       $GT.="1";
-		}
+			if($F[7]=~/INDEL/) { $INDEL=1 }
 	
-		if($F[7]=~/DP=(\d+);AF=(\d+\.\d+)(.*)/ or $F[7]=~/DP=(\d+);AF=(\d+)(.*)/)
-		{
-			$DP=$1;
-			$AF=$2;
-			$ANNOTATION=$3;
-		}
-		elsif($F[7]=~/DP=(\d+)(.*)/)
-		{
-			$DP=$1;
-			$ANNOTATION=$2
-		}
-		else
-		{
-			die "ERROR:$_"
-		}
+			if($F[7]=~/GT=(\S+?);/) { $GT=$1 }
+			else
+			{
+			       $GT="0/";
+	        	       $GT{$POS}{$SM}++;
 
-		$F[7]="SM=$SM";
-		$F[7].=";INDEL" if($INDEL);
-		$F[7].=$ANNOTATION if($ANNOTATION);
+		               foreach (1..$GT{$POS}{$SM}-1) { $GT.="0/" }
+        		       $GT.="1";
+			}
+	
+			if($F[7]=~/DP=(\d+);AF=(\d+\.\d+)(.*)/ or $F[7]=~/DP=(\d+);AF=(\d+)(.*)/)
+			{
+				$DP=$1;
+				$AF=$2;
+				$ANNOTATION=$3;
+			}
+			elsif($F[7]=~/DP=(\d+)(.*)/)
+			{
+				$DP=$1;
+				$ANNOTATION=$2
+			}
+			else
+			{
+				die "ERROR:$_"
+			}
 
-		$F[8]="GT:DP:AF";
-		$F[9]="$GT:$DP:$AF";
+			$F[7]="SM=$SM";
+			$F[7].=";INDEL" if($INDEL);
+			$F[7].=$ANNOTATION if($ANNOTATION);
+
+			$F[8]="GT:DP:AF";
+			$F[9]="$GT:$DP:$AF";
+		}
 
 		print join "\t",@F;
 		print "\n";

@@ -17,10 +17,10 @@ MAIN:
 
         # validate input parameters
         my $result = GetOptions(
-		"min1=s"	=>	\$opt{m1},
-		"Max1=s"  =>      \$opt{M1},
-               	"min2=s"  =>      \$opt{m2},
-               	"Max2=s"  =>      \$opt{M2},
+                "min1=s"  =>	  \$opt{m1},
+                "Max1=s"  =>	  \$opt{M1},
+                "min2=s"  =>	  \$opt{m2},
+                "Max2=s"  =>	  \$opt{M2},
 	);
 
 	die "ERROR: $! " if (!$result);
@@ -35,14 +35,13 @@ MAIN:
 
                 next if(/^$/ or /^#/);
 
-                my @F=split;
 		my $AF=1;
 		$AF=$1 if(/AF=(0\.\d+)/ or /.+:(1)$/ or /.+:(0\.\d+)/);
+                next if($AF<$opt{m2});
+                next if($AF>$opt{M2});
 
-		next if($AF<$opt{m2});
-		next if($AF>$opt{M2});
-
-                $h{"$F[0] $F[1] $F[3] $F[4]"}=1;
+                my @F=split;
+                push(@{$h{"$F[0] $F[1] $F[3] $F[4]"}},$_);
         }
 	close(IN);
         last unless(%h);
@@ -50,23 +49,22 @@ MAIN:
         #########################################
 
         open(IN,$ARGV[0]) or die("ERROR: Cannot open input file".$!) ;
-
         while(<IN>)
         {
                 if(/^$/ or /^#/) { print; next}
 
-                my @F=split;
-		my $AF=1;
+               	my $AF=1;
                 $AF=$1 if(/AF=(0\.\d+)/ or /.+:(1)$/ or /.+:(0\.\d+)/);
+                next if($AF<$opt{m1});
+                next if($AF>$opt{M1});
 
-		if($h{"$F[0] $F[1] $F[3] $F[4]"})
+                my @F=split;
+                foreach my $h (@{$h{"$F[0] $F[1] $F[3] $F[4]"}})
 		{
-               		next if($AF<$opt{m1});
-                	next if($AF>$opt{M1});
+			
+			next if($_ eq $h);
+			print join "\t",(@F,$h);
 		}
-                
-		print;
-		
         }
 
 	exit 0;

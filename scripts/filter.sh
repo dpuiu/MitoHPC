@@ -31,7 +31,7 @@ export R=`basename $R .mutect2`
 IDIR=`dirname $I`
 ODIR=`dirname $O`; mkdir -p $ODIR
 P=1                						# number of processors
-MSIZE=16500
+MINSIZE=16500
 MM=4g	# new (samtools : sorting mem mem)
 MS=2g	# new (java vm gatk)
 MX=2g
@@ -40,7 +40,7 @@ MX=2g
 #test -s $I
 #if [ ! -s $I.bai ] && [ ! -s $I.crai ] ; then exit 1 ; fi
 
-if [ $(stat -c%s $F.fa) -lt $MSIZE ] ; then exit 1 ; fi
+if [ $(stat -c%s $F.fa) -lt $MINSIZE ] ; then exit 1 ; fi
 
 #########################################################################################################################################
 #format references
@@ -148,7 +148,7 @@ if  [ ! -s $O.fa ]  && [ ! -s $O.$M.fa ] ; then
   bcftools consensus -f $F.fa $O.$M.max.vcf.gz | perl -ane 'if($.==1) { print ">$ENV{N}\n" } else { s/N//g; print }' > $O.$M.fa
   rm $O.$M.max.vcf.gz $O.$M.max.vcf.gz.tbi
 
-  #if [ $(stat -c%s " $O.$M.fa") -lt $MSIZE ] ; then exit 1 ; fi
+  #if [ $(stat -c%s " $O.$M.fa") -lt $MINSIZE ] ; then exit 1 ; fi
 
   #java -jar $JDIR/gatk.jar NormalizeFasta --INPUT $O.$M.fa --OUTPUT $O.$M.norm.fa --LINE_LENGTH 60
   cat $O.$M.fa | perl -ane 'if(/^>/) { print "\n" if($.>1); print} else { chomp ;print} END{print "\n"}' > $O.$M.norm.fa
@@ -166,4 +166,6 @@ if  [ ! -s $O.fa ]  && [ ! -s $O.$M.fa ] ; then
   fi
 fi
 
-
+if  [ -s $O.$M.fa ]  && [ ! -s $O.$M.haplocheck ] ; then
+  java -Xms$MS -Xmx$MX -jar $JDIR/haplocheck.jar --out $O.$M.haplocheck $O.$M.vcf
+fi  

@@ -25,8 +25,8 @@ MAIN:
 	die "ERROR: $! " if (!$result);
 	########################################
 
-        #Run                            H       h       S       s       I       i       Hp      hp      Sp      sp      Ip      ip
-        #GTEX-1GPI7-0002-SM-DLIOU       17      3       16      0       1       3       2       3       1       0       1       3
+        #Run                            H       h       S       s       I       i       Hp      hp      Sp      sp      Ip      ip	A
+        #GTEX-1GPI7-0002-SM-DLIOU       17      3       16      0       1       3       2       3       1       0       1       3	20
 
 	while(<>)
 	{

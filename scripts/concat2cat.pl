@@ -29,18 +29,22 @@ MAIN:
 			print;
 			next
 		}
+
 		my @F=split;
+		if($F[8] ne "SM")
+		{
+		
+			my ($SM,$ANNOTATION);
+			if(/SM=(\S+?);(\S+)/) { ($SM,$ANNOTATION)=($1,"$2;") }
+			elsif(/SM=(\S+)\s+/)  { ($SM,$ANNOTATION)=($1,"") }
+			else                  { die "ERROR $_";           }
 
-		my ($SM,$ANNOTATION);
-		if(/SM=(\S+?);(\S+)/) { ($SM,$ANNOTATION)=($1,"$2;") }
-		elsif(/SM=(\S+)\s+/)  { ($SM,$ANNOTATION)=($1,"") }
-		else                  { die "ERROR $_";           }
+			my ($GT,$DP,$AF)=split /:/,$F[-1];
 
-		my ($GT,$DP,$AF)=split /:/,$F[-1];
-
-		$F[7]=$ANNOTATION."GT=$GT;DP=$DP;AF=$AF";
-		$F[8]="SM";
-		$F[9]="$SM";
+			$F[7]=$ANNOTATION."GT=$GT;DP=$DP;AF=$AF";
+			$F[8]="SM";
+			$F[9]="$SM";
+		}
 
 		print join "\t",@F;
 		print "\n";

@@ -100,7 +100,7 @@ MAIN:
 				my $GT=$1;
 				my @GT=split /[|\/]/,$GT;
 
-				if($GT[0]==1 or $GT[1]==1)
+				if($GT[0]==1 or @GT>1 and $GT[1]==1)
 				{
 					$AC++;
 					$AN+=2;

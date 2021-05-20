@@ -86,11 +86,8 @@ if [ ! -s $BDIR/fastp ] ; then
   cd -
 fi
 
-#wget -N -c https://github.com/broadinstitute/gatk/releases/download/4.1.9.0/gatk-4.1.9.0.zip
 wget -N -c https://github.com/broadinstitute/gatk/releases/download/4.2.0.0/gatk-4.2.0.0.zip
 if [ ! -s $JDIR/gatk.jar ] ; then
-  #unzip gatk-4.1.9.0.zip
-  #cp gatk-4.1.9.0/gatk-package-4.1.9.0-local.jar $JDIR/gatk.jar
   unzip -o gatk-4.2.0.0.zip
   cp gatk-4.2.0.0/gatk-package-4.2.0.0-local.jar $JDIR/gatk.jar
 fi
@@ -101,6 +98,11 @@ if [ ! -s $JDIR/haplogrep.jar ] ; then
   cp haplogrep.jar $JDIR/
 fi
 
+wget -N -c https://github.com/genepi/haplocheck/releases/download/v1.3.3/haplocheck.zip
+if [ ! -s $JDIR/haplocheck.jar ] ; then
+  unzip -o haplocheck.zip
+  cp haplocheck.jar $JDIR/
+fi
 
 wget -N -c https://github.com/seppinho/mutserve/releases/download/v1.3.4/mutserve-1.3.4.jar
 if [ ! -s $JDIR/mutserve.jar ] ; then

@@ -36,12 +36,14 @@ MAIN:
 	{
 		next if(/^#/);
 		my @F=split;
-		$F[7]=~/SM=(.+?);/ or $F[7]=~/SM=(.+)$/ or die "ERROR:$_";
+		$F[7]=~/SM=(.+?);/ or $F[7]=~/SM=(.+)$/ or /\tSM\t(\S+)$/ or die "ERROR:$_";
 		my $sample=$1;
 		defined($samples{$sample}) or die "ERROR: $_";
 
 		if(!$snp{$sample}{$F[1]})
 		{
+			$count{$sample}{A}++;
+
 			if($F[-1]=~/.+:1$/)
 			{
 				$count{$sample}{H}++ ;
@@ -73,14 +75,14 @@ MAIN:
 
 	#########################################################
 
-	print join "\t",("Run","H","h","S","s","I","i","Hp","hp","Sp","sp","Ip","ip"); print "\n";
+	print join "\t",("Run","H","h","S","s","I","i","Hp","hp","Sp","sp","Ip","ip","A"); print "\n";
 
 	foreach my $i (1..@samples)
         {
 		my $sample=$samples[$i-1];
 		my @counts=();
 
-		foreach ("H","h","S","s","I","i","Hp","hp","Sp","sp","Ip","ip")
+		foreach ("H","h","S","s","I","i","Hp","hp","Sp","sp","Ip","ip","A")
 		{
 			 push @counts,($count{$sample}{$_})?$count{$sample}{$_}:0;
 		}

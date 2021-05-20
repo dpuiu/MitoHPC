@@ -11,7 +11,7 @@ use Getopt::Long;
 
 MAIN:
 {
-	my $i=0;
+	my $i;
 	my $max=1;
 
         my $result = GetOptions(
@@ -21,18 +21,25 @@ MAIN:
 	die "ERROR: $? " if (!$result);
 
 	my %h;
-
 	while(<>)
 	{
-		if(/^#/ or /^$/) { print }
-		elsif(/^@/) { print }
+		if(defined($i))
+		{
+			if(/^#/ or /^$/) { print }
+			elsif(/^@/) { print }
+			else
+			{
+				my @f=split;
+				die if(!defined($f[$i]));
+
+				$h{$f[$i]}++;
+				print if($h{$f[$i]}<=$max);
+			}
+		}
 		else
 		{
-			my @f=split;
-			die if(!defined($f[$i]));
-
-			$h{$f[$i]}++;
-			print if($h{$f[$i]}<=$max);
+			$h{$_}++;
+                        print if($h{$_}<=$max);
 		}
 	}
 

@@ -16,8 +16,7 @@ MAIN:
 
         # validate input parameters
         my $result = GetOptions(
-		"sm"	=>	\$opt{sm},
-		"min1=s"	=>	\$opt{m1},
+		"min1=s"  =>	  \$opt{m1},
 		"Max1=s"  =>      \$opt{M1},
                	"min2=s"  =>      \$opt{m2},
                	"Max2=s"  =>      \$opt{M2},
@@ -38,20 +37,16 @@ MAIN:
                 my @F=split;
 		my $SM="";
 
-                if(@F>=10 and $opt{sm})
-		{
-			if($F[8] eq "SM")                                 { $SM=$F[9] }
-			elsif($F[7]=~/SM=(\S+?);/ or $F[7]=~/SM=(\S+?)$/) { $SM=$1 }
-			else						  { die "ERROR: $_" }
-		}
-
+		if($F[8] eq "SM" and @F==10)                      { $SM=$F[9] }
+		elsif($F[7]=~/SM=(\S+?);/ or $F[7]=~/SM=(\S+?)$/) { $SM=$1 }
+		else						  { die "ERROR: $_" }
+		
 		my $AF=1;
 		$AF=$1 if(/AF=(0\.\d+)/ or /.+:(1)$/ or /.+:(0\.\d+)/);
-
 		next if(defined($opt{m2}) and $AF<$opt{m2});
 		next if(defined($opt{M2}) and $AF>$opt{M2});
 
-                $h{"$F[0] $F[1] $F[3] $F[4] $SM"}=1;
+                push(@{$h{"$F[0] $F[1] $F[3] $F[4]"}},$SM);
         }
 	close(IN);
         last unless(%h);
@@ -59,7 +54,6 @@ MAIN:
         #########################################
 
         open(IN,$ARGV[0]) or die("ERROR: Cannot open input file".$!) ;
-
         while(<IN>)
         {
                 if(/^$/ or /^#/) { print; next}
@@ -67,13 +61,9 @@ MAIN:
                 my @F=split;
                	my $SM="";
 
-                if(@F>=10 and $opt{sm})
-               	{
-                        if($F[8] eq "SM")                                 { $SM=$F[9] }
-                        elsif($F[7]=~/SM=(\S+?);/ or $F[7]=~/SM=(\S+?)$/) { $SM=$1 }
-			else                                              { die "ERROR: $_" }
-
-               	}
+                if($F[8] eq "SM" and @F==10)                      { $SM=$F[9] }
+                elsif($F[7]=~/SM=(\S+?);/ or $F[7]=~/SM=(\S+?)$/) { $SM=$1 }
+		else                                              { die "ERROR: $_" }
 
 		my $AF=1;
                 $AF=$1 if(/AF=(0\.\d+)/ or /.+:(1)$/ or /.+:(0\.\d+)/);
@@ -81,7 +71,12 @@ MAIN:
                	next if(defined($opt{m1}) and $AF<$opt{m1});
                 next if(defined($opt{M1}) and $AF>$opt{M1});
 
-                print if $h{"$F[0] $F[1] $F[3] $F[4] $SM"};
+                foreach (@{$h{"$F[0] $F[1] $F[3] $F[4]"}})
+		{
+			next if($SM eq $_);
+			print join "\t",(@F,$_);
+			print "\n";
+		}
         }
 
 	exit 0;
