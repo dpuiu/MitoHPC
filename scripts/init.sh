@@ -23,7 +23,7 @@ export PERL5LIB=$LDIR/:$PERL5LIB
 export SH="bash"                                               # parallel : filter.pl jobs
 export SHS="bash"		                               # singleton :  getSummary.pl job
 
-#export SH= "sbatch -J HP$$ --partition=shared -D $ODIR"                # SLURM (MARCC)
+#export SH="sbatch -J HP$$ --partition=shared -D $ODIR"                 # SLURM (MARCC)
 #export SHS="sbatch -J HP$$ -d singleton --partition=shared -D $ODIR"   # SLURM
 
 #define MYSCRATCH unless defined 
