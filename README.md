@@ -20,6 +20,7 @@
 
 ### SETUP ENVIRONMENT ###
     
+    $ PWD=`pwd`
     $ export SDIR=$PWD/HP/scripts/   # set script directory variable
 
 ### INSTALL PIPELINE PREREQUISITES (optional) ###
@@ -53,7 +54,7 @@
 ### GENERATE INPUT FILE  ###
 
     # generate an imput file which contains the list of the BAM/CRAM files to be processed 
-    $ find $ADIR/  | $SDIR/ls2in.pl -out $ODIR | sort > $IN
+    $ find $ADIR/ | egrep "\.bam$|\.cram$" | $SDIR/ls2in.pl -out $ODIR | sort > $IN
 
     $ head $IN
       #sampleName     inputFile          outputPath/prefix

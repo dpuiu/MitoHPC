@@ -22,6 +22,7 @@ if [ ! -s $BDIR/bwa ] ; then
   cd -
 fi
 
+#update to 1.12
 wget -N -c https://github.com/samtools/samtools/releases/download/1.11/samtools-1.11.tar.bz2
 if [ ! -s $BDIR/samtools ] ; then
   tar -xjvf samtools-1.11.tar.bz2
@@ -70,6 +71,7 @@ if [ ! -s $BDIR/st ] ; then
   cd -
 fi
 
+#update to 2.30
 wget -N -c https://github.com/arq5x/bedtools2/releases/download/v2.29.2/bedtools-2.29.2.tar.gz
 if [ ! -s $BDIR/bedtools ] ; then
   tar -xzvf bedtools-2.29.2.tar.gz
