@@ -43,17 +43,13 @@
     $ cp -i $SDIR/init.sh .
     $ nano init.sh
 
-### SETUP ENVIRONMENT ###
+### SETUP ENVIRONMENT & GENRTAE INPUT FILE ###
 
     # Examples 
 
-    $ export ADIR=$PWD/bams/                          # alignment directory path
-    $ export ODIR=$PWD/out/ ; mkdir -p $ODIR          # output directory  :  "out" or "$MYSCRATCH/out"
-    $ export IN=$PWD/in.txt                           # input file
-
-### GENERATE INPUT FILE  ###
-
-    # generate an imput file which contains the list of the BAM/CRAM files to be processed 
+    $ export ADIR=$PWD/bams/                                                         # alignment directory path
+    $ export ODIR=$PWD/out/ ; mkdir -p $ODIR                                         # output directory  :  "out" or "$MYSCRATCH/out"
+    $ export IN=$PWD/in.txt                                                          # input file name
     $ find $ADIR/ | egrep "\.bam$|\.cram$" | $SDIR/ls2in.pl -out $ODIR | sort > $IN
 
     $ head $IN
