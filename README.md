@@ -73,7 +73,7 @@
 ### COMPUTE mtDNA-CN ####
     
      $ mkdir -p $ODIR/
-     $ cut -f2 $IN  | sed 's|bam$|count|' | sed 's|cram$|count||' | xargs cat|  $SDIR/uniq.pl  | $SDIR/getCN.pl > $ODIR/count.tab
+     $ cut -f2 $IN  | sed 's|bam$|count|' | sed 's|cram$|count|' | xargs cat|  $SDIR/uniq.pl  | $SDIR/getCN.pl > $ODIR/count.tab
 
        Run       all        mapped     chrM    M       
        chrM.A    851537886  848029490  396766  181.7   
