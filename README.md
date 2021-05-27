@@ -72,7 +72,7 @@
 
 ### COMPUTE mtDNA-CN ####
     
-     $ mkir -p $ODIR/
+     $ mkdir -p $ODIR/
      $ cut -f2 $IN  | sed 's|bam$|count|' | xargs cat|  $SDIR/uniq.pl  | $SDIR/getCN.pl > $ODIR/count.tab
 
        Run       all        mapped     chrM    M       

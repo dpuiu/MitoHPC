@@ -22,10 +22,10 @@ F=$6  ; test -s $F.fa
 ########################################################################################################################################
 #set variables
 
-export N=`basename $O .mutect2`        
+export N=`basename $O .mutect2` #2nd mutect2 itteration       
 export RO=`basename $FO .fa`
 export R=`basename $F`
-export R=`basename $R .mutect2`
+export R=`basename $R .mutect2`	
 export R=`basename $R .mutect2`
 
 IDIR=`dirname $I`
