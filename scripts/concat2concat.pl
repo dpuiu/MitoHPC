@@ -14,9 +14,9 @@ MAIN:
 
 	#0	1	2	3	4	5	6	7			8		9
 	#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO			FORMAT		SAMPLE
-	#chrM   15	.	C	T	.       PASS    SM=SRR8013160;SNP;NUMT  GT:AF:DP        0/1:0.99:97
+	#chrM   15	.	C	T	.       PASS    SM=SRR0000000;SNP;NUMT  GT:AF:DP        0/1:0.99:97
 	#=>
-	#chrM   15      .       C       T       .       PASS    SM=SRR8013160;SNP;NUMT  GT:DP:AF        0/1:97:0.99
+	#chrM   15      .       C       T       .       PASS    SM=SRR0000000;SNP;NUMT  GT:DP:AF        0/1:97:0.99
 
 	#0/1:0.798,0.202:104
 	#chrM	11251	.	A	T	.	PASS	SM=chrM.T	GT:AF:DP	0/0:0.798,0.202:104

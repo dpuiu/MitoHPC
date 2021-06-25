@@ -29,11 +29,11 @@ MAIN:
 			elsif(/^@/) { print }
 			else
 			{
-				my @f=split;
-				die if(!defined($f[$i]));
+				my @F=split;
+				die if(!defined($F[$i]));
 
-				$h{$f[$i]}++;
-				print if($h{$f[$i]}<=$max);
+				$h{$F[$i]}++;
+				print if($h{$F[$i]}<=$max);
 			}
 		}
 		else

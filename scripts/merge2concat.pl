@@ -12,7 +12,7 @@ MAIN:
 
 	my $result = GetOptions(
 		"in=s"	=>	\$opt{in},
-		 "i=i"  => 	\$opt{i}
+		"i=i"  => 	\$opt{i}
 	);
         die "ERROR: $! " if (!$result);
 
@@ -47,6 +47,7 @@ MAIN:
 				if($F[$i] and $F[$i]=~/[1-9]/)
 				{
 					$F[7]="SM=$C[$i]";
+					$F[7].=";INDEL" if(length($F[3])!=length($F[4]) or $F[3] eq "*" or $F[4] eq "*");
 					print join "\t",(@F[0..8],$F[$i]);
 					print "\n";
 				}

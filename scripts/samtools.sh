@@ -1,24 +1,18 @@
 #!/usr/bin/bash -eux
 
-#SBATCH --job-name=samtools
-#SBATCH --partition=shared
-#SBATCH --time=24:0:0
-#SBATCH --ntasks-per-node=8
-#SBATCH --mem=32G
-
 ###############################################################
 
 #Program that indexes and counts alignments in a BAM/CRAM file
 #Input arguments:
 I=$1
+#MT environmental variable must be set
 
 ################################################################
 
 export N=`basename $I .bam`
 export N=`basename $N .cram`
 export D=`dirname $I`
-MT=chrM
-P=8
+P=1
 
 test -f $I
 ################################################################
@@ -34,9 +28,9 @@ if [ ! -s $D/$N.idxstats ] ; then
   samtools idxstats -@ $P $I > $D/$N.idxstats
 fi
 
-#if [ ! -s $D/$N.count ] ; then
-  cat $D/$N.idxstats | idxstats2count.pl -sample $N >  $D/$N.count
-#fi
+if [ ! -s $D/$N.count ] ; then
+  cat $D/$N.idxstats | idxstats2count.pl -sample $N -chrM $MT >  $D/$N.count
+fi
 
 #to be removed; only for the paper
 #if [ ! -s $D/$N.cvg.stat ] ; then

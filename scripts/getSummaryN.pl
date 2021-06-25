@@ -38,12 +38,12 @@ MAIN:
 		}	
 		else
 		{
-			my @f=split;
-			shift @f;
+			my @F=split;
+			shift @F;
 	
-			foreach my $i (0..@f-1)
+			foreach my $i (0..@F-1)
 			{
-				push @{$vals{$keys[$i]}},$f[$i];
+				push @{$vals{$keys[$i]}},$F[$i];
 			}		
 		}		 
 	}

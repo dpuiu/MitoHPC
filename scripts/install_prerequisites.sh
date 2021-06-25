@@ -14,6 +14,7 @@ mkdir -p $HDIR/prerequisites/ $BDIR/ $JDIR/
 #############
 
 cd $HDIR/prerequisites/
+
 wget -N -c https://netactuate.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2
 if [ ! -s $BDIR/bwa ] ; then
   tar -xjvf bwa-0.7.17.tar.bz2
@@ -106,25 +107,15 @@ if [ ! -s $JDIR/haplocheck.jar ] ; then
   cp haplocheck.jar $JDIR/
 fi
 
-wget -N -c https://github.com/seppinho/mutserve/releases/download/v1.3.4/mutserve-1.3.4.jar
-if [ ! -s $JDIR/mutserve.jar ] ; then
-  cp mutserve-1.3.4.jar $JDIR/mutserve.jar
-  #cd ../
-fi
-
 wget -N -c https://github.com/seppinho/mutserve/releases/download/v2.0.0-rc12/mutserve.zip
 if [ ! -s $JDIR/mutserve.jar ] ; then
   unzip -o mutserve.zip
-  cp mutserve.jar $JDIR/mutserve2.jar
+  cp mutserve.jar $JDIR
 fi
 
-#############
-
-cd $RDIR/
-wget -N -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa #-O hs38DH.fa
+wget -N -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa
 if [ ! -s $RDIR/hs38DH.fa ] ; then
-  cp GRCh38_full_analysis_set_plus_decoy_hla.fa hs38DH.fa
-  $BDIR/samtools faidx hs38DH.fa
-  cd -
+  cp GRCh38_full_analysis_set_plus_decoy_hla.fa $RDIR/hs38DH.fa
+  $BDIR/samtools faidx $RDIR/hs38DH.fa
 fi
 

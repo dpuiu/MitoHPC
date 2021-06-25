@@ -21,7 +21,7 @@
 ### SETUP ENVIRONMENT ###
     
     $ PWD=`pwd`
-    $ export SDIR=$PWD/HP/scripts/   # set script directory variable
+    $ export SDIR=path_to_pipeline_home_directory/HP/scripts/   # set script directory variable
 
 ### INSTALL PIPELINE PREREQUISITES (optional) ###
 
@@ -30,71 +30,44 @@
 ### CHECK INSTALL ###
   
     # if successfull => "Success message!"
+
     $ $SDIR/checkInstall.sh
     $ cat checkInstall.log
 
 ## USAGE ##
 
-### COPY init.sh ###
+### COPY init.sh SCRIPT ###
 
-    # go to the working directory
+    # go to the working directory ; copy init.sh 
 
-    # copy init.sh ; edit if necessary
     $ cp -i $SDIR/init.sh .
-    $ nano init.sh
 
-### SETUP ENVIRONMENT & GENRTAE INPUT FILE ###
+### SETUP ENVIRONMENT ###
 
-    # Examples 
+    # set variables (in terminal or init.sh)
 
-    $ export ADIR=$PWD/bams/                                                         # alignment directory path
-    $ export ODIR=$PWD/out/ ; mkdir -p $ODIR                                         # output directory  :  "out" or "$MYSCRATCH/out"
-    $ export IN=$PWD/in.txt                                                          # input file name
-    $ find $ADIR/ | egrep "\.bam$|\.cram$" | $SDIR/ls2in.pl -out $ODIR | sort > $IN
+    $ nano init.sh 
+        ...
+        export ADIR=$PWD/bams/                                                         # alignment directory path
+        export ODIR=$PWD/out/ ; mkdir -p $ODIR                                         # output directory  
+        export IN=$PWD/in.txt                                                          # input file name
+        find $ADIR/ | egrep "\.bam$|\.cram$" | $SDIR/ls2in.pl -out $ODIR | sort > $IN
 
-    $ head $IN
-      #sampleName     inputFile          outputPath/prefix
-      chrM.A          bams/chrM.A.bam    out/chrM.A/chrM.A
-      chrM.B          bams/chrM.B.bam    out/chrM.B/chrM.B
-      chrM.C          bams/chrM.C.bam    out/chrM.C/chrM.C
-      ...
+    $ . ./init.sh
 
-### GENERATE INDEX AND COUNT FILES ###
+### GENERATE ALIGNMENT INDEX AND READ COUNT FILES ###
 
-     $ cut -f2 $IN | sed "s|^|$SDIR/samtools.sh |" > samtools.all.sh
-     ... or (MARCC)
-     $ cut -f2 $IN | sed "s|^|sbatch --partition=shared --time=4:0:0 $SDIR/samtools.sh |" > samtools.all.sh
-     ... or (JHPCE)
-     $ cut -f2 $IN | sed "s|^|qsub -cwd -V -l walltime=4:0:0  $SDIR/samtools.sh |" > samtools.all.sh
-
-     $ chmod a+x ./samtools.all.sh
-     $ ./samtools.all.sh
+     $ cut -f2 $IN  | sed "s|^|$SH $SDIR/samtools.sh |" > samtools.all.sh
+     $ . ./samtools.all.sh
 
 ### COMPUTE mtDNA-CN ####
     
-     $ mkdir -p $ODIR/
-     $ cut -f2 $IN  | sed 's|bam$|count|' | sed 's|cram$|count|' | xargs cat|  $SDIR/uniq.pl  | $SDIR/getCN.pl > $ODIR/count.tab
-
-       Run       all        mapped     chrM    M       
-       chrM.A    851537886  848029490  396766  181.7   
-       chrM.B    884383716  882213718  506597  223.01  
-       chrM.C    786560467  785208588  503241  248.9   
-       ...
+     $ cut -f2 $IN  | sed 's|bam$|count|' | sed 's|cram$|count|' | xargs cat |  $SDIR/uniq.pl  | $SDIR/getCN.pl > $ODIR/count.tab
   
-### GENERATE SNV PIPELINE SCRIPT ###
-
-    $ $SDIR/run.sh $IN $ODIR  > filter.all.sh
-    $ chmod u+x ./filter.all.sh
-
 ### RUN PIPELINE  ###
-
-    $ ./filter.all.sh                                                    # run interactively	
-    ... or
-    $ nohup ./filter.all.sh &                                            # run in the backgroud
-    ... or (MARCC)
-    $ sbatch -D $ODIR --partition=shared --time=24:0:0 ./filter.all.sh   # run using a SLURM job scheduler
-    ... or (JHPCE)
-    qsub -wd $ODIR -V -l walltime=24:0:0 ./filter.all.sh                 # run using an SGE job scheduler; run under $MYSCRATCH
+ 
+    $ $SDIR/run.sh $IN $ODIR  > filter.all.sh
+    $ . ./filter.all.sh                                             
      
 ## OUTPUT ##
 
@@ -134,10 +107,23 @@
 ## EXAMPLE 2 : 3 simulated datasets  ##
 
 ### input file ###
-    $ cat $IN 
-      bams/chrM.A.bam
-      bams/chrM.B.bam
-      bams/chrM.C.bam 
+
+    $ head $IN
+      #sampleName     inputFile          outputPath/prefix
+      chrM.A          bams/chrM.A.bam    out/chrM.A/chrM.A
+      chrM.B          bams/chrM.B.bam    out/chrM.B/chrM.B
+      chrM.C          bams/chrM.C.bam    out/chrM.C/chrM.C
+      ...
+
+ ### read counts and mtDNA-CN(M)
+
+     $ head $ODIR/count.tab
+       Run	 all        mapped     chrM    M
+       chrM.A    851537886  848029490  396766  181.7
+       chrM.B    884383716  882213718  506597  223.01
+       chrM.C    786560467  785208588  503241  248.9
+       ...
+
 
 ### after running samtools.sh ###
     $ ls $ADIR/*

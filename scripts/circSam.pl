@@ -49,7 +49,7 @@ MAIN:
 		{
 			if($len{$1})
 			{
-				$F[2]="LN:$len{$1}\n";
+				$F[2]="LN:$len{$1}";
 			}
 		}
 		elsif(/^\@/)
@@ -112,7 +112,9 @@ MAIN:
 						$trim1+=$1 unless($2 eq "D");
 					}
 
-					$pos+=$1 unless($2 eq "D");
+					#$pos+=$1 unless($2 eq "D");  #June 24
+					$pos+=$1 unless($2 eq "I");
+
 					$F[5]=$3;
 				}
 
@@ -129,7 +131,8 @@ MAIN:
 				if($cigar2=~/M/)
 				{
 
-					print join "\t",($F[0],$F[1]+2048,$F[2],1,$F[4],$cigar2,@F[6..scalar(@F)-1]);
+					#print join "\t",($F[0],$F[1]+2048,$F[2],1,$F[4],$cigar2,@F[6..scalar(@F)-1]); # June 24 2020
+					print join "\t",($F[0],$F[1]+2048,$F[2],1,$F[4],$cigar2,@F[6..10],"NM:i:0",@F[12..scalar(@F)-1]);
 					print "\n";
 				}
 
