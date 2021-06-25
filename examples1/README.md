@@ -1,9 +1,9 @@
-# 100x covearge chrM Illumina dataset #
+# 100x covearge Illumina dataset #
 
-## Files ## 
+## DIRECTRIES ## 
 
-  RefSeq/  : 30 reference sequences, haplogroups A-Z
+    RefSeq/  : 30 reference sequences, haplogroups A-Z
 
-  fastq/   : 1100, wgsim simulated Illumina reads, 150bp long, basepair error=0.01 ; 43 heteroplasmies (35 SNPs+8 INDELS)
+    fastq/   : 1100, wgsim simulated Illumina reads, 150bp long, basepair error=0.01 ; 43 heteroplasmies (35 SNPs+8 INDELS)
 
-  bams/    : fastq reads aligned using bwa mem v0.7.17 , reference=rCRS
+    bams/    : fastq reads aligned using bwa mem v0.7.17 , reference=rCRS
