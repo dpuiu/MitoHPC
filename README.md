@@ -149,25 +149,25 @@
 
     $ cat mutect2.03.concat.vcf  
       ...
-      #CHROM  POS ID  REF  ALT  QUAL  FILTER                      INFO               FORMAT    SAMPLE    
-      chrM    64  .   C    T    .     clustered_events;haplotype  SM=chrM.A;HV       GT:DP:AF  0|1:67:1  
-      chrM    73  .   A    G    .     PASS                        SM=chrM.B;HV;NUMT  GT:DP:AF  0/1:52:1  
-      chrM    73  .   A    G    .     PASS                        SM=chrM.C;HV       GT:DP:AF  0/1:43:1  
+      #CHROM  POS ID  REF  ALT  QUAL FILTER                      INFO               FORMAT    SAMPLE    
+      chrM    64  .   C    T    .    clustered_events;haplotype  SM=chrM.A;HV       GT:DP:AF  0|1:67:1  
+      chrM    73  .   A    G    .    PASS                        SM=chrM.B;HV;NUMT  GT:DP:AF  0/1:52:1  
+      chrM    73  .   A    G    .    PASS                        SM=chrM.C;HV       GT:DP:AF  0/1:43:1  
       ...
 
     $ cat mutect2.03.merge.vcf  
       ...  
-      #CHROM  POS ID  REF  ALT  QUAL  FILTER  INFO               FORMAT    chrM.A     chrM.B    chrM.C    
-      chrM    64  .   C    T    .     .       AC=1;AN=2;HV       GT:DP:AF  0|1:67:1   .:.:.     .:.:.     
-      chrM    73  .   A    G    .     .       AC=1;AN=2;HV;NUMT  GT:DP:AF  .:.:.      0/1:52:1  .:.:.     
-      chrM    73  .   A    G    .     .       AC=2;AN=4;HV       GT:DP:AF  0|1:70:1   .:.:.     0/1:43:1  
+      #CHROM  POS ID  REF  ALT  QUAL FILTER  INFO               FORMAT    chrM.A     chrM.B    chrM.C    
+      chrM    64  .   C    T    .    .       AC=1;AN=2;HV       GT:DP:AF  0|1:67:1   .:.:.     .:.:.     
+      chrM    73  .   A    G    .    .       AC=1;AN=2;HV;NUMT  GT:DP:AF  .:.:.      0/1:52:1  .:.:.     
+      chrM    73  .   A    G    .    .       AC=2;AN=4;HV       GT:DP:AF  0|1:70:1   .:.:.     0/1:43:1  
       ...
 
     $ cat mutect2.03.merge.sitesOnly.vcf
-      #CHROM  POS ID  REF  ALT  QUAL  FILTER  INFO               
-      chrM    64  .   C    T    .     .       AC=1;AN=2;HV       
-      chrM    73  .   A    G    .     .       AC=1;AN=2;HV;NUMT  
-      chrM    73  .   A    G    .     .       AC=2;AN=4;HV       
+      #CHROM  POS ID  REF  ALT  QUAL FILTER  INFO               
+      chrM    64  .   C    T    .    .       AC=1;AN=2;HV       
+      chrM    73  .   A    G    .    .       AC=1;AN=2;HV;NUMT  
+      chrM    73  .   A    G    .    .       AC=2;AN=4;HV       
       ....
      
 #### SNV counts ####
@@ -219,7 +219,8 @@
 ### command line ###    
 
     $ M=mutect2
-    $ cat $ODIR/$M.00.concat.vcf  | egrep -v 'qual|haplotype|strand'  > $ODIR/$M.no_qual_haplotype_strand.00.concat.vcf
+    $ cat $ODIR/$M.00.concat.vcf  | egrep -v 'qual|haplotype|strand'  > \
+        $ODIR/$M.no_qual_haplotype_strand.00.concat.vcf
     $ $SDIR/snpCount.sh $IN $ODIR $M.no_qual_haplotype_strand 03
     $ $SDIR/snpCount.sh $IN $ODIR $M.no_qual_haplotype_strand 05
     $ $SDIR/snpCount.sh $IN $ODIR $M.no_qual_haplotype_strand 10
