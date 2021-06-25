@@ -49,9 +49,9 @@
 
     $ nano init.sh 
         ...
-       export ADIR=$PWD/bams/                                                         # alignment directory
-       export ODIR=$PWD/out/ ; mkdir -p $ODIR                                         # output directory  
-       export IN=$PWD/in.txt                                                          # input file name
+       export ADIR=$PWD/bams/                                                        # alignment dir
+       export ODIR=$PWD/out/ ; mkdir -p $ODIR                                        # output dir  
+       export IN=$PWD/in.txt                                                         # input file
        find $ADIR/ | egrep "\.bam$|\.cram$" | $SDIR/ls2in.pl -out $ODIR | sort > $IN
 
     $ . ./init.sh
@@ -79,14 +79,14 @@
 
 ### 1st ITTERATION ### 
 
-    {mutect2,mutserve}.{03,05,10}.{concat,merge[.sitesOnly]}.vcf       # SNVs; 3,5,10% heteroplasmy thold
-    {mutect2,mutserve}.{03,05,10}.tab                                  # SNV counts
-    {mutect2,mutserve}.{03,05,10}.summary                              # SNV count summaries
+    {mutect2,mutserve}.{03,05,10}.{concat,merge[.sitesOnly]}.vcf     # SNVs; 3,5,10% heteroplasmy thold
+    {mutect2,mutserve}.{03,05,10}.tab                                # SNV counts
+    {mutect2,mutserve}.{03,05,10}.summary                            # SNV count summaries
 
-    {mutect2,mutserve}.fa                                              # consensus sequence
-    {mutect2,mutserve}.haplogroup[1].tab                               # haplogroup
-    count.tab                                                          # reads  & mtDNA-CN counts
-    cvg.tab                                                            # coverage stats
+    {mutect2,mutserve}.fa                                            # consensus sequence
+    {mutect2,mutserve}.haplogroup[1].tab                             # haplogroup
+    count.tab                                                        # reads  & mtDNA-CN counts
+    cvg.tab                                                          # coverage stats
     
 
 ### 2nd ITTERATION ###
