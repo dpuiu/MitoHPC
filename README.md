@@ -4,7 +4,7 @@
 ## SYSTEM PREREQUISITES ##
 
     OS:                UNIX/LINIX 
-    SOFTWARE PACKAGES: git, wget, tar, unzip, autoconf, gcc(v4.8.5+), java(v1.8.0+), perl(v5.16.3+), python 
+    SOFTWARE PACKAGES: git, wget, tar, unzip, autoconf, gcc(v4.8.5+), java(v1.8.0+), perl, python 
  
 ## PIPELINE PREREQUISITES ##
 
