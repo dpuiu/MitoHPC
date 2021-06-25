@@ -4,7 +4,7 @@
 ## SYSTEM PREREQUISITES ##
 
     OS:                UNIX/LINIX 
-    SOFTWARE PACKAGES: git, wget, tar, unzip, autoconf, gcc(v4.8.5+), java(v1.8.0+), perl(v5.16.3+) 
+    SOFTWARE PACKAGES: git, wget, tar, unzip, autoconf, gcc(v4.8.5+), java(v1.8.0+), perl(v5.16.3+), python (v2) 
  
 ## PIPELINE PREREQUISITES ##
 
@@ -23,8 +23,9 @@
     $ PWD=`pwd`
     $ export SDIR=path_to_pipeline_home_directory/HP/scripts/   # set script directory variable
 
-### INSTALL PIPELINE PREREQUISITES (optional) ###
+### INSTALL PIPELINE PREREQUISITES (if necessary) ###
 
+    $ sudo $SDIR/install_sysprerequisites.sh
     $ $SDIR/install_prerequisites.sh  
     
 ### CHECK INSTALL ###
