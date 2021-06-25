@@ -49,10 +49,10 @@
 
     $ nano init.sh 
         ...
-        export ADIR=$PWD/bams/                                                         # alignment directory path
-        export ODIR=$PWD/out/ ; mkdir -p $ODIR                                         # output directory  
-        export IN=$PWD/in.txt                                                          # input file name
-        find $ADIR/ | egrep "\.bam$|\.cram$" | $SDIR/ls2in.pl -out $ODIR | sort > $IN
+       export ADIR=$PWD/bams/                                                         # alignment directory
+       export ODIR=$PWD/out/ ; mkdir -p $ODIR                                         # output directory  
+       export IN=$PWD/in.txt                                                          # input file name
+       find $ADIR/ | egrep "\.bam$|\.cram$" | $SDIR/ls2in.pl -out $ODIR | sort > $IN
 
     $ . ./init.sh
 
@@ -63,7 +63,8 @@
 
 ### COMPUTE mtDNA-CN ####
     
-     $ cut -f2 $IN  | sed 's|bam$|count|' | sed 's|cram$|count|' | xargs cat |  $SDIR/uniq.pl  | $SDIR/getCN.pl > $ODIR/count.tab
+     $ cut -f2 $IN | sed 's|bam$|count|' | sed 's|cram$|count|' | xargs cat | $SDIR/uniq.pl | \
+         $SDIR/getCN.pl > $ODIR/count.tab
   
 ### RUN PIPELINE  ###
  
@@ -78,13 +79,13 @@
 
 ### 1st ITTERATION ### 
 
-    {mutect2,mutserve}.{03,05,10}.{concat,merge[.sitesOnly]}.vcf       # SNVs; 3,5,10% minimum heteroplasmy thold
+    {mutect2,mutserve}.{03,05,10}.{concat,merge[.sitesOnly]}.vcf       # SNVs; 3,5,10% heteroplasmy thold
     {mutect2,mutserve}.{03,05,10}.tab                                  # SNV counts
     {mutect2,mutserve}.{03,05,10}.summary                              # SNV count summaries
 
     {mutect2,mutserve}.fa                                              # consensus sequence
     {mutect2,mutserve}.haplogroup[1].tab                               # haplogroup
-    count.tab                                                          # reads (all,mapped,chrM,filter) & mtDNA-CN counts
+    count.tab                                                          # reads  & mtDNA-CN counts
     cvg.tab                                                            # coverage stats
     
 
