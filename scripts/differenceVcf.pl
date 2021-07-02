@@ -13,10 +13,10 @@ use Getopt::Long;
 MAIN:
 {
         my (%opt,%h);
-	$opt{m1}=0; $opt{m2}=0; $opt{M1}=1; $opt{M2}=1;
 
         # validate input parameters
         my $result = GetOptions(
+		"sm"	=>	\$opt{sm},
 		"min1=s"	=>	\$opt{m1},
 		"Max1=s"  =>      \$opt{M1},
                	"min2=s"  =>      \$opt{m2},
@@ -36,13 +36,22 @@ MAIN:
                 next if(/^$/ or /^#/);
 
                 my @F=split;
+		my $SM="";
+
+                if(@F>=10 and $opt{sm})
+		{
+			if($F[8] eq "SM")                                 { $SM=$F[9] }
+			elsif($F[7]=~/SM=(\S+?);/ or $F[7]=~/SM=(\S+?)$/) { $SM=$1 }
+			else						  { die "ERROR: $_" }
+		}
+
 		my $AF=1;
 		$AF=$1 if(/AF=(0\.\d+)/ or /.+:(1)$/ or /.+:(0\.\d+)/);
 
-		next if($AF<$opt{m2});
-		next if($AF>$opt{M2});
+		next if(defined($opt{m2}) and $AF<$opt{m2});
+		next if(defined($opt{M2}) and $AF>$opt{M2});
 
-                $h{"$F[0] $F[1] $F[3] $F[4]"}=1;
+                $h{"$F[0] $F[1] $F[3] $F[4] $SM"}=1;
         }
 	close(IN);
         last unless(%h);
@@ -56,17 +65,23 @@ MAIN:
                 if(/^$/ or /^#/) { print; next}
 
                 my @F=split;
+               	my $SM="";
+
+                if(@F>=10 and $opt{sm})
+               	{
+                        if($F[8] eq "SM")                                 { $SM=$F[9] }
+                        elsif($F[7]=~/SM=(\S+?);/ or $F[7]=~/SM=(\S+?)$/) { $SM=$1 }
+			else                                              { die "ERROR: $_" }
+
+               	}
+
 		my $AF=1;
                 $AF=$1 if(/AF=(0\.\d+)/ or /.+:(1)$/ or /.+:(0\.\d+)/);
 
-		if($h{"$F[0] $F[1] $F[3] $F[4]"})
-		{
-               		next if($AF<$opt{m1});
-                	next if($AF>$opt{M1});
-		}
-                
-		print;
-		
+               	next if(defined($opt{m1}) and $AF<$opt{m1});
+                next if(defined($opt{M1}) and $AF>$opt{M1});
+
+                print unless $h{"$F[0] $F[1] $F[3] $F[4] $SM"};
         }
 
 	exit 0;

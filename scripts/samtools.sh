@@ -22,14 +22,11 @@ if [ ! -s $I.bai ] && [ ! -s $I.crai ]; then
 fi
 
 if [ ! -s $D/$N.idxstats ] ; then
-  #samtools view -@ $P $I -F 0x900 -c     | awk '{print $1,"all"}'    >  $D/$N.count
-  #samtools view -@ $P $I -F 0x904 -c     | awk '{print $1,"mapped"}' >> $D/$N.count
-  #samtools view -@ $P $I $MT -F 0x904 -c | awk '{print $1,"chrM"}'   >> $D/$N.count
   samtools idxstats -@ $P $I > $D/$N.idxstats
 fi
 
 if [ ! -s $D/$N.count ] ; then
-  cat $D/$N.idxstats | idxstats2count.pl -sample $N -chrM $MT >  $D/$N.count
+  cat $D/$N.idxstats | idxstats2count.pl -sample $N -chrM $HP_MT >  $D/$N.count
 fi
 
 #to be removed; only for the paper

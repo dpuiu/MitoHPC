@@ -9,7 +9,7 @@
 ## PIPELINE PREREQUISITES ##
 
     SOFTWARE PACKAGES: bwa, samtools, bedtools, fastp, samblaster, bcftools, htslib, vcftools, st
-    JAVA JARS:         gatk, mutserve, haplogrep
+    JAVA JARS:         gatk, mutserve, haplogrep, haplocheck
     HUMAN ASSEMBLY:    hs38DH
 
 ## INSTALL ## 
@@ -21,18 +21,18 @@
 ### SETUP ENVIRONMENT ###
     
     $ PWD=`pwd`
-    $ export SDIR=path_to_pipeline_home_directory/HP/scripts/   # set script directory variable
+    $ export HP_SDIR=path_to_pipeline_home_directory/HP/scripts/   # set script directory variable
 
 ### INSTALL PIPELINE PREREQUISITES (if necessary) ###
 
-    $ sudo $SDIR/install_sysprerequisites.sh
-    $ $SDIR/install_prerequisites.sh  
+    $ sudo $HP_SDIR/install_sysprerequisites.sh
+    $ $HP_SDIR/install_prerequisites.sh  
     
 ### CHECK INSTALL ###
   
     # if successfull => "Success message!"
 
-    $ $SDIR/checkInstall.sh
+    $ $HP_SDIR/checkInstall.sh
     $ cat checkInstall.log
 
 ## USAGE ##
@@ -41,7 +41,7 @@
 
     # go to the working directory ; copy init.sh 
 
-    $ cp -i $SDIR/init.sh .
+    $ cp -i $HP_SDIR/init.sh .
 
 ### SETUP ENVIRONMENT ###
 
@@ -49,26 +49,27 @@
 
     $ nano init.sh 
         ...
-       export ADIR=$PWD/bams/                                                        # alignment dir
-       export ODIR=$PWD/out/ ; mkdir -p $ODIR                                        # output dir  
-       export IN=$PWD/in.txt                                                         # input file
-       find $ADIR/ | egrep "\.bam$|\.cram$" | $SDIR/ls2in.pl -out $ODIR | sort > $IN
+       export HP_ADIR=$PWD/bams/                                                           # alignment dir
+       export HP_ODIR=$PWD/out/ ; mkdir -p $HP_ODIR                                        # output dir  
+       export HP_IN=$PWD/in.txt                                                            # input file
+    
+       find $HP_ADIR/ -type f -name "*.bam" -o -name "*.cram" | $HP_SDIR/ls2in.pl -out $HP_ODIR | sort > $HP_IN
 
     $ . ./init.sh
 
 ### GENERATE ALIGNMENT INDEX AND READ COUNT FILES ###
 
-     $ cut -f2 $IN  | sed "s|^|$SH $SDIR/samtools.sh |" > samtools.all.sh
+     $ cut -f2 $HP_IN  | sed "s|^|$SH $HP_SDIR/samtools.sh |" > samtools.all.sh
      $ . ./samtools.all.sh
 
 ### COMPUTE mtDNA-CN ####
     
-     $ cut -f2 $IN | sed 's|bam$|count|' | sed 's|cram$|count|' | xargs cat | $SDIR/uniq.pl | \
-         $SDIR/getCN.pl > $ODIR/count.tab
+     $ cut -f2 $HP_IN | sed -r 's|(.*)\.|\1\t|g' | cut -f1 | sed 's|$|.count|' | xargs cat | $HP_SDIR/uniq.pl | \
+         $HP_SDIR/getCN.pl > $HP_ODIR/count.tab
   
 ### RUN PIPELINE  ###
  
-    $ $SDIR/run.sh $IN $ODIR  > filter.all.sh
+    $ $HP_SDIR/run.sh > filter.all.sh
     $ . ./filter.all.sh                                             
      
 ## OUTPUT ##
@@ -100,11 +101,7 @@
 
 ## EXAMPLE 1 : Usage ##
 
-    #script      inFile outDir   humanRef   MTRef   SNVcalller
-    $ $SDIR/run.sh $IN $ODIR    
-    ... or
-    $ $SDIR/run.sh $IN $ODIR hs38DH.fa  RSRS.fa mutserve
-
+    $ $HP_SDIR/run.sh     
 
 ## EXAMPLE 2 : 3 simulated datasets  ##
 

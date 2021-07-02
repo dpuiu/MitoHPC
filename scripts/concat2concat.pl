@@ -22,6 +22,9 @@ MAIN:
 	#chrM	11251	.	A	T	.	PASS	SM=chrM.T	GT:AF:DP	0/0:0.798,0.202:104
 	#chrM	11251	.	A	G	.	PASS	SM=chrM.T	GT:AF:DP	1/0:0.798,0.202:104
 
+
+	#											0/1/2/3:1790:0.004,0.991,0.005:
+
 	my %GT;
 	while(<>)
 	{

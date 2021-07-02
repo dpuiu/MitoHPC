@@ -63,7 +63,7 @@ MAIN:
 		elsif($F[1]==3108 and $F[4] eq "*") { next }
 		elsif(@P and $P[4] eq "*")
 		{
-			if($F[4] eq "*")
+			if($P[0] eq $F[0] and $F[1]-$P[1]==1 and $F[4] eq "*")
 	               	{
         	               	$P[3].=$F[3]
                		}
@@ -73,7 +73,7 @@ MAIN:
 				$P[4]=substr($chrM,$P[1]-1,1);
 				$P[3]="$P[4]$P[3]";
 				print join "\t",@P;print "\n";
-				print;print "\n";
+				#print;print "\n";
 				@P=();
 			}
 		}
@@ -84,6 +84,7 @@ MAIN:
 		else
 		{
 			print;print "\n";
+			@P=();
 		}
 	}
 

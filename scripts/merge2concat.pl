@@ -44,7 +44,7 @@ MAIN:
 			my @F=split;
 			foreach my $i (9..@F-1) 
 			{ 
-				if($F[$i] and $F[$i]=~/[1-9]/)
+				if($F[$i] and $F[$i]=~/(.+?):/ and $1=~/[1-9]/)
 				{
 					$F[7]="SM=$C[$i]";
 					$F[7].=";INDEL" if(length($F[3])!=length($F[4]) or $F[3] eq "*" or $F[4] eq "*");

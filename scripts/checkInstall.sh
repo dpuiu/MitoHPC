@@ -8,21 +8,19 @@ set -e
 
 ##########################################################
 
-export SDIR=`dirname $0`        # script directory
-export HDIR=`readlink -f $SDIR/..`
-export LDIR=$HDIR/lib/perl5
-export PERLLIB=$LDIR:$PERLLIB
-export PERL5LIB=$LDIR:$PERL5LIB
-export JDIR=$HDIR/java
-export BDIR=$HDIR/bin
-export RDIR=$HDIR/RefSeq
+export HP_SDIR=`dirname $0`        # script directory
+export HP_HDIR=`readlink -f $HP_SDIR/..`
+export HP_LDIR=$HP_HDIR/lib/perl5
+export PERLLIB=$HP_LDIR:$PERLLIB
+export PERL5LIB=$HP_LDIR:$PERL5LIB
+export HP_JDIR=$HP_HDIR/java
+export HP_BDIR=$HP_HDIR/bin
+export HP_RDIR=$HP_HDIR/RefSeq
 
-export PATH=$SDIR:$BDIR:$PATH
-export PERLLIB=$LDIR/:$PERLLIB
-export PERL5LIB=$LDIR/:$PERL5LIB
+export PATH=$HP_SDIR:$HP_BDIR:$PATH
+export PERLLIB=$HP_LDIR/:$PERLLIB
+export PERL5LIB=$HP_LDIR/:$PERL5LIB
 
-#test -f  $SDIR/init.sh
-#source $SDIR/init.sh
 
 #test executables and Java jars
 which perl	        #usually available on Linux
@@ -42,10 +40,10 @@ which bcftools
 which tabix
 which vcftools
 
-test -f $JDIR/gatk.jar
-test -f $JDIR/mutserve.jar
-test -f $JDIR/haplogrep.jar
-test -f $JDIR/haplocheck.jar
+test -f $HP_JDIR/gatk.jar
+test -f $HP_JDIR/mutserve.jar
+test -f $HP_JDIR/haplogrep.jar
+test -f $HP_JDIR/haplocheck.jar
 ######################################################
 
 echo "########################"  > checkInstall.log
@@ -68,24 +66,24 @@ echo "########################"  >> checkInstall.log
 echo "JAVA_HOME=" $JAVA_HOME >> checkInstall.log
 echo "JARS:"  >> checkInstall.log
 
-ls -l $JDIR/gatk.jar      | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
-ls -l $JDIR/haplogrep.jar | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
-ls -l $JDIR/mutserve.jar  | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
+ls -l $HP_JDIR/gatk.jar      | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
+ls -l $HP_JDIR/haplogrep.jar | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
+ls -l $HP_JDIR/mutserve.jar  | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
 
 echo "########################"  >> checkInstall.log
 echo "VARS:"  >> checkInstall.log
 
-echo "HDIR=" $HDIR >> checkInstall.log
-echo "BDIR=" $BDIR >> checkInstall.log
-echo "SDIR=" $SDIR >> checkInstall.log
-echo "JDIR=" $JDIR >> checkInstall.log
-echo "RDIR=" $RDIR >> checkInstall.log
+echo "HP_HDIR=" $HP_HDIR >> checkInstall.log
+echo "HP_BDIR=" $HP_BDIR >> checkInstall.log
+echo "HP_SDIR=" $HP_SDIR >> checkInstall.log
+echo "HP_JDIR=" $HP_JDIR >> checkInstall.log
+echo "HP_RDIR=" $HP_RDIR >> checkInstall.log
 
 echo "########################"  >> checkInstall.log
 echo "REFERENCE SEQUENCES:"  >> checkInstall.log
 
-#test -s $RDIR/$HG
-#test -s $RDIR/$MT.fa
-#test -s $RDIR/$R
+#test -s $HP_RDIR/$HP_HG
+#test -s $HP_RDIR/$HP_MT.fa
+#test -s $HPRDIR/$HP_R
 
 echo Success!
