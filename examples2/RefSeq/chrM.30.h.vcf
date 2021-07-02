@@ -1,3 +1,8 @@
+#fileformat=VCFv4.2
+##FORMAT=<ID=SM,Number=1,Type=String,Description="Sample">
+##reference=file:///chrM.fa
+##contig=<ID=chrM,length=16569>
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	SAMPLE
 chrM	69	.	G	C	.	.	.	SM	chrM.E
 chrM	69	.	G	C	.	.	.	SM	chrM.HV
 chrM	69	.	G	C	.	.	.	SM	chrM.N
