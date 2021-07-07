@@ -1,4 +1,6 @@
-#!/bin/bash 
+#!/usr/bin/env bash
+set -e
+
 
 test -s $1.vcf	 # true heteroplasmies: Ex: examples?/RefSeq/chrM.30.h.vcf
 test -s $2.vcf	 # query file

@@ -1,8 +1,7 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
+set -e
 
-#test -s ./init.sh
-#. ./init.sh
-#test -s $HP_IN
+test -s $HP_IN
 mkdir -p $HP_ODIR
 
 ###############################################################

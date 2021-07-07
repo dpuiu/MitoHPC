@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 #check/install packages needed by bwa, samtools, bedtools ...
 #user needs sudo privileges

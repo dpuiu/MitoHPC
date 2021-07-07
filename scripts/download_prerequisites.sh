@@ -1,5 +1,6 @@
-#!/usr/bin/env bash 
-set -ex 
+#!/usr/bin/env bash
+set -e
+
 #######################################################################
 
 #Program that downloads and install software prerequisites and hs38DH.fa

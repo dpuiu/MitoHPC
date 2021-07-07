@@ -1,5 +1,5 @@
-#!/usr/bin/bash -eux
-
+#!/usr/bin/env bash
+set -e
 
 if [ "$#" -ne 4 ]; then exit 0 ; fi
 
