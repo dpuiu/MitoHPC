@@ -95,7 +95,7 @@ fi
 
 if [ ! -s $O.cvg.stat ] ; then
   cat $O.bam | bedtools bamtobed -cigar | bedtools genomecov -i - -g $F.fa.fai -d > $O.cvg
-  cat $O.cvg | cut -f3 | st  --summary --mean | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{HP_N}\t$_" }'  > $O.cvg.stat
+  cat $O.cvg | cut -f3 | st  --summary --mean | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{N}\t$_" }'  > $O.cvg.stat
 fi
 
 #########################################################################################################################################

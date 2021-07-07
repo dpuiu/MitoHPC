@@ -32,12 +32,12 @@ snpCount.sh $IN $D $M $T1
 snpCount.sh $IN $D $M $T2
 snpCount.sh $IN $D $M $T3
 
-#if [[ ! -z "${HP_FNAME}" ]]; then
-#  cat $D/$M.00.concat.vcf | eval $HP_FRULE > $D/$M.$HP_FNAME.00.concat.vcf
-#  snpCount.sh $IN $D $M.$FNAME $T1
-#  snpCount.sh $IN $D $M.$FNAME $T2
-#  snpCount.sh $IN $D $M.$FNAME $T3
-#fi
+if [[ ! -z "${HP_FNAME}" ]]; then
+  cat $D/$M.00.concat.vcf | eval $HP_FRULE > $D/$M.$HP_FNAME.00.concat.vcf
+  snpCount.sh $IN $D $M.$FNAME $T1
+  snpCount.sh $IN $D $M.$FNAME $T2
+  snpCount.sh $IN $D $M.$FNAME $T3
+fi
 
 #cleanup
 rm -f fastp.html fastp.json
