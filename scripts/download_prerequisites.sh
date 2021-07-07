@@ -7,14 +7,12 @@ set -ex
 ########################################################################
 
 
-#HP_SDIR=`dirname $0`	 # script directory
-#source 
 . $HP_SDIR/init.sh
 
 cd $HP_HDIR/
 mkdir -p prerequisites/ $HP_BDIR/ $HP_JDIR/
 
-cd $HP_HDIR/prerequisites/
+cd prerequisites/
 wget -N -c https://netactuate.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2
 wget -N -c https://github.com/samtools/samtools/releases/download/1.11/samtools-1.11.tar.bz2
 wget -N -c https://github.com/samtools/bcftools/releases/download/1.11/bcftools-1.11.tar.bz2

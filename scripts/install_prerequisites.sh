@@ -1,14 +1,12 @@
 #!/usr/bin/env bash 
-
+set -ex
 #######################################################################
 
 #Program that downloads and install software prerequisites and hs38DH.fa
 
 ########################################################################
 
-
-HP_SDIR=`dirname $0`	 # script directory
-source $HP_SDIR/init.sh
+. $HP_SDIR/init.sh
 cd $HP_HDIR
 mkdir -p prerequisites/ $HP_BDIR/ $HP_JDIR/
 cd prerequisites/
