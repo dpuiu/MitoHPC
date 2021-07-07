@@ -86,6 +86,7 @@
 
     {mutect2,mutserve}.fa                                            # consensus sequence
     {mutect2,mutserve}.haplogroup[1].tab                             # haplogroup
+    {mutect2,mutserve}.haplocheck.tab                                # contamination screen   
     count.tab                                                        # reads  & mtDNA-CN counts
     cvg.tab                                                          # coverage stats
     
