@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+##############################################################
+#INIT INPU/OUTPUT
+
 mkdir -p $HP_ODIR
 if [ ! -s $HP_IN ] ;
   then find $HP_ADIR/ -type f  -name "*.bam" -o -name "*.cram" | ls2in.pl -out $HP_ODIR | sort > $HP_IN
