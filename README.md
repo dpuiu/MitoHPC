@@ -55,9 +55,9 @@
     
     $ . ./init.sh
 
-   $ mkdir -p $HP_ODIR                                       
+    $ mkdir -p $HP_ODIR                                       
 
-   $ find $HP_ADIR/ -type f -name "*.bam" -o -name "*.cram" | $HP_SDIR/ls2in.pl -out $HP_ODIR | sort > $HP_IN
+    $ find $HP_ADIR/ -type f -name "*.bam" -o -name "*.cram" | $HP_SDIR/ls2in.pl -out $HP_ODIR | sort > $HP_IN
 
 ### GENERATE ALIGNMENT INDEX AND READ COUNT FILES ###
 
