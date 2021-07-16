@@ -21,7 +21,6 @@ export PATH=$HP_SDIR:$HP_BDIR:$PATH
 export PERLLIB=$HP_LDIR/:$PERLLIB
 export PERL5LIB=$HP_LDIR/:$PERL5LIB
 
-
 #test executables and Java jars
 which perl	        #usually available on Linux
 which gcc	        #MARCC:"module load gcc"
@@ -84,6 +83,6 @@ echo "REFERENCE SEQUENCES:"  >> checkInstall.log
 
 #test -s $HP_RDIR/$HP_HG
 #test -s $HP_RDIR/$HP_MT.fa
-#test -s $HPRDIR/$HP_R
+#test -s $HP_RDIR/$HP_R
 
 echo Success!

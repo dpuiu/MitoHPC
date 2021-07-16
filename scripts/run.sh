@@ -40,11 +40,3 @@ cat $HP_IN | perl -ane 'next if(/^#/ or @F<3); $ODIR=`dirname $F[2]`; chomp $ODI
 printf "\n"
 printf "$HP_SHS $HP_SDIR/getSummary$HP_I.sh\n"
 
-#cat $HP_IN | perl -ane 'next if(/^#/ or @F<3); $ODIR=`dirname $F[2]`; chomp $ODIR ; print "mkdir -p $ODIR ; " if($ODIR); $ODIR="" unless($ENV{HP_SH}=~/^qsub/ or $ENV{HP_SH}=~/^sbatch/); print "$ENV{HP_SH} $ODIR $ENV{HP_SDIR}/filter.sh $F[1] $F[2] $ENV{HP_M} $ENV{HP_RDIR}/$ENV{HP_H} $ENV{HP_RDIR}/$ENV{HP_R} $ENV{HP_RDIR}/$ENV{HP_R}\n";'
-#printf "$HP_SHS $HP_SDIR/getSummary.sh $HP_IN $HP_ODIR $HP_M $HP_T1 $HP_T2 $HP_T3\n"
-
-#if [ "$HP_M" == "mutect2" ] && [ "$HP_I" == "2" ] ; then
-#  printf "\n######################################\n\n"
-#  cat $HP_IN | perl -ane 'next if(/^#/ or @F<3); $ODIR=`dirname $F[2]`; chomp $ODIR ; $ODIR="" unless($ENV{HP_SH}=~/^qsub/ or $ENV{HP_SH}=~/^sbatch/); print "$ENV{HP_SH} $ODIR $ENV{HP_SDIR}/filter.sh $F[1] $F[2].$ENV{HP_M} $ENV{HP_M} $ENV{HP_RDIR}/$ENV{HP_H} $ENV{HP_RDIR}/$ENV{HP_R} $F[2].$ENV{HP_M}\n";'
-#  printf "$HP_SHS $HP_SDIR/getSummary.sh $HP_IN $HP_ODIR $HP_M.$HP_M $HP_T1 $HP_T2 $HP_T3\n"
-#fi

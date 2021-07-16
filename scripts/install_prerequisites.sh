@@ -12,78 +12,106 @@ cd $HP_HDIR
 mkdir -p prerequisites/ $HP_BDIR/ $HP_JDIR/
 cd prerequisites/
 
-wget -N -c https://netactuate.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2
-if [ ! -s $HP_BDIR/bwa ] ; then
-  tar -xjvf bwa-0.7.17.tar.bz2
-  cd bwa-0.7.17
-  make ; cp bwa $HP_BDIR/
-  cd -
+which bwa
+if [[ $? != 0 || $# == 1 && $2 == "-f" ]] ; then
+  wget -N -c https://netactuate.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2
+  if [ ! -s $HP_BDIR/bwa ] ; then
+    tar -xjvf bwa-0.7.17.tar.bz2
+    cd bwa-0.7.17
+    make ; cp bwa $HP_BDIR/
+    cd -
+  fi
 fi
 
 #update to 1.12
-wget -N -c https://github.com/samtools/samtools/releases/download/1.11/samtools-1.11.tar.bz2
-if [ ! -s $HP_BDIR/samtools ] ; then
-  tar -xjvf samtools-1.11.tar.bz2
-  cd samtools-1.11
-  ./configure --prefix=$HP_HDIR/ ; make ;  make install
-  cd -
+which samtools
+if [[ $? != 0 || $# == 1 && $2 == "-f" ]] ; then
+  wget -N -c https://github.com/samtools/samtools/releases/download/1.11/samtools-1.11.tar.bz2
+  if [ ! -s $HP_BDIR/samtools ] ; then
+    tar -xjvf samtools-1.11.tar.bz2
+    cd samtools-1.11
+    ./configure --prefix=$HP_HDIR/ ; make ;  make install
+    cd -
+  fi
 fi
 
-wget -N -c https://github.com/samtools/bcftools/releases/download/1.11/bcftools-1.11.tar.bz2
-if [ ! -s $HP_BDIR/bcftools ] ; then
-  tar -xjvf  bcftools-1.11.tar.bz2
-  cd bcftools-1.11
-  ./configure --prefix=$HP_HDIR/ ; make ; make install
-  cd -
+which bcftools
+if [[ $? != 0 || $# == 1 && $2 == "-f" ]] ; then
+  wget -N -c https://github.com/samtools/bcftools/releases/download/1.11/bcftools-1.11.tar.bz2
+  if [ ! -s $HP_BDIR/bcftools ] ; then
+    tar -xjvf  bcftools-1.11.tar.bz2
+    cd bcftools-1.11
+    ./configure --prefix=$HP_HDIR/ ; make ; make install
+    cd -
+  fi
 fi
 
-wget -N -c https://github.com/samtools/htslib/releases/download/1.11/htslib-1.11.tar.bz2
-if [ ! -s $HP_BDIR/tabix ] ; then
-  tar -xjvf htslib-1.11.tar.bz2
-  cd htslib-1.11
-  ./configure --prefix=$HP_HDIR/ ; make ; make install
-  cd -
+which htsfile
+if [[ $? != 0 || $# == 1 && $2 == "-f" ]] ; then
+  wget -N -c https://github.com/samtools/htslib/releases/download/1.11/htslib-1.11.tar.bz2
+  if [ ! -s $HP_BDIR/tabix ] ; then
+    tar -xjvf htslib-1.11.tar.bz2
+    cd htslib-1.11
+    ./configure --prefix=$HP_HDIR/ ; make ; make install
+    cd -
+  fi
 fi
 
-wget -N -c https://github.com/GregoryFaust/samblaster/releases/download/v.0.1.26/samblaster-v.0.1.26.tar.gz
-if [ ! -s $HP_BDIR/samblaster ] ; then
-  tar -xzvf samblaster-v.0.1.26.tar.gz
-  cd samblaster-v.0.1.26
-  make ; cp samblaster $HP_BDIR/
-  cd -
+which samblaster
+if [[ $? != 0 || $# == 1 && $2 == "-f" ]] ; then
+  wget -N -c https://github.com/GregoryFaust/samblaster/releases/download/v.0.1.26/samblaster-v.0.1.26.tar.gz
+  if [ ! -s $HP_BDIR/samblaster ] ; then
+    tar -xzvf samblaster-v.0.1.26.tar.gz
+    cd samblaster-v.0.1.26
+    make ; cp samblaster $HP_BDIR/
+    cd -
+  fi
 fi
 
-wget -N -c https://github.com/vcftools/vcftools/releases/download/v0.1.16/vcftools-0.1.16.tar.gz
-if [ ! -s $HP_BDIR/vcftools ] ; then
-  tar -xzvf vcftools-0.1.16.tar.gz
-  cd vcftools-0.1.16
-  ./configure --prefix=$HP_HDIR/  ; make ; make install
-  cd -
+which vcftools
+if [[ $? != 0 || $# == 1 && $2 == "-f" ]] ; then
+  wget -N -c https://github.com/vcftools/vcftools/releases/download/v0.1.16/vcftools-0.1.16.tar.gz
+  if [ ! -s $HP_BDIR/vcftools ] ; then
+    tar -xzvf vcftools-0.1.16.tar.gz
+    cd vcftools-0.1.16
+    ./configure --prefix=$HP_HDIR/  ; make ; make install
+    cd -
+  fi
 fi
 
-wget -N -c https://github.com/nferraz/st/archive/v1.1.4.tar.gz #-O st-1.1.4.tar.gz
-if [ ! -s $HP_BDIR/st ] ; then
-  tar -xzvf v1.1.4.tar.gz # st-1.1.4.tar.gz
-  cd st-1.1.4
-  perl ./Makefile.PL INSTALL_BASE=$HP_HDIR/ ; make ; make install
-  cd -
+which st
+if [[ $? != 0 || $# == 1 && $2 == "-f" ]] ; then
+  wget -N -c https://github.com/nferraz/st/archive/v1.1.4.tar.gz #-O st-1.1.4.tar.gz
+  if [ ! -s $HP_BDIR/st ] ; then
+    tar -xzvf v1.1.4.tar.gz # st-1.1.4.tar.gz
+    cd st-1.1.4
+    perl ./Makefile.PL INSTALL_BASE=$HP_HDIR/ ; make ; make install
+    cd -
+  fi
 fi
 
 #update to 2.30
-wget -N -c https://github.com/arq5x/bedtools2/releases/download/v2.29.2/bedtools-2.29.2.tar.gz
-if [ ! -s $HP_BDIR/bedtools ] ; then
-  tar -xzvf bedtools-2.29.2.tar.gz
-  cd bedtools2/
-  make install prefix=$HP_HDIR/
-  cd -
+
+which bedtools
+if [[ $? != 0 || $# == 1 && $2 == "-f" ]] ; then
+  wget -N -c https://github.com/arq5x/bedtools2/releases/download/v2.29.2/bedtools-2.29.2.tar.gz
+  if [ ! -s $HP_BDIR/bedtools ] ; then
+    tar -xzvf bedtools-2.29.2.tar.gz
+    cd bedtools2/
+    make install prefix=$HP_HDIR/
+    cd -
+  fi
 fi
 
-wget -N -c https://github.com/OpenGene/fastp/archive/v0.20.1.tar.gz #-O fastp-0.20.1.tar.gz
-if [ ! -s $HP_BDIR/fastp ] ; then
-  tar -xzvf v0.20.1.tar.gz # fastp-0.20.1.tar.gz
-  cd fastp-0.20.1/
-  make ; cp fastp $HP_BDIR/
-  cd -
+which fastp
+if [[ $? != 0 || $# == 1 && $2 == "-f" ]] ; then
+  wget -N -c https://github.com/OpenGene/fastp/archive/v0.20.1.tar.gz #-O fastp-0.20.1.tar.gz
+  if [ ! -s $HP_BDIR/fastp ] ; then
+    tar -xzvf v0.20.1.tar.gz # fastp-0.20.1.tar.gz
+    cd fastp-0.20.1/
+    make ; cp fastp $HP_BDIR/
+    cd -
+  fi
 fi
 
 wget -N -c https://github.com/broadinstitute/gatk/releases/download/4.2.0.0/gatk-4.2.0.0.zip

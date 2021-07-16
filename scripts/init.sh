@@ -66,13 +66,12 @@ if [[ $HP_M != "mutect2" ]] ; then export HP_I=1 ; fi
 
 PWD=`pwd`
 export HP_ADIR="${HP_ADIR:-$PWD/bams/}"	# bams or crams
-export HP_ODIR="${HP_ODIR:-$PWD/out/}"  ; mkdir -p $HP_ODIR
+export HP_ODIR="${HP_ODIR:-$PWD/out/}"
 export HP_IN="${HP_IN:-$PWD/in.txt}"
-if [ ! -s $HP_IN ] ;  then find $HP_ADIR/ -type f  -name "*.bam" -o -name "*.cram" | ls2in.pl -out $HP_ODIR | sort > $HP_IN ; fi
 
 ###############################################################
 #JOB SCHEDULING
-
+	
 #bash
 export HP_SH="${HP_SH:-bash}"
 export HP_SHS="${HP_SHS:-bash}"
@@ -84,15 +83,3 @@ export HP_SHS="${HP_SHS:-bash}"
 #SGE
 #export HP_SH="qsub  -V -N HP_$$ -wd "
 #export HP_SHS="qsub -V -hold_jid HP_$$ -N HP_S$$ -wd $HP_ODIR "
-
-################################################################
-#GENERATE SCRIPTS
-
-#if [ ! -s $PWD/samtools.all.sh ] ; then
-#  cut -f2 $HP_IN  | sed "s|^|$HP_SH $HP_SDIR/samtools.sh |" > samtools.all.sh
-#  echo "cut -f2 $HP_IN | sed -r 's|(.*)\.|\1\t|g' | cut -f1 | sed 's|$|.count|' | xargs cat | uniq.pl | getCN.pl > $HP_ODIR/count.tab" >> samtools.all.sh
-#fi
-
-#if [ ! -s $PWD/filter.all.sh ] ; then
-#   $HP_SDIR/run.sh > filter.all.sh
-#fi

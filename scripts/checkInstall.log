@@ -1,0 +1,29 @@
+########################
+DATE:
+Thu Jul 15 13:57:14 EDT 2021
+########################
+EXECUTABLES:
+samtools 1.11
+bcftools 1.11
+bedtools v2.29.2
+fastp 0.20.1
+bwa Version: 0.7.17-r1188
+samblaster: Version 0.1.26
+tabix Version: 1.11
+This is perl 5, version 16, subversion 3 (v5.16.3) built for x86_64-linux-thread-multi
+java 13.0.2 2020-01-14
+########################
+JAVA_HOME= /software/apps/java/jdk-13.0.2
+JARS:
+/work-zfs/ssalzbe1/users/dpuiu/Homo_sapiens_mito/HP/java/gatk.jar
+/work-zfs/ssalzbe1/users/dpuiu/Homo_sapiens_mito/HP/java/haplogrep.jar
+mutserve-2.0.0.jar
+########################
+VARS:
+HP_HDIR= /work-zfs/ssalzbe1/users/dpuiu/Homo_sapiens_mito/HP
+HP_BDIR= /work-zfs/ssalzbe1/users/dpuiu/Homo_sapiens_mito/HP/bin
+HP_SDIR= .
+HP_JDIR= /work-zfs/ssalzbe1/users/dpuiu/Homo_sapiens_mito/HP/java
+HP_RDIR= /work-zfs/ssalzbe1/users/dpuiu/Homo_sapiens_mito/HP/RefSeq
+########################
+REFERENCE SEQUENCES:

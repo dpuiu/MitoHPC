@@ -30,7 +30,3 @@ if [ ! -s $D/$N.count ] ; then
   cat $D/$N.idxstats | idxstats2count.pl -sample $N -chrM $HP_MT >  $D/$N.count
 fi
 
-#to be removed; only for the paper
-#if [ ! -s $D/$N.cvg.stat ] ; then
-#  samtools depth $I | grep ^$MT | tee $D/$N.cvg | cut -f3 | st  --summary --mean | sed 's|^|'"$N"'\t|' > $D/$N.cvg.stat
-#fi

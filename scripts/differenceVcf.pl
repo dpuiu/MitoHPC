@@ -21,6 +21,7 @@ MAIN:
 		"Max1=s"  =>      \$opt{M1},
                	"min2=s"  =>      \$opt{m2},
                	"Max2=s"  =>      \$opt{M2},
+		"alt"	=>	\$opt{alt}
 	);
 
 	die "ERROR: $! " if (!$result);
@@ -52,6 +53,7 @@ MAIN:
 		next if(defined($opt{M2}) and $AF>$opt{M2});
 
                 $h{"$F[0] $F[1] $F[3] $F[4] $SM"}=1;
+		$h{"$F[0] $F[1] $F[4] $F[3] $SM"}=1 if($opt{alt});
         }
 	close(IN);
         last unless(%h);
