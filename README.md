@@ -62,7 +62,7 @@
 
 ### GENERATE ALIGNMENT INDEX AND READ COUNT FILES ###
 
-     $ cut -f2 $HP_IN  | sed "s|^|$SH $HP_SDIR/samtools.sh |" > samtools.all.sh
+     $ cut -f2 $HP_IN  | sed "s|^|$HP_SDIR/samtools.sh |" > samtools.all.sh
 
      $ . ./samtools.all.sh
 

@@ -10,9 +10,9 @@ set -e
 
 export HP_HDIR=`readlink -f $HP_SDIR/..`
 export HP_BDIR="${HP_BDIR:-$HP_HDIR/bin}"
-export HP_JDIR="${HP_BDIR:-$HP_HDIR/java}"
-export HP_RDIR="${HP_BDIR:-$HP_HDIR/RefSeq}"
-export HP_LDIR="${HP_BDIR:-$HP_HDIR/lib/perl5}"
+export HP_JDIR="${HP_JDIR:-$HP_HDIR/java}"
+export HP_RDIR="${HP_RDIR:-$HP_HDIR/RefSeq}"
+export HP_LDIR="${HP_LDIR:-$HP_HDIR/lib/perl5}"
 
 export PATH=$HP_SDIR:$HP_BDIR:$PATH
 export PERLLIB=$HP_LDIR/:$PERLLIB
