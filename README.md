@@ -49,9 +49,9 @@
 
     $ nano init.sh 
         ...
-       export HP_ADIR=$PWD/bams/                                                           # alignment dir
-       export HP_ODIR=$PWD/out/ ;                                                          # output dir  
-       export HP_IN=$PWD/in.txt                                                            # input file
+       export HP_ADIR=$PWD/bams/                                           # alignment dir
+       export HP_ODIR=$PWD/out/ ;                                          # output dir  
+       export HP_IN=$PWD/in.txt                                            # input file
     
     $ . ./init.sh
 
