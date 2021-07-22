@@ -59,7 +59,7 @@ echo -n "bwa "  >> checkInstall.log; bwa 2>&1 | grep Version -m 1  >> checkInsta
 samblaster --version 2>&1 | head -1 >> checkInstall.log
 echo -n "tabix " >> checkInstall.log ; tabix 2>&1 |  grep -v ^$ | head -1 >> checkInstall.log
 perl --version | grep -v ^$ | head -1  >> checkInstall.log
-java --version | head -1               >> checkInstall.log
+java -version | head -1               >> checkInstall.log
  
 echo "########################"  >> checkInstall.log
 echo "JAVA_HOME=" $JAVA_HOME >> checkInstall.log

@@ -22,8 +22,8 @@ export PERL5LIB=$HP_LDIR/:$PERL5LIB
 #ORIGINAL REFERENCE
 
 #hs38DH
-export HP_MT="${MT:-chrM}"
-export HP_NUMT="${NUMT:-chr1:629084-634422 chr17:22521366-22521502}"
+export HP_MT="${HP_MT:-chrM}"
+export HP_NUMT="${HP_NUMT:-chr1:629084-634422 chr17:22521366-22521502}"
 
 #grch38_1kgmaj
 #export HP_MT=M
