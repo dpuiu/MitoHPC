@@ -18,6 +18,9 @@ P=1
 test -f $I
 ################################################################
 
+#test BAM/CRAM file sorted 
+samtools view -H $I | grep -m 1 -P "^@HD.+coordinates$"
+
 if [ ! -s $I.bai ] && [ ! -s $I.crai ]; then
   samtools index -@ $P $I
 fi
