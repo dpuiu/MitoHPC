@@ -113,7 +113,7 @@
 
 ### input file ###
 
-    $ head $IN
+    $ head $HP_IN
       #sampleName     inputFile          outputPath/prefix
       chrM.A          bams/chrM.A.bam    out/chrM.A/chrM.A
       chrM.B          bams/chrM.B.bam    out/chrM.B/chrM.B
@@ -122,7 +122,7 @@
 
  ### read counts and mtDNA-CN(M)
 
-     $ head $ODIR/count.tab
+     $ head $HP_ODIR/count.tab
        Run	 all        mapped     chrM    M
        chrM.A    851537886  848029490  396766  181.7
        chrM.B    884383716  882213718  506597  223.01
@@ -131,7 +131,7 @@
 
 
 ### after running samtools.sh ###
-    $ ls $ADIR/*
+    $ ls $HP_ADIR/*
       bams/chrM.A.bam
       bams/chrM.A.bam.bai
       bams/chrM.A.idxstats
@@ -215,16 +215,15 @@
 ### using init.sh ###
 
     $ nano init.sh
-      export FNAME="no_qual_haplotype_strand"
-      export FRULE="egrep -v \"qual|haplotype|strand\""
+      export HP_FNAME="no_qual_haplotype_strand"
+      export HP_FRULE="egrep -v \"qual|haplotype|strand\""
     # rerun run.sh ...
 
 ### command line ###    
 
-    $ M=mutect2
-    $ cat $ODIR/$M.00.concat.vcf  | egrep -v 'qual|haplotype|strand'  > \
-        $ODIR/$M.no_qual_haplotype_strand.00.concat.vcf
-    $ $SDIR/snpCount.sh $IN $ODIR $M.no_qual_haplotype_strand 03
-    $ $SDIR/snpCount.sh $IN $ODIR $M.no_qual_haplotype_strand 05
-    $ $SDIR/snpCount.sh $IN $ODIR $M.no_qual_haplotype_strand 10
+    $ HP_M=mutect2
+    $ cat $HP_ODIR/$M.00.concat.vcf  | egrep -v 'qual|haplotype|strand'  > $HP_ODIR/$M.no_qual_haplotype_strand.00.concat.vcf
+    $ $HP_SDIR/snpCount.sh $HP_IN $ODIR $HP_M.no_qual_haplotype_strand 03
+    $ $HP_SDIR/snpCount.sh $HP_IN $ODIR $HP_M.no_qual_haplotype_strand 05
+    $ $HP_SDIR/snpCount.sh $HP_IN $ODIR $HP_M.no_qual_haplotype_strand 10
 

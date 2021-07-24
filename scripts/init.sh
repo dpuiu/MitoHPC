@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+#set -e
 
 ###############################################################
 
@@ -76,10 +76,10 @@ export HP_IN="${HP_IN:-$PWD/in.txt}"
 export HP_SH="${HP_SH:-bash}"
 export HP_SHS="${HP_SHS:-bash}"
 
-#SLURM
-#export HP_SH="sbatch -p shared -J HP_$$ -D "
-#export HP_SHS="sbatch -p shared -J HP_$$ -d singleton -D $HP_ODIR "
+#SLURM "-D $HP_ODIR"
+#export HP_SH="sbatch -p shared -J HP_$$ "
+#export HP_SHS="sbatch -p shared -J HP_$$ -d singleton "
 
 #SGE
-#export HP_SH="qsub  -V -N HP_$$ -wd "
+#export HP_SH="qsub  -V -N HP_$$ -wd $HP_ODIR "
 #export HP_SHS="qsub -V -hold_jid HP_$$ -N HP_S$$ -wd $HP_ODIR "
