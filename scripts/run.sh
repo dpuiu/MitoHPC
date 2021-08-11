@@ -35,7 +35,8 @@ printf "export PERLLIB=$HP_LDIR:$PERLLIB\n"
 printf "export PERL5LIB=$HP_LDIR:$PERL5LIB\n"
 
 printf "\n"
-cat $HP_IN | perl -ane 'next if(/^#/ or @F<3); $ODIR=`dirname $F[2]`; chomp $ODIR ; print "mkdir -p $ODIR ; " if($ODIR);  print "$ENV{HP_SH} $ENV{HP_SDIR}/filter$ENV{HP_I}.sh $F[1] $F[2]\n";'
+#cat $HP_IN | perl -ane 'next if(/^#/ or @F<3); $ODIR=`dirname $F[2]`; chomp $ODIR ; print "mkdir -p $ODIR ; " if($ODIR);  print "$ENV{HP_SH} $ENV{HP_SDIR}/filter$ENV{HP_I}.sh $F[1] $F[2]\n";'
+cat $HP_IN | perl -ane 'next if(/^#/ or @F<3); print "$ENV{HP_SH} $ENV{HP_SDIR}/filter$ENV{HP_I}.sh $F[1] $F[2]\n";'
 
 printf "\n"
 printf "$HP_SHS $HP_SDIR/getSummary$HP_I.sh\n"

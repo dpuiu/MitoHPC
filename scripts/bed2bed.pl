@@ -33,7 +33,8 @@ MAIN:
 	$opt{add}=0;
 	my $result = GetOptions(
 		"min=i"	=>	\$opt{min},
-		"add=i"	=>	\$opt{add}
+		"add=i"	=>	\$opt{add},
+		"offset" =>     \$opt{offset}
         );
         die "ERROR: $HELPTEXT " if (!$result);
 
@@ -44,6 +45,12 @@ MAIN:
 		my @F=split;
 		die "ERROR: $_" if(@F<3);
 
+                if($F[0]=~/^(.+):(\d+)-(\d+)$/ && $opt{offset})
+                {
+                        $F[0]=$1;
+                        $F[1]+=$2;
+                        $F[2]+=$2;
+                }
 
 		$F[1]+=$opt{add};
 		$F[2]-=$opt{add};

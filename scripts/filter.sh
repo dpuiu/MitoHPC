@@ -84,6 +84,18 @@ if  [ ! -s $O.bam.bai ] ; then
   samtools index $O.bam
 fi
 
+#  samtools view $I $HP_MT $HP_NUMT -bu -F 0x900 -T $H.fa | \
+#    samtools sort -n -O SAM -m $MM | \
+#    perl -ane 'if(/^@/) {print} elsif($P[0] eq $F[0]) {print $p,$_}; @P=@F; $p=$_;' | \
+#    tee $O.osam | \
+#    samtools view -bu | \
+#    bedtools bamtofastq  -i /dev/stdin -fq /dev/stdout -fq2 /dev/stdout | \
+#    bwa mem $F+ - -p -v 1 -t $P -Y -R "@RG\tID:$N\tSM:$N\tPL:ILLUMINA" -v 1 | \
+#    circSam.pl -ref_len $F.fa.fai | grep -v "^$" > $O.nsam
+#  bedtools bamtobed -i $O.osam | tee $O.obed | uniq.pl -i 3 | count.pl -i 0 | perl -ane '$count{$F[0]}=$F[1]; END { foreach ("chrM","chr1","chr17") { $count{$_}=0 unless $count{$_} ; print $count{$_},"\t"} print "\n" } ' > $O.ocount
+#  bedtools bamtobed -i $O.nsam  | bed2bed.pl -offset | tee $O.bed  | uniq.pl -i 3 | count.pl -i 0 | perl -ane '$count{$F[0]}=$F[1]; END { foreach ("chrM","chr1","chr17") { $count{$_}=0 unless $count{$_} ; print $count{$_},"\t"} print "\n" } ' > $O.ncount
+#  exit 0
+
 #########################################################################################################################################
 #count aligned reads
 

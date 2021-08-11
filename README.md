@@ -64,7 +64,7 @@
 
      $ cut -f2 $HP_IN  | sed "s|^|$HP_SDIR/samtools.sh |" > samtools.all.sh
 
-     $ . ./samtools.all.sh
+     $ bash ./samtools.all.sh
 
 ### COMPUTE mtDNA-CN ####
     
@@ -75,7 +75,7 @@
  
     $ $HP_SDIR/run.sh > filter.all.sh
 
-    $ . ./filter.all.sh                                             
+    $ bash ./filter.all.sh                                             
      
 ## OUTPUT ##
 
