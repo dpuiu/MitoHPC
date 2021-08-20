@@ -18,8 +18,8 @@ P=1
 test -f $I
 ################################################################
 
-#test BAM/CRAM file sorted 
-samtools view -H $I | grep -m 1 -P "^@HD.+coordinate$"
+#test BAM/CRAM file sorted
+samtools view -H $I | grep -m 1 -P "^@HD.+coordinate$" > /dev/null
 
 if [ ! -s $I.bai ] && [ ! -s $I.crai ]; then
   samtools index -@ $P $I
@@ -31,5 +31,6 @@ fi
 
 if [ ! -s $D/$N.count ] ; then
   cat $D/$N.idxstats | idxstats2count.pl -sample $N -chrM $HP_MT >  $D/$N.count
+  samtools view -F 0x900 $I $HP_NUMT -c | sed 's|^|NUMT\n|' | paste $D/$N.count - > $D/$N.count+
+  mv $D/$N.count+ $D/$N.count
 fi
-

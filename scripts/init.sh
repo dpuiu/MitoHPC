@@ -81,5 +81,5 @@ export HP_SHS="${HP_SHS:-bash}"
 #export HP_SHS="sbatch -p shared -J HP_$$ -d singleton "
 
 #SGE
-#export HP_SH="qsub  -V -N HP_$$ -wd $HP_ODIR "
-#export HP_SHS="qsub -V -hold_jid HP_$$ -N HP_S$$ -wd $HP_ODIR "
+#export HP_SH="qsub  -V -N HP_$$ "
+#export HP_SHS="qsub -V -hold_jid HP_$$ -N HP_S$$ "

@@ -30,7 +30,7 @@ MAIN:
 		$count{chrM}=$F[2] if($F[0] eq $opt{chrM}); 
 	}
 
-	print join "\t",("Run","all","mapped","chrM"); print "\n";
+	print join "\t",("Run","all","mapped","MT"); print "\n";
 	print join "\t",($opt{sample},$count{all},$count{mapped},$count{chrM}); print "\n";
 
 	exit 0;
