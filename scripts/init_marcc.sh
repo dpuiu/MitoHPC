@@ -21,5 +21,6 @@ export HP_BDIR=/work-zfs/darking1/active/projects/mito/Heteroplasmy/HP/bin/     
 export HP_LDIR=/work-zfs/darking1/active/projects/mito/Heteroplasmy/HP/lib/perl5/
 
 export PATH=$SDIR:$BDIR:$PATH
-export PERLLIB=$LDIR:$PERLLIB
+export PERLLIB=$LDIR  #:$PERLLIB
+export PERL5LIB=$LDIR #:$PERL5LIB
 export SH="sbatch"

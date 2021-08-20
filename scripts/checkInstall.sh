@@ -18,8 +18,8 @@ export HP_BDIR=$HP_HDIR/bin
 export HP_RDIR=$HP_HDIR/RefSeq
 
 export PATH=$HP_SDIR:$HP_BDIR:$PATH
-export PERLLIB=$HP_LDIR/:$PERLLIB
-export PERL5LIB=$HP_LDIR/:$PERL5LIB
+export PERLLIB=$HP_LDIR  #:$PERLLIB
+export PERL5LIB=$HP_LDIR #:$PERL5LIB
 
 #test executables and Java jars
 which perl	        #usually available on Linux

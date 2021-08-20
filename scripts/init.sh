@@ -15,8 +15,8 @@ export HP_RDIR="${HP_RDIR:-$HP_HDIR/RefSeq}"
 export HP_LDIR="${HP_LDIR:-$HP_HDIR/lib/perl5}"
 
 export PATH=$HP_SDIR:$HP_BDIR:$PATH
-export PERLLIB=$HP_LDIR/:$PERLLIB
-export PERL5LIB=$HP_LDIR/:$PERL5LIB
+export PERLLIB=$HP_LDIR  #:$PERLLIB
+export PERL5LIB=$HP_LDIR #:$PERL5LIB
 
 ################################################################
 #ORIGINAL REFERENCE
@@ -76,9 +76,9 @@ export HP_IN="${HP_IN:-$PWD/in.txt}"
 export HP_SH="${HP_SH:-bash}"
 export HP_SHS="${HP_SHS:-bash}"
 
-#SLURM "-D $HP_ODIR"
-#export HP_SH="sbatch -p shared -J HP_$$ "
-#export HP_SHS="sbatch -p shared -J HP_$$ -d singleton "
+#SLURM
+#export HP_SH="sbatch -J HP_$$ "
+#export HP_SHS="sbatch -J HP_$$ -d singleton "
 
 #SGE
 #export HP_SH="qsub  -V -N HP_$$ "
