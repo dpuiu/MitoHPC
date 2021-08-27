@@ -19,5 +19,7 @@ bcftools annotate -a $HP_RDIR/HS.bed.gz    $O.gz -c "CHROM,FROM,TO,HS"  -h <(ech
 bcftools annotate -a $HP_RDIR/CDS.bed.gz   $O.gz -c "CHROM,FROM,TO,CDS"  -h <(echo '##INFO=<ID=CDS,Number=0,Type=Flag,Description="CDS">')         > $O ; bgzip -f $O ; tabix -f $O.gz
 bcftools annotate -a $HP_RDIR/HG.vcf.gz    $O.gz -c "INFO"  > $O ; bgzip -f $O ; tabix -f $O.gz
 bcftools annotate -a $HP_RDIR/NUMT.vcf.gz  $O.gz -c "INFO"  > $O ; bgzip -f $O ; tabix -f $O.gz
-bcftools annotate -a $HP_RDIR/dbSNP.vcf.gz $O.gz -c "ID"    > $O 
+bcftools annotate -a $HP_RDIR/dbSNP.vcf.gz $O.gz -c "ID"    > $O ; bgzip -f $O ; tabix -f $O.gz
+bcftools annotate -a $HP_RDIR/CADD.vcf.gz  $O.gz -c "INFO"  > $O 
+
 rm -f $O.gz $O.gz.tbi

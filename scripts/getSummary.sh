@@ -25,7 +25,7 @@ cut -f3 $IN | sed "s|$|.$M.00.vcf|" | xargs cat | bedtools sort -header | sed 's
 cat $D/$M.00.concat.vcf | grep "^#" > $D/$M.00.concat.vcf.tmp
 cat $D/$M.00.concat.vcf | grep -v "^#" | sort -k1,1 -k2,2n -k4,4 -k5,5 >>  $D/$M.00.concat.vcf.tmp
 mv  $D/$M.00.concat.vcf.tmp  $D/$M.00.concat.vcf
-annotateVcf.sh $D/$M.00.concat.vcf
+#annotateVcf.sh $D/$M.00.concat.vcf
 
 #snv counts
 snpCount.sh $IN $D $M $T1
