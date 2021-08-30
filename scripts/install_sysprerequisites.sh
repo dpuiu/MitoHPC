@@ -13,7 +13,7 @@ fi
 which apt-get
 if [ "$?" == 0 ] ; then
   sudo apt-get -y update && apt-get upgrade
-  sudo apt-get install -y git wget default-jdk default-jre make zlib1g libz-dev libncurses5-dev libbz2-dev pkg-config liblzma-dev python
+  sudo apt-get install -y git wget default-jdk default-jre zlib1g libz-dev libncurses5-dev libbz2-dev pkg-config liblzma-dev python  build-essential unzip # make gcc
 fi
 
 which yum
