@@ -13,6 +13,8 @@ I=$1
 export N=`basename $I .bam`
 export N=`basename $N .cram`
 export D=`dirname $I`
+export PATH=$HP_SDIR:$HP_BDIR:$PATH
+
 P=1
 
 test -f $I

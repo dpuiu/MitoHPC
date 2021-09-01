@@ -9,10 +9,10 @@
 ###############################################################
 
 export HP_HDIR=`readlink -f $HP_SDIR/..`
-export HP_BDIR="${HP_BDIR:-$HP_HDIR/bin}"
-export HP_JDIR="${HP_JDIR:-$HP_HDIR/java}"
-export HP_RDIR="${HP_RDIR:-$HP_HDIR/RefSeq}"
-export HP_LDIR="${HP_LDIR:-$HP_HDIR/lib/perl5}"
+export HP_BDIR="${HP_BDIR:-$HP_HDIR/bin/}"
+export HP_JDIR="${HP_JDIR:-$HP_HDIR/java/}"
+export HP_RDIR="${HP_RDIR:-$HP_HDIR/RefSeq/}"
+export HP_LDIR="${HP_LDIR:-$HP_HDIR/lib/perl5/}"
 
 export PATH=$HP_SDIR:$HP_BDIR:$PATH
 export PERLLIB=$HP_LDIR  #:$PERLLIB
@@ -73,12 +73,12 @@ export HP_IN="${HP_IN:-$PWD/in.txt}"
 #JOB SCHEDULING
 	
 #bash
-export HP_SH="${HP_SH:-bash}"
-export HP_SHS="${HP_SHS:-bash}"
+#export HP_SH="${HP_SH:-bash}"
+#export HP_SHS="${HP_SHS:-bash}"
 
 #SLURM
-#export HP_SH="sbatch -J HP_$$ "
-#export HP_SHS="sbatch -J HP_$$ -d singleton "
+export HP_SH="sbatch --export=ALL -J HP_$$ "
+export HP_SHS="sbatch --export=ALL -J HP_$$ -d singleton "
 
 #SGE
 #export HP_SH="qsub  -V -N HP_$$ "

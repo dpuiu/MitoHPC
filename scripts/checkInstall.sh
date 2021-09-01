@@ -8,18 +8,18 @@ set -e
 
 ##########################################################
 
-export HP_SDIR=`dirname $0`        # script directory
-export HP_HDIR=`readlink -f $HP_SDIR/..`
-export HP_LDIR=$HP_HDIR/lib/perl5
-export PERLLIB=$HP_LDIR:$PERLLIB
-export PERL5LIB=$HP_LDIR:$PERL5LIB
-export HP_JDIR=$HP_HDIR/java
-export HP_BDIR=$HP_HDIR/bin
-export HP_RDIR=$HP_HDIR/RefSeq
-
-export PATH=$HP_SDIR:$HP_BDIR:$PATH
-export PERLLIB=$HP_LDIR  #:$PERLLIB
-export PERL5LIB=$HP_LDIR #:$PERL5LIB
+#export HP_SDIR=`dirname $0`        # script directory
+#export HP_HDIR=`readlink -f $HP_SDIR/..`
+#export HP_LDIR=$HP_HDIR/lib/perl5
+#export PERLLIB=$HP_LDIR:$PERLLIB
+#export PERL5LIB=$HP_LDIR:$PERL5LIB
+#export HP_JDIR=$HP_HDIR/java
+#export HP_BDIR=$HP_HDIR/bin
+#export HP_RDIR=$HP_HDIR/RefSeq
+#export PATH=$HP_SDIR:$HP_BDIR:$PATH
+#export PERLLIB=$HP_LDIR  #:$PERLLIB
+#export PERL5LIB=$HP_LDIR #:$PERL5LIB
+. $HP_SDIR/init.sh
 
 #test executables and Java jars
 which perl	        #usually available on Linux
@@ -65,9 +65,10 @@ echo "########################"  >> checkInstall.log
 echo "JAVA_HOME=" $JAVA_HOME >> checkInstall.log
 echo "JARS:"  >> checkInstall.log
 
-ls -l $HP_JDIR/gatk.jar      | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
-ls -l $HP_JDIR/haplogrep.jar | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
-ls -l $HP_JDIR/mutserve.jar  | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
+ls -l $HP_JDIR/gatk.jar       | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
+ls -l $HP_JDIR/mutserve.jar   | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
+ls -l $HP_JDIR/haplogrep.jar  | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
+ls -l $HP_JDIR/haplocheck.jar | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
 
 echo "########################"  >> checkInstall.log
 echo "VARS:"  >> checkInstall.log
@@ -82,7 +83,7 @@ echo "########################"  >> checkInstall.log
 echo "REFERENCE SEQUENCES:"  >> checkInstall.log
 
 #test -s $HP_RDIR/$HP_HG
-#test -s $HP_RDIR/$HP_MT.fa
+ls -l $HP_RDIR/$HP_MT.fa | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
 #test -s $HP_RDIR/$HP_R
 
 echo Success!
