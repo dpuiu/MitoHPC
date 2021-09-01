@@ -21,10 +21,10 @@ cat $D/$M.$T.concat.vcf | concat2merge.pl -in $IN | bedtools sort -header | tee 
 cat $D/$M.$T.concat.vcf | snpCount.pl -in $IN | tee $D/$M.$T.tab | getSummaryN.pl > $D/$M.$T.summary
 
 #######################################################
-#if [[ -z "${FNAME}" ]]; then exit 0;  fi
-#cat $D/$M.$T.concat.vcf | eval $FRULE > $D/$M.$T.$FNAME.concat.vcf
-#cat $D/$M.$T.$FNAME.concat.vcf | concat2merge.pl -in $IN | bedtools sort -header | tee $D/$M.$T.$FNAME.merge.vcf | vcf2sitesOnly.pl >  $D/$M.$T.$FNAME.merge.sitesOnly.vcf
-#cat $D/$M.$T.$FNAME.concat.vcf | snpCount.pl -in $IN | tee $D/$M.$T.$FNAME.tab | getSummaryN.pl > $D/$M.$T.$FNAME.summary
+if [[ -z "${FNAME}" ]]; then exit 0;  fi
+cat $D/$M.$T.concat.vcf | eval $FRULE > $D/$M.$T.$FNAME.concat.vcf
+cat $D/$M.$T.$FNAME.concat.vcf | concat2merge.pl -in $IN | bedtools sort -header | tee $D/$M.$T.$FNAME.merge.vcf | vcf2sitesOnly.pl >  $D/$M.$T.$FNAME.merge.sitesOnly.vcf
+cat $D/$M.$T.$FNAME.concat.vcf | snpCount.pl -in $IN | tee $D/$M.$T.$FNAME.tab | getSummaryN.pl > $D/$M.$T.$FNAME.summary
 
 #cat $D/$M.$T.concat.vcf | uniqVcf.pl | posCount.pl  | sort -k1,1 -k2,2n | tee $D/$M.$T.count | awk 'NR == 1; NR > 1 {print $0 | "sort -k4,4nr -k2,2n"}' > $D/$M.$T.hcount
 #cat $D/$M.$T.count |  awk 'NR == 1; NR > 1 {print $0 | "sort -k6,6nr -k2,2n"}'  > $D/$M.$T.hScount
