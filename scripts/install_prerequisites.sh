@@ -79,16 +79,16 @@ if [[ $? != 0 || $# == 1 && $2 == "-f" ]] ; then
   fi
 fi
 
-which st
-if [[ $? != 0 || $# == 1 && $2 == "-f" ]] ; then
-  wget -N -c https://github.com/nferraz/st/archive/v1.1.4.tar.gz #-O st-1.1.4.tar.gz
-  if [ ! -s $HP_BDIR/st ] ; then
-    tar -xzvf v1.1.4.tar.gz # st-1.1.4.tar.gz
-    cd st-1.1.4
-    perl ./Makefile.PL INSTALL_BASE=$HP_HDIR/ ; make ; make install
-    cd -
-  fi
-fi
+#which st
+#if [[ $? != 0 || $# == 1 && $2 == "-f" ]] ; then
+#  wget -N -c https://github.com/nferraz/st/archive/v1.1.4.tar.gz #-O st-1.1.4.tar.gz
+#  if [ ! -s $HP_BDIR/st ] ; then
+#    tar -xzvf v1.1.4.tar.gz # st-1.1.4.tar.gz
+#    cd st-1.1.4
+#    perl ./Makefile.PL INSTALL_BASE=$HP_HDIR/ ; make ; make install
+#    cd -
+#  fi
+#fi
 
 #update to 2.30
 

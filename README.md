@@ -53,11 +53,13 @@
        export HP_ODIR=$PWD/out/ ;                                          # output dir  
        export HP_IN=$PWD/in.txt                                            # input file
     
-    $ . ./init.sh
+    $ . ./init.sh                                                          # source init file 
+
+    $ printenv | grep HP_                                                  # check variables 
 
     $ mkdir -p $HP_ODIR                                       
 
-    $ find $HP_ADIR/ -type f -name "*.bam" -o -name "*.cram" | \
+    $ find $HP_ADIR/ -type f -name "*.bam" -o -name "*.cram" | \           # generate Run list input file
         $HP_SDIR/ls2in.pl -out $HP_ODIR | sort > $HP_IN
 
 ### GENERATE ALIGNMENT INDEX AND READ COUNT FILES ###
@@ -76,6 +78,15 @@
     $ $HP_SDIR/run.sh > filter.all.sh
 
     $ bash ./filter.all.sh                                             
+
+
+### RE-RUN PIPELINE (with modified parameters) ###
+
+    $ nano init.sh                                                          
+
+    $ $HP_SDIR/run.sh > filter.all.sh                                       
+
+    $ bash ./filter.all.sh
      
 ## OUTPUT ##
 

@@ -13,10 +13,7 @@ export HP_HDIR=`readlink -f $HP_SDIR/..`
 export HP_BDIR=$HP_HDIR/bin/
 export HP_JDIR=$HP_HDIR/java/
 export HP_RDIR=$HP_HDIR/RefSeq/
-export HP_LDIR=$HP_HDIR/lib/perl5/
 export PATH=$HP_SDIR:$HP_BDIR:$PATH
-#export PERLLIB=$HP_LDIR:$PERLLIB
-#export PERL5LIB=$HP_LDIR:$PERL5LIB
 
 ################################################################
 #ORIGINAL REFERENCE
@@ -59,6 +56,5 @@ export HP_IN=in.txt             # input file
 #JOB SCHEDULING
 
 export HP_SH="bash" ;                          export HP_SHS="bash"                                      # bash
-#export HP_SH="sbatch --export=ALL -J HP_$$" ; export HP_SHS="sbatch --export=ALL -J HP_$$ -d singleton" # SLURM ???
-#export HP_SH="sbatch -J HP_$$" ;              export HP_SHS="sbatch -J HP_$$ -d singleton"              # SLURM    
+#export HP_SH="sbatch -J HP_$$" ;              export HP_SHS="sbatch -J HP_$$ -d singleton"              # SLURM
 #export HP_SH="qsub  -V -N HP_$$" ;            export HP_SHS="qsub -V -hold_jid HP_$$ -N HP_S$$ "        # SGE

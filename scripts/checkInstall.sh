@@ -33,8 +33,8 @@ which fastp             #install from "https://github.com/OpenGene/fastp"
 which samblaster        #install from "https://github.com/GregoryFaust/samblaster"
 which circSam.pl        #available under scripts
 which filterVcf.pl      #available under scripts
-which st                #simple statistics: install from "https://github.com/nferraz/st"
-perl -e 'use App::St'
+#which st                #simple statistics: install from "https://github.com/nferraz/st"
+#perl -e 'use App::St'
 which bcftools
 which tabix
 which vcftools
@@ -47,10 +47,12 @@ test -f $HP_JDIR/haplocheck.jar
 
 echo "########################"  > checkInstall.log
 echo "DATE:"  >> checkInstall.log
+
 date >> checkInstall.log
 
 echo "########################"  >> checkInstall.log
 echo "EXECUTABLES:"  >> checkInstall.log
+
 samtools --version | head -1 >> checkInstall.log
 bcftools --version | head -1 >> checkInstall.log
 bedtools --version | head -1 >> checkInstall.log
@@ -60,11 +62,11 @@ samblaster --version 2>&1 | head -1 >> checkInstall.log
 echo -n "tabix " >> checkInstall.log ; tabix 2>&1 |  grep -v ^$ | head -1 >> checkInstall.log
 perl --version | grep -v ^$ | head -1  >> checkInstall.log
 java -version | head -1               >> checkInstall.log
- 
-echo "########################"  >> checkInstall.log
-echo "JAVA_HOME=" $JAVA_HOME >> checkInstall.log
-echo "JARS:"  >> checkInstall.log
 
+echo "########################"  >> checkInstall.log
+echo "JAVA:"  >> checkInstall.log
+
+echo "JAVA_HOME=" $JAVA_HOME >> checkInstall.log
 ls -l $HP_JDIR/gatk.jar       | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
 ls -l $HP_JDIR/mutserve.jar   | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
 ls -l $HP_JDIR/haplogrep.jar  | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
@@ -80,10 +82,11 @@ echo "HP_JDIR=" $HP_JDIR >> checkInstall.log
 echo "HP_RDIR=" $HP_RDIR >> checkInstall.log
 
 echo "########################"  >> checkInstall.log
-echo "REFERENCE SEQUENCES:"  >> checkInstall.log
+echo "REFERENCES:"  >> checkInstall.log
 
 #test -s $HP_RDIR/$HP_HG
-ls -l $HP_RDIR/$HP_MT.fa | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
+ls -l $HP_RDIR/$HP_MT.fa | perl -ane 'print "HP_MT= $F[-1]\n";' >> checkInstall.log
+ls -l $HP_RDIR/$HP_R.fa  | perl -ane 'print "HP_R=  $F[-1]\n";' >> checkInstall.log
 #test -s $HP_RDIR/$HP_R
 
 echo Success!
