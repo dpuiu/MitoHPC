@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -ex
+set -e
 
 #######################################################################################################################################
 
@@ -153,11 +153,13 @@ if [ ! -s $O.$M.00.vcf ]; then
   cat $O.$M.vcf  | bcftools norm -m - | filterVcf.pl -sample $N -source $M |  grep -v "^#" | sort -k2,2n -k4,4 -k5,5 | fix${M}Vcf.pl -file $F.fa >> $O.$M.00.vcf
 fi
 
+annotateVcf.sh $O.$M.00.vcf
+
 #########################################################################################################################################
 #get new consensus
 
 if  [ ! -s $O.fa ]  && [ ! -s $O.$M.fa ] ; then
-  annotateVcf.sh $O.$M.00.vcf
+  #annotateVcf.sh $O.$M.00.vcf
   cat $O.$M.00.vcf | maxVcf.pl | bedtools sort -header |tee $O.$M.max.vcf | bgzip -f -c > $O.$M.max.vcf.gz ; tabix -f $O.$M.max.vcf.gz
   bcftools consensus -f $F.fa $O.$M.max.vcf.gz | perl -ane 'chomp; if($.==1) { print ">$ENV{N}\n" } else { s/N//g; print } END {print "\n"}' > $O.$M.fa
   rm $O.$M.max.vcf.gz $O.$M.max.vcf.gz.tbi
