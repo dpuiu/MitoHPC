@@ -224,7 +224,7 @@
     ...
     ?p                            # "p" suffix stands for non homopolimeric
     ...
-    A                             # total number of SNVs
+    A                             # total number of SNVs (H+h)
 
 ## EXAMPLE 3 : CUSTOM FILTERING ##
 
