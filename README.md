@@ -215,7 +215,7 @@
 
     haplogroup                    # sample haplogroup
 
-    H                             # number of homozygous SNVs (the multiallelic SNVs are always couted once)
+    H                             # number of homozygous SNVs (the multiallelic SNVs counted once)
     h                             # number of heterozygous SNVs
     S                             # number of homozygous SNVs (excluding INDELs)
     s                             # number of heterozygous SNVs (excluding INDELs)
