@@ -214,12 +214,17 @@
     M                             # mtDNA copy number ; = 2*Mcvg/Gcvg
 
     haplogroup                    # sample haplogroup
-    S                             # homozygous SNPs, 3% heteroplasmy rate
-    s                             # heterozygous SNPs
-    I                             # homozygous INDELs
-    i                             # heterozygous INDELs
+
+    H                             # number of homozygous SNVs (the multiallelic SNVs are always couted once)
+    h                             # number of heterozygous SNVs
+    S                             # number of homozygous SNVs (excluding INDELs)
+    s                             # number of heterozygous SNVs (excluding INDELs)
+    I                             # number of homozygous INDELs
+    i                             # number of heterozygous INDELs
     ...
     ?p                            # "p" suffix stands for non homopolimeric
+    ...
+    A                             # total number of SNVs
 
 ## EXAMPLE 3 : CUSTOM FILTERING ##
 
