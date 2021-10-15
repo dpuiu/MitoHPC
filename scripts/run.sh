@@ -19,6 +19,9 @@ printf "export HP_NUMT=\"$HP_NUMT\"\n"
 printf "export HP_E=$HP_E\n"
 printf "export HP_L=$HP_L\n"
 
+printf "export HP_IN=$HP_IN\n"
+printf "export HP_ODIR=$HP_ODIR\n"
+
 printf "export HP_M=$HP_M\n"
 printf "export HP_T1=$HP_T1\n"
 printf "export HP_T2=$HP_T2\n"
