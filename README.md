@@ -50,7 +50,7 @@
     $ nano init.sh 
         ...
        export HP_ADIR=$PWD/bams/                                           # alignment dir
-       export HP_ODIR=$PWD/out/ ;                                          # output dir  
+       export HP_ODIR=$PWD/out/                                            # output dir  
        export HP_IN=$PWD/in.txt                                            # input file
     
     $ . ./init.sh                                                          # source init file 
@@ -59,8 +59,8 @@
 
     $ mkdir -p $HP_ODIR                                       
 
-    $ find $HP_ADIR/ -type f -name "*.bam" -o -name "*.cram" | \           # generate input file
-        $HP_SDIR/ls2in.pl -out $HP_ODIR | sort > $HP_IN
+    $ find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | \
+        $HP_SDIR/ls2in.pl -out $HP_ODIR | sort > $HP_IN                    # generate input file
 
 ### GENERATE ALIGNMENT INDEX AND READ COUNT FILES ###
 

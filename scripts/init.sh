@@ -42,7 +42,8 @@ export HP_T3=10
 export HP_FNAME=                # FILTERING options: Ex: noMultiallelic
 export HP_FRULE=                # FILTERING options: Ex: "grep -v multiallelic"
 
-export HP_JOPT=                 # JAVA options: Ex: "--Xms2g -Xmx2g"
+export HP_JOPT=                 # JAVA options: Ex: "-Xms2g -Xmx2g -XX:ParallelGCThreads=1"
+export HP_JOPT="-Xms2g -Xmx2g -XX:ParallelGCThreads=1"
 
 ################################################################
 #INPUT/OUTPUT
@@ -50,7 +51,7 @@ export HP_JOPT=                 # JAVA options: Ex: "--Xms2g -Xmx2g"
 PWD=`pwd`
 export HP_ADIR=$PWD/bams/	# bams or crams
 export HP_ODIR=$PWD/out/        # output dir
-export HP_IN=in.txt             # input file
+export HP_IN=$PWD/in.txt        # input file
 
 ###############################################################
 #JOB SCHEDULING

@@ -63,6 +63,29 @@ fi
 
 #########################################################################################################################################
 #filter & realign reads   ##   -F 20 (fwd); -f 0x10 (rev)
+
+#no subsampling
+#if  [ ! -s $O.bam.bai ] ; then
+#  test -s $I
+#  if [ ! -s $I.bai ] && [ ! -s $I.crai ] ; then exit 1 ; fi
+
+#  samtools view $I $HP_MT $HP_NUMT -bu -F 0x900 -T $H.fa | \
+#    samtools sort -n -O SAM -m $MM | \
+#    perl -ane 'if(/^@/) {print} elsif($P[0] eq $F[0]) {print $p,$_}; @P=@F; $p=$_;' | \
+#    samtools view -bu | \
+#    bedtools bamtofastq  -i /dev/stdin -fq /dev/stdout -fq2 /dev/stdout | \
+#    fastp --stdin --interleaved_in --stdout $HP_FOPT -j $O.json  -h $O.html | \
+#    bwa mem $F+ - -p -v 1 -t $P -Y -R "@RG\tID:$N\tSM:$N\tPL:ILLUMINA" -v 1 | \
+#    samblaster --removeDups --addMateTags  | \
+#    circSam.pl -ref_len $F.fa.fai | grep -v "^$" | \
+#    perl -ane 'next if(/^\@SQ\tSN:(\S+)/ and !($1 eq $ENV{HP_MT} or $1 eq $ENV{N})); print' | \
+#    samtools view -bu | \
+#    samtools sort -m $MM > $O.bam
+
+#  samtools index $O.bam
+#fi
+
+#with subsampling; max HP_L reads
 if  [ ! -s $O.bam.bai ] ; then
   test -s $I
   if [ ! -s $I.bai ] && [ ! -s $I.crai ] ; then exit 1 ; fi
@@ -75,7 +98,7 @@ if  [ ! -s $O.bam.bai ] ; then
     fastp --stdin --interleaved_in --stdout $HP_FOPT -j $O.json  -h $O.html | \
     bwa mem $F+ - -p -v 1 -t $P -Y -R "@RG\tID:$N\tSM:$N\tPL:ILLUMINA" -v 1 | \
     samblaster --removeDups --addMateTags  | \
-    perl -ane 'if(/^@/) { print } else { last if($P[0] ne $F[0] and $L>$ENV{HP_L}) ;  print if($F[2] eq $ENV{R} and $F[6] eq "="); @P=@F ; $L++}' | \
+    perl -ane 'if(/^@/) { print } else { last if($P[0] ne $F[0] and $L and $ENV{HP_L} and $L>$ENV{HP_L}) ;  print if($F[2] eq $ENV{R} and $F[6] eq "="); @P=@F ; $L++}' | \
     circSam.pl -ref_len $F.fa.fai | grep -v "^$" | \
     grep -v -P '^\@SQ\tSN:chr1' | \
     samtools view -bu | \
@@ -84,17 +107,6 @@ if  [ ! -s $O.bam.bai ] ; then
   samtools index $O.bam
 fi
 
-#  samtools view $I $HP_MT $HP_NUMT -bu -F 0x900 -T $H.fa | \
-#    samtools sort -n -O SAM -m $MM | \
-#    perl -ane 'if(/^@/) {print} elsif($P[0] eq $F[0]) {print $p,$_}; @P=@F; $p=$_;' | \
-#    tee $O.osam | \
-#    samtools view -bu | \
-#    bedtools bamtofastq  -i /dev/stdin -fq /dev/stdout -fq2 /dev/stdout | \
-#    bwa mem $F+ - -p -v 1 -t $P -Y -R "@RG\tID:$N\tSM:$N\tPL:ILLUMINA" -v 1 | \
-#    circSam.pl -ref_len $F.fa.fai | grep -v "^$" > $O.nsam
-#  bedtools bamtobed -i $O.osam | tee $O.obed | uniq.pl -i 3 | count.pl -i 0 | perl -ane '$count{$F[0]}=$F[1]; END { foreach ("chrM","chr1","chr17") { $count{$_}=0 unless $count{$_} ; print $count{$_},"\t"} print "\n" } ' > $O.ocount
-#  bedtools bamtobed -i $O.nsam  | bed2bed.pl -offset | tee $O.bed  | uniq.pl -i 3 | count.pl -i 0 | perl -ane '$count{$F[0]}=$F[1]; END { foreach ("chrM","chr1","chr17") { $count{$_}=0 unless $count{$_} ; print $count{$_},"\t"} print "\n" } ' > $O.ncount
-#  exit 0
 
 #########################################################################################################################################
 #count aligned reads
@@ -107,7 +119,7 @@ fi
 #get covearge at each chrM position ; get overall stats
 
 if [ ! -s $O.cvg.stat ] ; then
-  cat $O.bam | bedtools bamtobed -cigar | bedtools genomecov -i - -g $F.fa.fai -d > $O.cvg
+  cat $O.bam | bedtools bamtobed -cigar | grep "^$HP_MT" | bedtools genomecov -i - -g $F.fa.fai -d > $O.cvg
   cat $O.cvg | cut -f3 | st.pl  --summary --mean | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{N}\t$_" }'  > $O.cvg.stat
 fi
 
@@ -123,7 +135,7 @@ fi
 
 if [ ! -s $O.$M.vcf ] ; then
   if [ "$M" == "mutect2" ] ; then
-    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $F.fa -I $O.bam                             -O $O.$M.vcf
+    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $F.fa -I $O.bam                            -O $O.$M.vcf
     java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $F.fa -V $O.$M.vcf --min-reads-per-strand 2 -O $O.${M}F.vcf ; mv $O.${M}F.vcf  $O.$M.vcf ; rm $O.${M}F.vcf* $O.$M.vcf.*
     if [ -s $O.max.vcf ] ; then
       cat $O.max.vcf | fixsnpPos.pl -ref $RO -rfile $FO.fa -file /dev/stdin $O.$M.vcf > $O.${M}F.vcf ; mv $O.${M}F.vcf $O.$M.vcf
@@ -140,7 +152,6 @@ if [ ! -s $O.$M.vcf ] ; then
     exit 1
   fi
 fi
-test -s $O.$M.vcf
 
 ##########################################################################################################################################
 
@@ -151,9 +162,9 @@ if [ ! -s $O.$M.00.vcf ]; then
 
   fa2Vcf.pl $FO.fa >> $O.$M.00.vcf
   cat $O.$M.vcf  | bcftools norm -m - | filterVcf.pl -sample $N -source $M |  grep -v "^#" | sort -k2,2n -k4,4 -k5,5 | fix${M}Vcf.pl -file $F.fa >> $O.$M.00.vcf
-fi
 
-annotateVcf.sh $O.$M.00.vcf
+  annotateVcf.sh $O.$M.00.vcf
+fi
 
 #########################################################################################################################################
 #get new consensus
