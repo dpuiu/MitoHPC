@@ -70,8 +70,25 @@
 
 ### COMPUTE mtDNA-CN ####
     
-     $ cut -f2 $HP_IN | sed -r 's|(.*)\.|\1\t|g' | cut -f1 | sed 's|$|.count|' | xargs cat | \
+     $ cut -f2 $HP_IN | sed -r 's|(.*)\.|\1\t|g' | cut -f1 | \
+         sed 's|$|.count|' | xargs cat | \
          $HP_SDIR/uniq.pl | $HP_SDIR/getCN.pl > $HP_ODIR/count.tab
+
+### SUBSAMPLE BAM FILES (optional) ###
+
+        $ nano init.sh
+          ...
+          export HP_L=222000                                                # number of reads
+          export HP_LDIR=...                                                # subsample dir
+
+       $ join $HP_IN $HP_ODIR/count.tab | \                                 
+           perl -ane '$s=$ENV{HP_L}/$F[5]; $s=($s<1)?"-s $s":""; \
+             print "samtools view $s $F[1] $ENV{HP_MT} $ENV{HP_NUMT} -b \
+             $ENV{HP_LDIR}/$F[0].bam; \
+             samtools index $ENV{HP_LDIR}/$F[0].bam\n"' | bash              # subsample
+
+       $ find $HP_LDIR/ -name "*.bam" -o -name "*.cram" | \                 # re-create input file
+          $HP_SDIR/ls2in.pl -out $HP_ODIR | sort > $HP_IN
   
 ### RUN PIPELINE  ###
  
@@ -161,6 +178,8 @@
 
 #### vcf files : concat & merge ####
 
+##### 1st itteration #####
+
     $ cat mutect2.03.concat.vcf  
       ...
       #CHROM  POS ID  REF  ALT  QUAL FILTER                      INFO               FORMAT    SAMPLE    
@@ -187,10 +206,17 @@
 #### SNV counts ####
 
     $ cat mutect2.03.tab            
-      Run                        H           h   S   s   I  i  Hp  hp  Sp  sp  Ip  ip  
-      chrM.A                     31          44  28  36  3  8  3   0   0   0   3   0   
-      chrM.B                     27          42  25  34  2  8  5   0   3   0   2   0   
-      chrM.C                     39          43  35  35  4  8  2   0   0   0   2   0   
+      Run     H   h   S   s   I  i  Hp  hp  Sp  sp  Ip  ip  A
+      chrM.A  31  43  28  35  3  8  28  43  28  35  0   8   74
+      chrM.B  27  43  25  35  2  8  22  41  22  33  0   8   70
+      chrM.C  40  42  36  34  4  8  38  41  36  33  2   8   82
+      ...
+
+    $ cat  mutect2.mutect2.03.tab 
+      Run     H  h   S  s   I  i  Hp  hp  Sp  sp  Ip  ip  A
+      chrM.A  0  43  0  35  0  8  0   43  0   35  0   8   43
+      chrM.B  0  43  0  35  0  8  0   41  0   33  0   8   43
+      chrM.C  0  42  0  34  0  8  0   41  0   33  0   8   42
 
 #### Haplogroups ####
 
