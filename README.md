@@ -18,18 +18,16 @@
 
     $ git clone https://github.com/dpuiu/HP.git
 
-### SETUP ENVIRONMENT ###
+### SETUP ENVIRONMENT (1) ###
     
     $ PWD=`pwd`
     $ export HP_SDIR=path_to_pipeline_home_directory/HP/scripts/   # set script directory variable
 
-### INSTALL PIPELINE PREREQUISITES (if necessary) ###
+### INSTALL PIPELINE PREREQUISITES ; CHECK INSTALL ###
 
     $ sudo $HP_SDIR/install_sysprerequisites.sh
     $ $HP_SDIR/install_prerequisites.sh  
-    
-### CHECK INSTALL ###
-  
+      
     # if successfull => "Success message!"
 
     $ $HP_SDIR/checkInstall.sh
@@ -43,7 +41,7 @@
 
     $ cp -i $HP_SDIR/init.sh .
 
-### SETUP ENVIRONMENT ###
+### SETUP ENVIRONMENT (2) ###
 
     $ nano init.sh 
         ...
