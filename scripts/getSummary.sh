@@ -53,7 +53,7 @@ cut -f3 $IN | sed "s|$|.$M.haplogroup|" | xargs cat | grep -v SampleID | sed 's|
   perl -ane 'print "$1\n" if(/(^Run.+)/ or /(\S+\s+L\d)(.*)/ or /(\S+\s+HV)(.*)/ or /(\S+\s+JT)(.*)/ or /(\S+\s+\w)(.*)/);' > $D/$M.haplogroup1.tab
 
 #haplocheck
-cut -f3 $IN | sed "s|$|.$M.haplocheck|" | xargs cat  | uniq.pl | sed 's|"||g' | sed 's|^Sample|Run|' | sed 's| ||g' > $D/$M.haplocheck.tab
+cut -f3 $IN | sed "s|$|.$M.haplocheck|" | xargs cat  | uniq.pl | sed 's|^"Sample"|"Run"|' | sed 's|"||g' | sed 's| ||g' > $D/$M.haplocheck.tab
 
 #fasta
 cut -f3 $IN | sed "s|$|.$M.fa|"        | xargs cat > $D/$M.fa
