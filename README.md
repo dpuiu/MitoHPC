@@ -221,7 +221,7 @@
       chrM    146  .   T    C    .     .       AC=1;AN=2;HV;DLOOP;CR=0.949142;CP=10.37
       ...
 
-    # 2nd iteration ; heteroplasmies only(AF<1)
+    # 2nd iteration ; mostly heteroplasmies(AF<1)
     $ cat mutect2.mutect2.03.concat.vcf 
       #CHROM  POS   ID  REF   ALT  QUAL  FILTER  INFO                                  FORMAT    SAMPLE
       chrM    374   .   A     G    .     PASS    SM=chrM.A;DLOOP;CR=0.998787;CP=10.66  GT:DP:AF  0/1:62:0.138
