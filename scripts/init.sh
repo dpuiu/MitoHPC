@@ -9,11 +9,13 @@
 ###############################################################
 #PATHS
 
-export HP_HDIR=`readlink -f $HP_SDIR/..`
-export HP_BDIR=$HP_HDIR/bin/
-export HP_JDIR=$HP_HDIR/java/
-export HP_RDIR=$HP_HDIR/RefSeq/
-export PATH=$HP_SDIR:$HP_BDIR:$PATH
+export HP_HDIR=`readlink -f $HP_SDIR/..`	#HP home directory
+export HP_BDIR=$HP_HDIR/bin/			#bin directory
+export HP_JDIR=$HP_HDIR/java/			#java directory
+export HP_RDIR=$HP_HDIR/RefSeq/			#reference file
+export HP_LDIR=					#subsample directory
+
+export PATH=$HP_SDIR:$HP_BDIR:$PATH		#PATH
 
 ################################################################
 #ORIGINAL REFERENCE
@@ -42,8 +44,7 @@ export HP_T3=10
 export HP_FNAME=                # FILTERING options: Ex: noMultiallelic
 export HP_FRULE=                # FILTERING options: Ex: "grep -v multiallelic"
 
-export HP_JOPT=                 # JAVA options: Ex: "-Xms2g -Xmx2g -XX:ParallelGCThreads=1"
-export HP_JOPT="-Xms2g -Xmx2g -XX:ParallelGCThreads=1"
+export HP_JOPT="-Xms2g -Xmx2g -XX:ParallelGCThreads=1"  # JAVA options
 
 ################################################################
 #INPUT/OUTPUT

@@ -45,8 +45,6 @@
 
 ### SETUP ENVIRONMENT ###
 
-    # set variables (in terminal or init.sh)
-
     $ nano init.sh 
         ...
        export HP_ADIR=$PWD/bams/                                           # alignment dir
@@ -62,19 +60,19 @@
     $ find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | \
         $HP_SDIR/ls2in.pl -out $HP_ODIR | sort > $HP_IN                    # generate input file
 
-### GENERATE ALIGNMENT INDEX AND READ COUNT FILES ###
+### GENERATE ALIGNMENT INDEX AND READ COUNT FILES; COMPUTE mtDNA-CN ####
 
      $ cut -f2 $HP_IN  | sed "s|^|$HP_SH $HP_SDIR/samtools.sh |" > samtools.all.sh
 
      $ bash ./samtools.all.sh
 
-### COMPUTE mtDNA-CN ####
-    
+     # wait for the jobs to finish ...
+
      $ cut -f2 $HP_IN | sed -r 's|(.*)\.|\1\t|g' | cut -f1 | \
          sed 's|$|.count|' | xargs cat | \
          $HP_SDIR/uniq.pl | $HP_SDIR/getCN.pl > $HP_ODIR/count.tab
 
-### SUBSAMPLE BAM FILES (optional) ###
+### SUBSAMPLE ALIGNMENT FILES (optional) ###
 
         $ nano init.sh
           ...
@@ -83,12 +81,12 @@
 
        $ join $HP_IN $HP_ODIR/count.tab | \                                 
            perl -ane '$s=$ENV{HP_L}/$F[5]; $s=($s<1)?"-s $s":""; \
-             print "samtools view $s $F[1] $ENV{HP_MT} $ENV{HP_NUMT} -b \
+             print "samtools view $s $F[1] $ENV{HP_MT} $ENV{HP_NUMT} -T $ENV{HP_RDIR}/$ENV{HP_H}.fa -b \
              $ENV{HP_LDIR}/$F[0].bam; \
              samtools index $ENV{HP_LDIR}/$F[0].bam\n"' | bash              # subsample
 
-       $ find $HP_LDIR/ -name "*.bam" -o -name "*.cram" | \                 # re-create input file
-          $HP_SDIR/ls2in.pl -out $HP_ODIR | sort > $HP_IN
+       $ find $HP_LDIR/ -name "*.bam" -o -name "*.cram" | \                 
+          $HP_SDIR/ls2in.pl -out $HP_ODIR | sort > $HP_IN		    # re-create input file
   
 ### RUN PIPELINE  ###
  
@@ -97,9 +95,9 @@
     $ bash ./filter.all.sh                                             
 
 
-### RE-RUN PIPELINE (with modified parameters) ###
+### RE-RUN PIPELINE (optional) ###
 
-    $ nano init.sh                                                          
+    $ nano init.sh           						    # update parameters if needed                                               
 
     $ $HP_SDIR/run.sh > filter.all.sh                                       
 
