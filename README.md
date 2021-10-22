@@ -190,22 +190,20 @@
       ##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
       ##FORMAT=<ID=AF,Number=A,Type=Float,Description="Allele Frequency">
       ...
-      #CHROM  POS   ID          REF   ALT  QUAL  FILTER                        INFO                                          FORMAT    SAMPLE
-      chrM    64    .           C     T    .     clustered_events;haplotype    SM=chrM.A;HV;DLOOP;CR=1.140555;CP=11.43       GT:DP:AF  0|1:67:1
-      chrM    73    .           A     G    .     PASS                          SM=chrM.B;HV;DLOOP;NUMT;CR=1.039800;CP=10.89  GT:DP:AF  0/1:52:1
-      chrM    73    .           A     G    .     PASS                          SM=chrM.C;HV;DLOOP;NUMT;CR=1.039800;CP=10.89  GT:DP:AF  0/1:43:1
-      chrM    73    .           A     G    .     clustered_events;haplotype    SM=chrM.A;HV;DLOOP;NUMT;CR=1.039800;CP=10.89  GT:DP:AF  0|1:70:1
-      chrM    146   .           T     C    .     clustered_events;haplotype    SM=chrM.A;HV;DLOOP;CR=0.949142;CP=10.37       GT:DP:AF  0|1:88:1
+      #CHROM  POS  ID  REF  ALT  QUAL  FILTER                        INFO                                          FORMAT    SAMPLE
+      chrM    64   .   C    T    .     clustered_events;haplotype    SM=chrM.A;HV;DLOOP;CR=1.140555;CP=11.43       GT:DP:AF  0|1:67:1
+      chrM    73   .   A    G    .     PASS                          SM=chrM.B;HV;DLOOP;NUMT;CR=1.039800;CP=10.89  GT:DP:AF  0/1:52:1
+      chrM    73   .   A    G    .     PASS                          SM=chrM.C;HV;DLOOP;NUMT;CR=1.039800;CP=10.89  GT:DP:AF  0/1:43:1
+      chrM    73   .   A    G    .     clustered_events;haplotype    SM=chrM.A;HV;DLOOP;NUMT;CR=1.039800;CP=10.89  GT:DP:AF  0|1:70:1
+      chrM    146  .   T    C    .     clustered_events;haplotype    SM=chrM.A;HV;DLOOP;CR=0.949142;CP=10.37       GT:DP:AF  0|1:88:1
       ...
-      chrM    374   .           A     G    .     clustered_events              SM=chrM.A;DLOOP;CR=0.998787;CP=10.66          GT:DP:AF  0/1:76:0.139
-      chrM    375   .           C     T    .     clustered_events;strand_bias  SM=chrM.B;DLOOP;CR=1.074472;CP=11.08          GT:DP:AF  0/1:65:0.162
-      chrM    378   .           C     T    .     clustered_events;strand_bias  SM=chrM.C;DLOOP;CR=1.043995;CP=10.91          GT:DP:AF  0/1:82:0.128
+      chrM    374  .   A    G    .     clustered_events              SM=chrM.A;DLOOP;CR=0.998787;CP=10.66          GT:DP:AF  0/1:76:0.139
+      chrM    375  .   C    T    .     clustered_events;strand_bias  SM=chrM.B;DLOOP;CR=1.074472;CP=11.08          GT:DP:AF  0/1:65:0.162
+      chrM    378  .     C    T    .   clustered_events;strand_bias  SM=chrM.C;DLOOP;CR=1.043995;CP=10.91          GT:DP:AF  0/1:82:0.128
       ...
-      chrM    827   rs28358569  A     G    .     clustered_events              SM=chrM.B;RNR;HG=B;CR=0.943544;CP=10.33       GT:DP:AF  0/1:80:1
-      ...
-      chrM    1037  .           A     C    .     PASS                          SM=chrM.B;RNR;CR=0.682748;CP=8.714            GT:DP:AF  0/1:70:0.178
-      chrM    1038  .           C     G    .     PASS                          SM=chrM.A;RNR;CR=0.822718;CP=9.603            GT:DP:AF  0/1:70:0.165
-      chrM    1042  .           T     A    .     PASS                          SM=chrM.C;RNR;CR=1.104043;CP=11.24            GT:DP:AF  0/1:60:0.24
+      chrM    1037 .   A    C    .     PASS                          SM=chrM.B;RNR;CR=0.682748;CP=8.714            GT:DP:AF  0/1:70:0.178
+      chrM    1038 .   C    G    .     PASS                          SM=chrM.A;RNR;CR=0.822718;CP=9.603            GT:DP:AF  0/1:70:0.165
+      chrM    1042 .   T    A     .    PASS                          SM=chrM.C;RNR;CR=1.104043;CP=11.24            GT:DP:AF  0/1:60:0.24
       ...
     $ cat mutect2.03.merge.vcf  
       ...  
@@ -225,14 +223,14 @@
 
     # 2nd iteration ; heteroplasmies only(AF<1)
     $ cat mutect2.mutect2.03.concat.vcf 
-      #CHROM  POS   ID  REF   ALT  QUAL  FILTER                       INFO                                     FORMAT    SAMPLE
-      chrM    374   .   A     G    .     PASS                         SM=chrM.A;DLOOP;CR=0.998787;CP=10.66     GT:DP:AF  0/1:62:0.138
-      chrM    375   .   C     T    .     PASS                         SM=chrM.B;DLOOP;CR=1.074472;CP=11.08     GT:DP:AF  0/1:48:0.178
-      chrM    378   .   C     T    .     PASS                         SM=chrM.C;DLOOP;CR=1.043995;CP=10.91     GT:DP:AF  0/1:71:0.121
+      #CHROM  POS   ID  REF   ALT  QUAL  FILTER  INFO                                  FORMAT    SAMPLE
+      chrM    374   .   A     G    .     PASS    SM=chrM.A;DLOOP;CR=0.998787;CP=10.66  GT:DP:AF  0/1:62:0.138
+      chrM    375   .   C     T    .     PASS    SM=chrM.B;DLOOP;CR=1.074472;CP=11.08  GT:DP:AF  0/1:48:0.178
+      chrM    378   .   C     T    .     PASS    SM=chrM.C;DLOOP;CR=1.043995;CP=10.91  GT:DP:AF  0/1:71:0.121
       ...
-      chrM    1037  .   A     C    .     PASS                         SM=chrM.B;RNR;CR=0.682748;CP=8.714       GT:DP:AF  0/1:70:0.178
-      chrM    1038  .   C     G    .     PASS                         SM=chrM.A;RNR;CR=0.822718;CP=9.603       GT:DP:AF  0/1:70:0.165
-      chrM    1042  .   T     A    .     PASS                         SM=chrM.C;RNR;CR=1.104043;CP=11.24       GT:DP:AF  0/1:60:0.24
+      chrM    1037  .   A     C    .     PASS    SM=chrM.B;RNR;CR=0.682748;CP=8.714    GT:DP:AF  0/1:70:0.178
+      chrM    1038  .   C     G    .     PASS    SM=chrM.A;RNR;CR=0.822718;CP=9.603    GT:DP:AF  0/1:70:0.165
+      chrM    1042  .   T     A    .     PASS    SM=chrM.C;RNR;CR=1.104043;CP=11.24    GT:DP:AF  0/1:60:0.24
       ...
      
 #### SNV counts ####
