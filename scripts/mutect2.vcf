@@ -27,7 +27,7 @@
 ##INFO=<ID=INDEL,Number=0,Type=Flag,Description="INDEL">
 ##INFO=<ID=HP,Number=0,Type=Flag,Description="Homoloplymer">
 ##INFO=<ID=HS,Number=0,Type=Flag,Description="Hot spot">
-##INFO=<ID=CDS,Number=0,Type=Flag,Description="coding region">
+##INFO=<ID=CDS,Number=0,Type=Flag,Description="coding sequence">
 ##INFO=<ID=RNR,Number=0,Type=Flag,Description="rRNA">
 ##INFO=<ID=TRN,Number=0,Type=Flag,Description="tRNA">
 ##INFO=<ID=DLOOP,Number=0,Type=Flag,Description="D-loop">

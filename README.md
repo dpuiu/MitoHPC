@@ -18,10 +18,10 @@
 
     $ git clone https://github.com/dpuiu/HP.git
 
-### SETUP ENVIRONMENT (1) ###
+### SETUP ENVIRONMENT ###
     
     $ PWD=`pwd`
-    $ export HP_SDIR=path_to_pipeline_home_directory/HP/scripts/   # set script directory variable
+    $ export HP_SDIR=path_to_pipeline_home_directory/HP/scripts/   # set script directory variable; could be added to ~/.bashrc
 
 ### INSTALL PIPELINE PREREQUISITES ; CHECK INSTALL ###
 
@@ -41,7 +41,7 @@
 
     $ cp -i $HP_SDIR/init.sh .
 
-### SETUP ENVIRONMENT (2) ###
+### SETUP ENVIRONMENT ###
 
     $ nano init.sh 
         ...
@@ -107,7 +107,7 @@
 
     VCF/TAB/SUMMARY/FASTA Files: 
 
-### 1st ITTERATION ### 
+### 1st ITERATION ### 
 
     {mutect2,mutserve}.{03,05,10}.{concat,merge[.sitesOnly]}.vcf     # SNVs; 3,5,10% heteroplasmy thold
     {mutect2,mutserve}.{03,05,10}.tab                                # SNV counts
@@ -120,7 +120,7 @@
     cvg.tab                                                          # coverage stats
     
 
-### 2nd ITTERATION ###
+### 2nd ITERATION ###
 
     mutect2.mutect2.{03,05,10}.{concat,merge[.sitesOnly]}.vcf	
     mutect2.mutect2.{03,05,10}.tab
@@ -169,9 +169,7 @@
 
 #### vcf files : concat & merge ####
 
-##### 1st itteration #####
-
-    # homoplasmies (AF=1) and heteroplasmies(AF<1)
+    # 1st iteration : homoplasmies(AF=1) and heteroplasmies(AF<1)
     $ cat mutect2.03.concat.vcf  
       ...
       ##INFO=<ID=SM,Number=1,Type=String,Description="Sample">
@@ -225,9 +223,7 @@
       chrM    146  .   T    C    .     .       AC=1;AN=2;HV;DLOOP;CR=0.949142;CP=10.37
       ...
 
-##### 2nd itteration #####
-
-    # Shoule contain homoplasmies only => all AF's should be < 1
+    # 2nd iteration ; heteroplasmies only(AF<1)
     $ cat mutect2.mutect2.03.concat.vcf 
       #CHROM  POS   ID  REF   ALT  QUAL  FILTER                       INFO                                     FORMAT    SAMPLE
       chrM    374   .   A     G    .     PASS                         SM=chrM.A;DLOOP;CR=0.998787;CP=10.66     GT:DP:AF  0/1:62:0.138
@@ -241,6 +237,7 @@
      
 #### SNV counts ####
 
+    # 1st iteration
     $ cat mutect2.03.tab            
       Run     H   h   S   s   I  i  Hp  hp  Sp  sp  Ip  ip  A
       chrM.A  31  43  28  35  3  8  28  43  28  35  0   8   74
@@ -248,11 +245,31 @@
       chrM.C  40  42  36  34  4  8  38  41  36  33  2   8   82
       ...
 
+    # 2nd iteration ; no homoplamies(H=S=I=0)
     $ cat  mutect2.mutect2.03.tab 
       Run     H  h   S  s   I  i  Hp  hp  Sp  sp  Ip  ip  A
       chrM.A  0  43  0  35  0  8  0   43  0   35  0   8   43
       chrM.B  0  43  0  35  0  8  0   41  0   33  0   8   43
       chrM.C  0  42  0  34  0  8  0   41  0   33  0   8   42
+      ...
+
+#### Summaries ####
+    # 1st iteration
+    $ cat mutect2.03.summary  | column -t
+      id  count  nonZero  min  max  median  mean   sum
+       H   3      3        27   39   31      32.33  97
+       h   3      3        42   44   43      43     129
+       S   3      3        25   35   28      29.33  88
+       s   3      3        34   36   35      35     105
+       I   3      3        2    4    3       3      9
+       i   3      3        8    8    8       8      24
+       Hp  3      3        22   37   28      29     87
+       hp  3      3        42   44   43      43     129
+       Sp  3      3        22   35   28      28.33  85
+       sp  3      3        34   36   35      35     105
+       Ip  3      1        0    2    0       0.67   2
+       ip  3      3        8    8    8       8      24
+       A   3      3        69   82   75      75.33  226
 
 #### Haplogroups ####
 
@@ -261,12 +278,39 @@
       chrM.A                     A2+(64)     
       chrM.B                     B2          
       chrM.C                     C           
+      ...
+
+#### Contamination ####
+
+    $ cat mutect2.haplocheck.tab  | column -t
+      Run     ContaminationStatus  ContaminationLevel  Distance  SampleCoverage
+      chrM.A  NO                   ND                  14        78
+      chrM.B  NO                   ND                  14        79
+      chrM.C  NO                   ND                  14        78
+      ...
+
+## EXAMPLE 3 : CUSTOM FILTERING ##
+
+### using init.sh ###
+
+    $ nano init.sh
+      export HP_FNAME="no_qual_haplotype_strand"
+      export HP_FRULE="egrep -v \"qual|haplotype|strand\""
+    # rerun run.sh ...
+
+### command line ###    
+
+    $ HP_M=mutect2
+    $ cat $HP_ODIR/$M.00.concat.vcf  | egrep -v 'qual|haplotype|strand'  > $HP_ODIR/$M.no_qual_haplotype_strand.00.concat.vcf
+    $ $HP_SDIR/snpCount.sh $HP_IN $ODIR $HP_M.no_qual_haplotype_strand 03
+    $ $HP_SDIR/snpCount.sh $HP_IN $ODIR $HP_M.no_qual_haplotype_strand 05
+    $ $HP_SDIR/snpCount.sh $HP_IN $ODIR $HP_M.no_qual_haplotype_strand 10
 
 ### LEGEND ###
 
     Run                           # Sample name
 
-    all                           # number of reads in the sample reads 
+    all                           # number of reads in the sample reads
     mapped                        # number of aligned reads in the sample
     chrM                          # number of reads aligned to chrM
     filter                        # number of chrM used (subsample ~2000x cvg based on name)
@@ -288,20 +332,4 @@
     ...
     A                             # total number of SNVs (H+h)
 
-## EXAMPLE 3 : CUSTOM FILTERING ##
-
-### using init.sh ###
-
-    $ nano init.sh
-      export HP_FNAME="no_qual_haplotype_strand"
-      export HP_FRULE="egrep -v \"qual|haplotype|strand\""
-    # rerun run.sh ...
-
-### command line ###    
-
-    $ HP_M=mutect2
-    $ cat $HP_ODIR/$M.00.concat.vcf  | egrep -v 'qual|haplotype|strand'  > $HP_ODIR/$M.no_qual_haplotype_strand.00.concat.vcf
-    $ $HP_SDIR/snpCount.sh $HP_IN $ODIR $HP_M.no_qual_haplotype_strand 03
-    $ $HP_SDIR/snpCount.sh $HP_IN $ODIR $HP_M.no_qual_haplotype_strand 05
-    $ $HP_SDIR/snpCount.sh $HP_IN $ODIR $HP_M.no_qual_haplotype_strand 10
 
