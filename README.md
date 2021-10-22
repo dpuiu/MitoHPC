@@ -198,7 +198,6 @@
       chrM    73    .           A     G    .     PASS                          SM=chrM.C;HV;DLOOP;NUMT;CR=1.039800;CP=10.89  GT:DP:AF  0/1:43:1
       chrM    73    .           A     G    .     clustered_events;haplotype    SM=chrM.A;HV;DLOOP;NUMT;CR=1.039800;CP=10.89  GT:DP:AF  0|1:70:1
       chrM    146   .           T     C    .     clustered_events;haplotype    SM=chrM.A;HV;DLOOP;CR=0.949142;CP=10.37       GT:DP:AF  0|1:88:1
-      chrM    153   .           A     G    .     clustered_events;haplotype    SM=chrM.A;HV;DLOOP;CR=1.066332;CP=11.03       GT:DP:AF  0|1:89:1
       ...
       chrM    374   .           A     G    .     clustered_events              SM=chrM.A;DLOOP;CR=0.998787;CP=10.66          GT:DP:AF  0/1:76:0.139
       chrM    375   .           C     T    .     clustered_events;strand_bias  SM=chrM.B;DLOOP;CR=1.074472;CP=11.08          GT:DP:AF  0/1:65:0.162
@@ -212,18 +211,19 @@
       ...
     $ cat mutect2.03.merge.vcf  
       ...  
-      #CHROM  POS ID  REF  ALT  QUAL FILTER  INFO               FORMAT    chrM.A     chrM.B    chrM.C    
-      chrM    64  .   C    T    .    .       AC=1;AN=2;HV       GT:DP:AF  0|1:67:1   .:.:.     .:.:.     
-      chrM    73  .   A    G    .    .       AC=1;AN=2;HV;NUMT  GT:DP:AF  .:.:.      0/1:52:1  .:.:.     
-      chrM    73  .   A    G    .    .       AC=2;AN=4;HV       GT:DP:AF  0|1:70:1   .:.:.     0/1:43:1  
+      #CHROM  POS  ID  REF  ALT  QUAL  FILTER  INFO                                          FORMAT    chrM.A    chrM.B    chrM.C
+      chrM    64   .   C    T    .     .       AC=1;AN=2;HV;DLOOP;CR=1.140555;CP=11.43       GT:DP:AF  0|1:67:1  .:.:.     .:.:.
+      chrM    73   .   A    G    .     .       AC=3;AN=6;HV;DLOOP;NUMT;CR=1.039800;CP=10.89  GT:DP:AF  0|1:70:1  0/1:52:1  0/1:43:1
+      chrM    146  .   T    C    .     .       AC=1;AN=2;HV;DLOOP;CR=0.949142;CP=10.37       GT:DP:AF  0|1:88:1  .:.:.     .:.:.
       ...
 
     $ cat mutect2.03.merge.sitesOnly.vcf
-      #CHROM  POS ID  REF  ALT  QUAL FILTER  INFO               
-      chrM    64  .   C    T    .    .       AC=1;AN=2;HV       
-      chrM    73  .   A    G    .    .       AC=1;AN=2;HV;NUMT  
-      chrM    73  .   A    G    .    .       AC=2;AN=4;HV       
-      ....
+     ...
+      #CHROM  POS  ID  REF  ALT  QUAL  FILTER  INFO
+      chrM    64   .   C    T    .     .       AC=1;AN=2;HV;DLOOP;CR=1.140555;CP=11.43
+      chrM    73   .   A    G    .     .       AC=3;AN=6;HV;DLOOP;NUMT;CR=1.039800;CP=10.89
+      chrM    146  .   T    C    .     .       AC=1;AN=2;HV;DLOOP;CR=0.949142;CP=10.37
+      ...
 
 ##### 2nd itteration #####
 
