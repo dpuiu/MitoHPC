@@ -70,7 +70,7 @@
      
 ## OUTPUT ##
 
-    under $ODIR:
+    under $HP_ODIR:
 
     TAB/SUMMARY/VCF/FASTA Files: 
 
@@ -117,7 +117,8 @@
        chrM.C    786560467  785208588  503241  248.9
        ...
 
-### after running samtools.sh ###
+### directory structure ###
+
     $ ls $HP_ADIR/*
       bams/chrM.A.bam
       bams/chrM.A.bam.bai
