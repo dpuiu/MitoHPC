@@ -62,9 +62,9 @@
 
 ### RE-RUN PIPELINE (optional) ###
 
-    $ nano init.sh           			                   # update parameters if needed                                               
+    $ nano init.sh           			                   # update parameters if needed
 
-    $ $HP_SDIR/run.sh > filter.all.sh                                       
+    $ $HP_SDIR/run.sh > filter.all.sh
 
     $ bash ./filter.all.sh
      
@@ -267,7 +267,8 @@
 ### command line ###    
 
     $ HP_M=mutect2
-    $ cat $HP_ODIR/$M.00.concat.vcf  | egrep -v 'qual|haplotype|strand'  > $HP_ODIR/$M.no_qual_haplotype_strand.00.concat.vcf
+    $ cat $HP_ODIR/$M.00.concat.vcf  | egrep -v 'qual|haplotype|strand'  > \
+        $HP_ODIR/$M.no_qual_haplotype_strand.00.concat.vcf
     $ $HP_SDIR/snpCount.sh $HP_IN $ODIR $HP_M.no_qual_haplotype_strand 03
     $ $HP_SDIR/snpCount.sh $HP_IN $ODIR $HP_M.no_qual_haplotype_strand 05
     $ $HP_SDIR/snpCount.sh $HP_IN $ODIR $HP_M.no_qual_haplotype_strand 10
