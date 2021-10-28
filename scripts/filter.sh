@@ -34,7 +34,7 @@ if [ ! -s $I.idxstats ] ;               then  samtools idxstats -@ $HP_P $2 > $I
 
 if [ ! -s $I.count ] ; then
   cat $I.idxstats | idxstats2count.pl -sample $S -chrM $HP_MT >  $I.count
-  samtools view -F 0x900 $2 $HP_NUMT -c | sed 's|^|NUMT\n|' | paste $I.count - > $I.count+ ; mv $I.count+ $I.count
+  samtools view -F 0x900 $2 $HP_NUMT -c -T $HP_RDIR/$HP_H.fa | sed 's|^|NUMT\n|' | paste $I.count - > $I.count+ ; mv $I.count+ $I.count
 fi
 
 if [ $HP_I -lt 1 ] ; then exit 0 ; fi

@@ -10,7 +10,7 @@ set -ex
 #get count stats
 
 cut -f2 $HP_IN | sed -r "s|(.*)\.|\1\t|g" | cut -f1 | sed "s|$|.count|" | xargs cat | $HP_SDIR/uniq.pl | $HP_SDIR/getCN.pl > $HP_ODIR/count.tab
-cut -f3 $HP_IN | sed "s|$|.$HP_M.count|" | xargs cat | $HP_SDIR/uniq.pl > $HP_ODIR/count.$HP_M.tab
+if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 
 ###########################################################
 # get 1st iteration stats
@@ -52,11 +52,13 @@ cut -f3 $HP_IN | sed "s|$|.$M.haplocheck|" | xargs cat  | uniq.pl | sed 's|^"Sam
 cut -f3 $HP_IN | sed "s|$|.$M.fa|"        | xargs cat > $HP_ODIR/$M.fa
 samtools faidx  $HP_ODIR/$M.fa
 
+cut -f3 $HP_IN | sed "s|$|.count|" | xargs cat | $HP_SDIR/uniq.pl > $HP_ODIR/count1.tab
+
 ##########################################################
 # get 2nd iteration stats
 
-test $HP_M == "mutect2"
-test $HP_I == "2"
+if [ $HP_I -lt 2 ] ; then exit 0 ; fi
+if [ $HP_M != "mutect2" ] ; then exit 0 ; fi
 
 MM=$M.$M
 
@@ -79,3 +81,4 @@ if [[ ! -z "${HP_FNAME}" ]]; then
   snpCount.sh $MM.$HP_FNAME $HP_T3
 fi
 
+cut -f3 $HP_IN | sed "s|$|.$HP_M.count|" | xargs cat | $HP_SDIR/uniq.pl > $HP_ODIR/count2.$HP_M.tab
