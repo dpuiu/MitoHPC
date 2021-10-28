@@ -6,56 +6,76 @@ set -ex
 #Program that summarizes aligned read counts
 #Input arguments
 
-IN=$1
-D=$2                    # out dir
-M=$3                    # snp caller: mutect2 or mutserve
-T1=$4             	# Heteroplasmy tholds
-T2=$5
-T3=$6
+###########################################################
+#get count stats
 
-##########################################################
+cut -f2 $HP_IN | sed -r "s|(.*)\.|\1\t|g" | cut -f1 | sed "s|$|.count|" | xargs cat | $HP_SDIR/uniq.pl | $HP_SDIR/getCN.pl > $HP_ODIR/count.tab
+cut -f3 $HP_IN | sed "s|$|.$HP_M.count|" | xargs cat | $HP_SDIR/uniq.pl > $HP_ODIR/count.$HP_M.tab
 
+###########################################################
+# get 1st iteration stats
 
-#read counts
-cut -f3 $IN | sed "s|$|.count|" | xargs cat | uniq.pl -i 0  | sed 's|^sample|Run|' > $D/filter.tab
+M=$HP_M
 
 #cvg
-cut -f3 $IN | sed "s|$|.cvg.stat|" | xargs cat | uniq.pl -i 0  > $D/cvg.tab
-cut -f3 $IN | sed "s|$|.$M.00.vcf|" | xargs cat | bedtools sort -header | sed 's|rCRS|chrM|g'  > $D/$M.00.concat.vcf
-cat $D/$M.00.concat.vcf | grep "^#" > $D/$M.00.concat.vcf.tmp
-cat $D/$M.00.concat.vcf | grep -v "^#" | sort -k1,1 -k2,2n -k4,4 -k5,5 >>  $D/$M.00.concat.vcf.tmp
-mv  $D/$M.00.concat.vcf.tmp  $D/$M.00.concat.vcf
-#annotateVcf.sh $D/$M.00.concat.vcf
+cut -f3 $HP_IN | sed "s|$|.cvg.stat|" | xargs cat | uniq.pl -i 0  > $HP_ODIR/cvg.tab
+cut -f3 $HP_IN | sed "s|$|.$M.00.vcf|" | xargs cat | bedtools sort -header  > $HP_ODIR/$M.00.concat.vcf
+cat $HP_ODIR/$M.00.concat.vcf | grep "^#" > $HP_ODIR/$M.00.concat.vcf+
+cat $HP_ODIR/$M.00.concat.vcf | grep -v "^#" | sort -k1,1 -k2,2n -k4,4 -k5,5 >> $HP_ODIR/$M.00.concat.vcf+
+mv  $HP_ODIR/$M.00.concat.vcf+  $HP_ODIR/$M.00.concat.vcf
 
 #snv counts
-snpCount.sh $IN $D $M $T1
-snpCount.sh $IN $D $M $T2
-snpCount.sh $IN $D $M $T3
+snpCount.sh $M $HP_T1
+snpCount.sh $M $HP_T2
+snpCount.sh $M $HP_T3
 
 if [[ ! -z "${HP_FNAME}" ]]; then
-  cat $D/$M.00.concat.vcf | eval $HP_FRULE > $D/$M.$HP_FNAME.00.concat.vcf
-  snpCount.sh $IN $D $M.$HP_FNAME $T1
-  snpCount.sh $IN $D $M.$HP_FNAME $T2
-  snpCount.sh $IN $D $M.$HP_FNAME $T3
+  cat $HP_ODIR/$M.00.concat.vcf | eval $HP_FRULE > $HP_ODIR/$M.$HP_FNAME.00.concat.vcf
+  snpCount.sh $M.$HP_FNAME $HP_T1
+  snpCount.sh $M.$HP_FNAME $HP_T2
+  snpCount.sh $M.$HP_FNAME $HP_T3
 fi
 
 #cleanup
 rm -f fastp.html fastp.json
 
-##########################################################
-
-if [[ $M == "mutect2.mutect2" ]] ; then exit 0 ; fi
-
 #haplogroups
-cut -f3 $IN | sed "s|$|.$M.haplogroup|" | xargs cat | grep -v SampleID | sed 's|"||g' | awk '{print $1,$2}' | sort -u | \
-  perl -ane 'BEGIN {print "Run\thaplogroup\n"} print "$F[0]\t$F[1]\n";' | sed 's|\.MT||' | \
-  tee $D/$M.haplogroup.tab | \
-  perl -ane 'print "$1\n" if(/(^Run.+)/ or /(\S+\s+L\d)(.*)/ or /(\S+\s+HV)(.*)/ or /(\S+\s+JT)(.*)/ or /(\S+\s+\w)(.*)/);' > $D/$M.haplogroup1.tab
+cut -f3 $HP_IN | sed "s|$|.$M.haplogroup|" | xargs cat | grep -v SampleID | sed 's|"||g' | awk '{print $1,$2}' | sort -u | \
+  perl -ane 'BEGIN {print "Run\thaplogroup\n"} print "$F[0]\t$F[1]\n";' | sed "s|\.MT||" | \
+  tee $HP_ODIR/$M.haplogroup.tab | \
+  perl -ane 'print "$1\n" if(/(^Run.+)/ or /(\S+\s+L\d)(.*)/ or /(\S+\s+HV)(.*)/ or /(\S+\s+JT)(.*)/ or /(\S+\s+\w)(.*)/);' > $HP_ODIR/$M.haplogroup1.tab
 
 #haplocheck
-cut -f3 $IN | sed "s|$|.$M.haplocheck|" | xargs cat  | uniq.pl | sed 's|^"Sample"|"Run"|' | sed 's|"||g' | sed 's| ||g' > $D/$M.haplocheck.tab
+cut -f3 $HP_IN | sed "s|$|.$M.haplocheck|" | xargs cat  | uniq.pl | sed 's|^"Sample"|"Run"|' | sed 's|"||g' | sed 's| ||g' > $HP_ODIR/$M.haplocheck.tab
 
 #fasta
-cut -f3 $IN | sed "s|$|.$M.fa|"        | xargs cat > $D/$M.fa
-samtools faidx  $D/$M.fa
+cut -f3 $HP_IN | sed "s|$|.$M.fa|"        | xargs cat > $HP_ODIR/$M.fa
+samtools faidx  $HP_ODIR/$M.fa
+
+##########################################################
+# get 2nd iteration stats
+
+test $HP_M == "mutect2"
+test $HP_I == "2"
+
+MM=$M.$M
+
+#cvg
+cut -f3 $HP_IN | sed "s|$|$M.cvg.stat|" | xargs cat | uniq.pl -i 0  > $HP_ODIR/$M.cvg.tab
+cut -f3 $HP_IN | sed "s|$|.$MM.00.vcf|" | xargs cat | bedtools sort -header  > $HP_ODIR/$MM.00.concat.vcf
+cat $HP_ODIR/$MM.00.concat.vcf | grep "^#" > $HP_ODIR/$MM.00.concat.vcf+
+cat $HP_ODIR/$MM.00.concat.vcf | grep -v "^#" | sort -k1,1 -k2,2n -k4,4 -k5,5 >> $HP_ODIR/$MM.00.concat.vcf+
+mv  $HP_ODIR/$MM.00.concat.vcf+  $HP_ODIR/$MM.00.concat.vcf
+
+#snv counts
+snpCount.sh $MM $HP_T1
+snpCount.sh $MM $HP_T2
+snpCount.sh $MM $HP_T3
+
+if [[ ! -z "${HP_FNAME}" ]]; then
+  cat $HP_ODIR/$MM.00.concat.vcf | eval $HP_FRULE > $HP_ODIR/$MM.$HP_FNAME.00.concat.vcf
+  snpCount.sh $MM.$HP_FNAME $HP_T1
+  snpCount.sh $MM.$HP_FNAME $HP_T2
+  snpCount.sh $MM.$HP_FNAME $HP_T3
+fi
 

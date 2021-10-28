@@ -1,38 +1,37 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 ###############################################################
 
 #Program that indexes and counts alignments in a BAM/CRAM file
 #Input arguments:
-I=$1
-#MT environmental variable must be set
+#1: .bam/cram file; full path
 
 ################################################################
 
-export N=`basename $I .bam`
-export N=`basename $N .cram`
-export D=`dirname $I`
-export PATH=$HP_SDIR:$HP_BDIR:$PATH
+S=$1
+test -s $2
+N=`basename $2 .bam`
+N=`basename $N .cram`
 
-P=1
+IDIR=`dirname $2`
+I=$IDIR/$N
+#PATH=$HP_SDIR:$HP_BDIR:$PATH
 
-test -f $I
 ################################################################
 
 #test BAM/CRAM file sorted
-samtools view -H $I | grep -m 1 -P "^@HD.+coordinate$" > /dev/null
+samtools view -H $2 | grep -m 1 -P "^@HD.+coordinate$" > /dev/null
 
-if [ ! -s $I.bai ] && [ ! -s $I.crai ]; then
-  samtools index -@ $P $I
+if [ ! -s $2.bai ] && [ ! -s $2.crai ]; then
+  samtools index -@ $HP_P $2
 fi
 
-if [ ! -s $D/$N.idxstats ] ; then
-  samtools idxstats -@ $P $I > $D/$N.idxstats
+if [ ! -s $I.idxstats ] ; then
+  samtools idxstats -@ $HP_P $2 > $I.idxstats
 fi
 
-if [ ! -s $D/$N.count ] ; then
-  cat $D/$N.idxstats | idxstats2count.pl -sample $N -chrM $HP_MT >  $D/$N.count
-  samtools view -F 0x900 $I $HP_NUMT -c | sed 's|^|NUMT\n|' | paste $D/$N.count - > $D/$N.count+
-  mv $D/$N.count+ $D/$N.count
+if [ ! -s $I.count ] ; then
+  cat $I.idxstats | idxstats2count.pl -sample $S -chrM $HP_MT >  $I.count
+  samtools view -F 0x900 $2 $HP_NUMT -c | sed 's|^|NUMT\n|' | paste $I.count - > $I.count+ ; mv $I.count+ $I.count
 fi

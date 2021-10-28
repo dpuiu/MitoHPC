@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+test -s init.sh
+. ./init.sh
+
 test -s $HP_IN
 mkdir -p $HP_ODIR
 
@@ -13,6 +16,7 @@ printf "export HP_RDIR=$HP_RDIR\n"
 printf "export HP_ODIR=$HP_ODIR\n"
 
 printf "export HP_R=$HP_R\n"
+printf "export HP_N=$HP_N\n"
 printf "export HP_H=$HP_H\n"
 printf "export HP_MT=$HP_MT\n"
 printf "export HP_NUMT=\"$HP_NUMT\"\n"
@@ -32,14 +36,14 @@ printf "export HP_FRULE=\"$HP_FRULE\"\n"
 
 printf "export HP_FOPT=\"$HP_FOPT\"\n"
 printf "export HP_JOPT=\"$HP_JOPT\"\n"
+printf "export HP_MM=\"$HP_MM\"\n"
+printf "export HP_P=\"$HP_P\"\n"
 
 printf "export PATH=$HP_SDIR:$HP_BDIR:\$PATH\n"
-#printf "export PERLLIB=$HP_LDIR:$PERLLIB\n"
-#printf "export PERL5LIB=$HP_LDIR:$PERL5LIB\n"
 
 printf "\n"
-cat $HP_IN | perl -ane 'next if(/^#/ or @F<3); print "$ENV{HP_SH} $ENV{HP_SDIR}/filter$ENV{HP_I}.sh $F[1] $F[2]\n";'
+grep -v "^#" $HP_IN | sed "s|^|$HP_SH $HP_SDIR/filter.sh |"
 
 printf "\n"
-printf "$HP_SHS $HP_SDIR/getSummary$HP_I.sh\n"
+printf "$HP_SHS $HP_SDIR/getSummary.sh\n"
 

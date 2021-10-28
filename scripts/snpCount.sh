@@ -1,30 +1,26 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
-if [ "$#" -ne 4 ]; then exit 0 ; fi
+if [ "$#" -ne 2 ]; then exit 0 ; fi
 
-export IN=$1
-D=$2
-export M=$3 # source (mutect2...)
-export T=$4 # thold
-#export TL="env${T}pc_"
-export TL=""
+export M=$1 # source (mutect2...)
+export T=$2 # thold
 
 #######################################################
 
-test -f $D/$M.00.concat.vcf
+test -f $HP_ODIR/$M.00.concat.vcf
 
 #catenate, merge, sount SNPs
-cat $D/$M.00.concat.vcf | filterVcf.pl -p 0.$T > $D/$M.$T.concat.vcf
-cat $D/$M.$T.concat.vcf | concat2cat.pl > $D/$M.$T.vcf
-cat $D/$M.$T.concat.vcf | concat2merge.pl -in $IN | bedtools sort -header | tee $D/$M.$T.merge.vcf | vcf2sitesOnly.pl >  $D/$M.$T.merge.sitesOnly.vcf
-cat $D/$M.$T.concat.vcf | snpCount.pl -in $IN | tee $D/$M.$T.tab | getSummaryN.pl > $D/$M.$T.summary
+cat $HP_ODIR/$M.00.concat.vcf | filterVcf.pl -p 0.$T > $HP_ODIR/$M.$T.concat.vcf
+cat $HP_ODIR/$M.$T.concat.vcf | concat2cat.pl > $HP_ODIR/$M.$T.vcf
+cat $HP_ODIR/$M.$T.concat.vcf | concat2merge.pl -in $HP_IN | bedtools sort -header | tee $HP_ODIR/$M.$T.merge.vcf | vcf2sitesOnly.pl >  $HP_ODIR/$M.$T.merge.sitesOnly.vcf
+cat $HP_ODIR/$M.$T.concat.vcf | snpCount.pl -in $HP_IN | tee $HP_ODIR/$M.$T.tab | getSummaryN.pl > $HP_ODIR/$M.$T.summary
 
 #######################################################
 if [[ -z "${FNAME}" ]]; then exit 0;  fi
-cat $D/$M.$T.concat.vcf | eval $FRULE > $D/$M.$T.$FNAME.concat.vcf
-cat $D/$M.$T.$FNAME.concat.vcf | concat2merge.pl -in $IN | bedtools sort -header | tee $D/$M.$T.$FNAME.merge.vcf | vcf2sitesOnly.pl >  $D/$M.$T.$FNAME.merge.sitesOnly.vcf
-cat $D/$M.$T.$FNAME.concat.vcf | snpCount.pl -in $IN | tee $D/$M.$T.$FNAME.tab | getSummaryN.pl > $D/$M.$T.$FNAME.summary
+cat $HP_ODIR/$M.$T.concat.vcf | eval $FRULE > $HP_ODIR/$M.$T.$FNAME.concat.vcf
+cat $HP_ODIR/$M.$T.$FNAME.concat.vcf | concat2merge.pl -in $HP_IN | bedtools sort -header | tee $HP_ODIR/$M.$T.$FNAME.merge.vcf | vcf2sitesOnly.pl >  $HP_ODIR/$M.$T.$FNAME.merge.sitesOnly.vcf
+cat $HP_ODIR/$M.$T.$FNAME.concat.vcf | snpCount.pl -in $HP_IN | tee $HP_ODIR/$M.$T.$FNAME.tab | getSummaryN.pl > $HP_ODIR/$M.$T.$FNAME.summary
 
-#cat $D/$M.$T.concat.vcf | uniqVcf.pl | posCount.pl  | sort -k1,1 -k2,2n | tee $D/$M.$T.count | awk 'NR == 1; NR > 1 {print $0 | "sort -k4,4nr -k2,2n"}' > $D/$M.$T.hcount
-#cat $D/$M.$T.count |  awk 'NR == 1; NR > 1 {print $0 | "sort -k6,6nr -k2,2n"}'  > $D/$M.$T.hScount
+#cat $HP_ODIR/$M.$T.concat.vcf | uniqVcf.pl | posCount.pl  | sort -k1,1 -k2,2n | tee $D/$M.$T.count | awk 'NR == 1; NR > 1 {print $0 | "sort -k4,4nr -k2,2n"}' > $HP_ODIR/$M.$T.hcount
+#cat $HP_ODIR/$M.$T.count |  awk 'NR == 1; NR > 1 {print $0 | "sort -k6,6nr -k2,2n"}'  > $HP_ODIR/$M.$T.hScount

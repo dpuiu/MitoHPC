@@ -8,7 +8,7 @@
  
 ## PIPELINE PREREQUISITES ##
 
-    SOFTWARE PACKAGES: bwa, samtools, bedtools, fastp, samblaster, bcftools, htslib, vcftools, st
+    SOFTWARE PACKAGES: bwa, samtools, bedtools, fastp, samblaster, bcftools, htslib
     JAVA JARS:         gatk, mutserve, haplogrep, haplocheck
     HUMAN ASSEMBLY:    hs38DH
 
@@ -43,7 +43,7 @@
 
 ### SETUP ENVIRONMENT ###
 
-    $ nano init.sh 
+    $ nano init.sh                                                         # check input file
         ...
        export HP_ADIR=$PWD/bams/                                           # alignment dir
        export HP_ODIR=$PWD/out/                                            # output dir  
@@ -53,39 +53,9 @@
 
     $ printenv | grep HP_                                                  # check variables 
 
-    $ mkdir -p $HP_ODIR                                       
-
     $ find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | \
-        $HP_SDIR/ls2in.pl -out $HP_ODIR | sort > $HP_IN                    # generate input file
+        $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN                 # generate input file
 
-### GENERATE ALIGNMENT INDEX AND READ COUNT FILES; COMPUTE mtDNA-CN ####
-
-     $ cut -f2 $HP_IN  | sed "s|^|$HP_SH $HP_SDIR/samtools.sh |" > samtools.all.sh
-
-     $ bash ./samtools.all.sh
-
-     # wait for the jobs to finish ...
-
-     $ cut -f2 $HP_IN | sed -r 's|(.*)\.|\1\t|g' | cut -f1 | \
-         sed 's|$|.count|' | xargs cat | \
-         $HP_SDIR/uniq.pl | $HP_SDIR/getCN.pl > $HP_ODIR/count.tab
-
-### SUBSAMPLE ALIGNMENT FILES (optional) ###
-
-        $ nano init.sh
-          ...
-          export HP_L=222000                                                # number of reads
-          export HP_LDIR=...                                                # subsample dir
-
-       $ join $HP_IN $HP_ODIR/count.tab | \                                 
-           perl -ane '$s=$ENV{HP_L}/$F[5]; $s=($s<1)?"-s $s":""; \
-             print "samtools view $s $F[1] $ENV{HP_MT} $ENV{HP_NUMT} -T $ENV{HP_RDIR}/$ENV{HP_H}.fa -b \
-             $ENV{HP_LDIR}/$F[0].bam; \
-             samtools index $ENV{HP_LDIR}/$F[0].bam\n"' | bash              # subsample
-
-       $ find $HP_LDIR/ -name "*.bam" -o -name "*.cram" | \                 
-          $HP_SDIR/ls2in.pl -out $HP_ODIR | sort > $HP_IN		    # re-create input file
-  
 ### RUN PIPELINE  ###
  
     $ $HP_SDIR/run.sh > filter.all.sh
@@ -105,7 +75,10 @@
 
     under $ODIR:
 
-    VCF/TAB/SUMMARY/FASTA Files: 
+    TAB/SUMMARY/VCF/FASTA Files: 
+
+    count.tab                                                        # reads  & mtDNA-CN counts
+    cvg.tab                                                          # coverage stats
 
 ### 1st ITERATION ### 
 
@@ -116,9 +89,7 @@
     {mutect2,mutserve}.fa                                            # consensus sequence
     {mutect2,mutserve}.haplogroup[1].tab                             # haplogroup
     {mutect2,mutserve}.haplocheck.tab                                # contamination screen   
-    count.tab                                                        # reads  & mtDNA-CN counts
-    cvg.tab                                                          # coverage stats
-    
+
 
 ### 2nd ITERATION ###
 
@@ -329,5 +300,3 @@
     ?p                            # "p" suffix stands for non homopolimeric
     ...
     A                             # total number of SNVs (H+h)
-
-
