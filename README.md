@@ -35,15 +35,11 @@
 
 ## USAGE ##
 
-### COPY init.sh SCRIPT ###
-
-    # go to the working directory ; copy init.sh 
-
-    $ cp -i $HP_SDIR/init.sh .
-
 ### SETUP ENVIRONMENT ###
 
-    $ nano init.sh                                                         # check input file
+    $ cp -i $HP_SDIR/init.sh .                                             # copy init.sh to working directory
+
+    $ nano init.sh                                                         # check variables
         ...
        export HP_ADIR=$PWD/bams/                                           # alignment dir
        export HP_ODIR=$PWD/out/                                            # output dir  
@@ -51,7 +47,7 @@
     
     $ . ./init.sh                                                          # source init file 
 
-    $ printenv | grep HP_                                                  # check variables 
+    $ printenv | grep HP_                                                  # check pipeline (HP_) variables 
 
     $ find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | \
         $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN                 # generate input file
