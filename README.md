@@ -21,7 +21,8 @@
 ### SETUP ENVIRONMENT ###
     
     $ PWD=`pwd`
-    $ export HP_SDIR=path_to_pipeline_home_directory/HP/scripts/   # set script directory variable; could be added to ~/.bashrc
+    $ export HP_SDIR=path_to_pipeline_home_directory/HP/scripts/    # set script directory variable; 
+                                                                    # could be added to ~/.bashrc
 
 ### INSTALL PIPELINE PREREQUISITES ; CHECK INSTALL ###
 
@@ -37,20 +38,20 @@
 
 ### SETUP ENVIRONMENT ###
 
-    $ cp -i $HP_SDIR/init.sh .                                             # copy init.sh to working directory
+    $ cp -i $HP_SDIR/init.sh .                                       # copy init.sh to working directory
 
-    $ nano init.sh                                                         # check variables
+    $ nano init.sh                                                   # check variables
         ...
-       export HP_ADIR=$PWD/bams/                                           # alignment dir
-       export HP_ODIR=$PWD/out/                                            # output dir  
-       export HP_IN=$PWD/in.txt                                            # input file
+       export HP_ADIR=$PWD/bams/                                     # alignment dir
+       export HP_ODIR=$PWD/out/                                      # output dir  
+       export HP_IN=$PWD/in.txt                                      # input file
     
-    $ . ./init.sh                                                          # source init file 
+    $ . ./init.sh                                                    # source init file 
 
-    $ printenv | grep HP_                                                  # check pipeline (HP_) variables 
+    $ printenv | grep HP_                                            # check pipeline (HP_) variables 
 
     $ find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | \
-        $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN                 # generate input file
+        $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN           # generate input file
 
 ### RUN PIPELINE  ###
  
@@ -61,7 +62,7 @@
 
 ### RE-RUN PIPELINE (optional) ###
 
-    $ nano init.sh           						    # update parameters if needed                                               
+    $ nano init.sh           			                     # update parameters if needed                                               
 
     $ $HP_SDIR/run.sh > filter.all.sh                                       
 
