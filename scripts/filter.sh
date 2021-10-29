@@ -67,7 +67,6 @@ if  [ ! -s $O.bam.bai ] ; then
 
   samtools index $O.bam
 fi
-
 #########################################################################################################################################
 #count aligned reads; compute cvg; get stats; gets split alignments
 
@@ -135,7 +134,7 @@ if [ ! -s $OM.dict ]   ; then java $HP_JOPT -jar $HP_JDIR/gatk.jar CreateSequenc
 if [ ! -s ${OM}+.fa ] ; then
   cat $OM.fa.fai | perl -ane 'print "$F[0]\t0\t$F[1]\n$F[0]\t0\t$ENV{HP_E}\n";' | bedtools getfasta -fi $OM.fa -bed - -fo /dev/stdout | grep -v "^>" | perl -ane 'BEGIN { print ">$ENV{S}\n" } ;print;' > ${OM}+.fa
   echo "HP_N=" $HP_N
-  cat $HP_RDIR/$HP_N.fa >> ${OM}+.fa  
+  cat $HP_RDIR/$HP_N.fa >> ${OM}+.fa
   cat ${OM}+.fa | perl -ane 'if(/^>/) { print "\n" if($.>1); print} else { chomp ;print} END{print "\n"}' > ${OM}+.fa+ ; mv ${OM}+.fa+ ${OM}+.fa
 fi
 

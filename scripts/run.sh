@@ -5,7 +5,9 @@ test -s init.sh
 . ./init.sh
 
 test -s $HP_IN
+
 mkdir -p $HP_ODIR
+test -w $HP_ODIR
 
 ###############################################################
 printf "#!/usr/bin/bash -eux\n\n"
