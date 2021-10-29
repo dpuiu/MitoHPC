@@ -60,8 +60,10 @@ fi
 if  [ ! -s $O.bam.bai ] ; then
   cat $O.fq | \
     bwa mem $HP_RDIR/${HP_R}+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" -v 1 | \
+    tee $O.sam1 |\
     circSam.pl -ref_len $HP_RDIR/$HP_R.fa.fai | grep -v "^$" | \
     perl -ane 'next if(/^\@SQ\tSN:(\S+)/ and $1 ne $ENV{HP_R}); print' | \
+    tee $O.sam2 |\
     samtools view -bu | \
     samtools sort -m $HP_MM > $O.bam
 
