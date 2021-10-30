@@ -79,19 +79,6 @@ if [[ $? != 0 || $# == 1 && $2 == "-f" ]] ; then
   fi
 fi
 
-#which st
-#if [[ $? != 0 || $# == 1 && $2 == "-f" ]] ; then
-#  wget -N -c https://github.com/nferraz/st/archive/v1.1.4.tar.gz #-O st-1.1.4.tar.gz
-#  if [ ! -s $HP_BDIR/st ] ; then
-#    tar -xzvf v1.1.4.tar.gz # st-1.1.4.tar.gz
-#    cd st-1.1.4
-#    perl ./Makefile.PL INSTALL_BASE=$HP_HDIR/ ; make ; make install
-#    cd -
-#  fi
-#fi
-
-#update to 2.30
-
 which bedtools
 if [[ $? != 0 || $# == 1 && $2 == "-f" ]] ; then
   wget -N -c https://github.com/arq5x/bedtools2/releases/download/v2.29.2/bedtools-2.29.2.tar.gz
@@ -142,6 +129,8 @@ fi
 wget -N -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa
 if [ ! -s $HP_RDIR/hs38DH.fa ] ; then
   cp GRCh38_full_analysis_set_plus_decoy_hla.fa $HP_RDIR/hs38DH.fa
-  $HP_BDIR/samtools faidx $HP_RDIR/hs38DH.fa
+  samtools faidx $HP_RDIR/hs38DH.fa
 fi
 
+#create index,bwa,dict files ...
+#samtools faidx $HP_RDIR/$R.fa

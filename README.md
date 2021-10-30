@@ -19,10 +19,9 @@
     $ git clone https://github.com/dpuiu/HP.git
 
 ### SETUP ENVIRONMENT ###
-    
-    $ PWD=`pwd`
-    $ export HP_SDIR=path_to_pipeline_home_directory/HP/scripts/   # set script directory variable
-                                                                   # could be added to ~/.bashrc
+
+    $ cd HP/scripts/    
+    $ export HP_SDIR=`pwd`  # set script directory variable (add to ~/.bashrc_
 
 ### INSTALL PIPELINE PREREQUISITES ; CHECK INSTALL ###
 
