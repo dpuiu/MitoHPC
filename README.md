@@ -62,8 +62,8 @@
 
 ### RE-RUN PIPELINE (optional) ###
 
-    $ nano init.sh         	                                 # optional; update parameters
-    $ $HP_SDIR/run.sh > filter.all.sh                            # optional; recreate command file
+    $ nano init.sh                                               # update parameters
+    $ $HP_SDIR/run.sh > filter.all.sh                            # recreate command file
 
     $ bash ./filter.all.sh
      
