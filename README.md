@@ -47,8 +47,8 @@
        export HP_IN=$PWD/in.txt                                    # input file
 
        find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | \
-        $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN         # automatically generate input file
-      ...                                                          # 3 column, tab delimited, can be edited
+        $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN         # generate input file
+      ...                                                          # 3 column, tab delim., can be edited
 
     $ . ./init.sh                                                  # source init.sh file 
 
