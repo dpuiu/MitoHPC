@@ -52,7 +52,7 @@
 
     $ . ./init.sh                                                  # source init.sh file 
 
-    $ printenv | grep HP_ | sort                                   # optional ; check pipeline(HP_) variables 
+    $ printenv | grep HP_ | sort                                   # optional ; check HP_ variables 
     $ nano $HP_IN                                                  # optional ; check input file
 
 ### RUN PIPELINE  ###
