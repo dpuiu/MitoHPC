@@ -1,5 +1,5 @@
 #!/usr/bin/env bash 
-#set -e
+set -e
 
 #######################################################################
 
@@ -9,7 +9,7 @@
 
 . $HP_SDIR/init.sh
 cd $HP_HDIR
-mkdir -p prerequisites/ $HP_BDIR/ $HP_JDIR/
+mkdir -p prerequisites/ $HP_BDIR/ $HP_JDIR/ $HP_RDIR/
 cd prerequisites/
 
 which bwa
@@ -101,36 +101,46 @@ if [[ $? != 0 || $# == 1 && $2 == "-f" ]] ; then
   fi
 fi
 
-wget -N -c https://github.com/broadinstitute/gatk/releases/download/4.2.0.0/gatk-4.2.0.0.zip
 if [ ! -s $HP_JDIR/gatk.jar ] ; then
+  wget -N -c https://github.com/broadinstitute/gatk/releases/download/4.2.0.0/gatk-4.2.0.0.zip
   unzip -o gatk-4.2.0.0.zip
   cp gatk-4.2.0.0/gatk-package-4.2.0.0-local.jar $HP_JDIR/gatk.jar
   cp gatk-4.2.0.0/gatk $HP_BDIR/
 fi
 
-wget -N -c https://github.com/seppinho/haplogrep-cmd/releases/download/v2.2.9/haplogrep.zip
 if [ ! -s $HP_JDIR/haplogrep.jar ] ; then
+  wget -N -c https://github.com/seppinho/haplogrep-cmd/releases/download/v2.2.9/haplogrep.zip
   unzip -o haplogrep.zip
   cp haplogrep.jar $HP_JDIR/
 fi
 
-wget -N -c https://github.com/genepi/haplocheck/releases/download/v1.3.3/haplocheck.zip
 if [ ! -s $HP_JDIR/haplocheck.jar ] ; then
+  wget -N -c https://github.com/genepi/haplocheck/releases/download/v1.3.3/haplocheck.zip
   unzip -o haplocheck.zip
   cp haplocheck.jar $HP_JDIR/
 fi
 
-wget -N -c https://github.com/seppinho/mutserve/releases/download/v2.0.0-rc12/mutserve.zip
 if [ ! -s $HP_JDIR/mutserve.jar ] ; then
+  wget -N -c https://github.com/seppinho/mutserve/releases/download/v2.0.0-rc12/mutserve.zip
   unzip -o mutserve.zip
   cp mutserve.jar $HP_JDIR
 fi
 
-wget -N -c ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa
-if [ ! -s $HP_RDIR/hs38DH.fa ] ; then
-  cp GRCh38_full_analysis_set_plus_decoy_hla.fa $HP_RDIR/hs38DH.fa
-  samtools faidx $HP_RDIR/hs38DH.fa
+if [ ! -s $HP_RDIR/$HP_RNAME.fa ] ; then
+  wget -qO- $HP_RURL | zcat -f > $HP_RDIR/$HP_RNAME.fa
+  samtools faidx $HP_RDIR/$HP_RNAME.fa
 fi
 
-#create index,bwa,dict files ...
-#samtools faidx $HP_RDIR/$R.fa
+if [ ! -s $HP_RDIR/$HP_MT.fa ] ; then
+  samtools faidx $HP_RDIR/$HP_RNAME.fa $HP_RMT > $HP_RDIR/$HP_MT.fa
+  samtools faidx $HP_RDIR/$HP_MT.fa
+  java $HP_JOPT -jar $HP_JDIR/gatk.jar CreateSequenceDictionary --REFERENCE $HP_RDIR/$HP_MT.fa --OUTPUT $HP_RDIR/$HP_MT.dict
+fi
+
+if [ ! -s $HP_RDIR/${HP_MT}+.fa ] ; then
+  samtools faidx $HP_RDIR/$HP_RNAME.fa $HP_RNUMT > $HP_RDIR/$HP_NUMT.fa
+  cat $HP_RDIR/$HP_MT.fa > $HP_RDIR/${HP_MT}+.fa
+  samtools faidx $HP_RDIR/$HP_RNAME.fa $HP_RMT:1-$HP_E | grep -v ">" >> $HP_RDIR/${HP_MT}+.fa
+  cat $HP_RDIR/$HP_NUMT.fa >> $HP_RDIR/${HP_MT}+.fa
+  bwa index $HP_RDIR/${HP_MT}+.fa -p $HP_RDIR/${HP_MT}+
+fi

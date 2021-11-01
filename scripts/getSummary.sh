@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -ex
+set -e
 
 ##########################################################
 
@@ -40,13 +40,15 @@ fi
 rm -f fastp.html fastp.json
 
 #haplogroups
-cut -f3 $HP_IN | sed "s|$|.$M.haplogroup|" | xargs cat | grep -v SampleID | sed 's|"||g' | awk '{print $1,$2}' | sort -u | \
-  perl -ane 'BEGIN {print "Run\thaplogroup\n"} print "$F[0]\t$F[1]\n";' | sed "s|\.MT||" | \
-  tee $HP_ODIR/$M.haplogroup.tab | \
-  perl -ane 'print "$1\n" if(/(^Run.+)/ or /(\S+\s+L\d)(.*)/ or /(\S+\s+HV)(.*)/ or /(\S+\s+JT)(.*)/ or /(\S+\s+\w)(.*)/);' > $HP_ODIR/$M.haplogroup1.tab
+if [ "$HP_O" == "Human" ] ; then
+  cut -f3 $HP_IN | sed "s|$|.$M.haplogroup|" | xargs cat | grep -v SampleID | sed 's|"||g' | awk '{print $1,$2}' | sort -u | \
+    perl -ane 'BEGIN {print "Run\thaplogroup\n"} print "$F[0]\t$F[1]\n";' | sed "s|\.MT||" | \
+    tee $HP_ODIR/$M.haplogroup.tab | \
+    perl -ane 'print "$1\n" if(/(^Run.+)/ or /(\S+\s+L\d)(.*)/ or /(\S+\s+HV)(.*)/ or /(\S+\s+JT)(.*)/ or /(\S+\s+\w)(.*)/);' > $HP_ODIR/$M.haplogroup1.tab
 
-#haplocheck
-cut -f3 $HP_IN | sed "s|$|.$M.haplocheck|" | xargs cat  | uniq.pl | sed 's|^"Sample"|"Run"|' | sed 's|"||g' | sed 's| ||g' > $HP_ODIR/$M.haplocheck.tab
+  #haplocheck
+  cut -f3 $HP_IN | sed "s|$|.$M.haplocheck|" | xargs cat  | uniq.pl | sed 's|^"Sample"|"Run"|' | sed 's|"||g' | sed 's| ||g' > $HP_ODIR/$M.haplocheck.tab
+fi
 
 #fasta
 cut -f3 $HP_IN | sed "s|$|.$M.fa|"        | xargs cat > $HP_ODIR/$M.fa
@@ -61,9 +63,8 @@ if [ $HP_I -lt 2 ] ; then exit 0 ; fi
 if [ $HP_M != "mutect2" ] ; then exit 0 ; fi
 
 MM=$M.$M
-
 #cvg
-cut -f3 $HP_IN | sed "s|$|$M.cvg.stat|" | xargs cat | uniq.pl -i 0  > $HP_ODIR/$M.cvg.tab
+cut -f3 $HP_IN | sed "s|$|.$M.cvg.stat|" | xargs cat | uniq.pl -i 0  > $HP_ODIR/$M.cvg.tab
 cut -f3 $HP_IN | sed "s|$|.$MM.00.vcf|" | xargs cat | bedtools sort -header  > $HP_ODIR/$MM.00.concat.vcf
 cat $HP_ODIR/$MM.00.concat.vcf | grep "^#" > $HP_ODIR/$MM.00.concat.vcf+
 cat $HP_ODIR/$MM.00.concat.vcf | grep -v "^#" | sort -k1,1 -k2,2n -k4,4 -k5,5 >> $HP_ODIR/$MM.00.concat.vcf+

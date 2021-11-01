@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -ex
+set -e
 
 if [ "$#" -ne 2 ]; then exit 0 ; fi
 

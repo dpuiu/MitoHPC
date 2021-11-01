@@ -17,11 +17,16 @@ printf "export HP_JDIR=$HP_JDIR\n"
 printf "export HP_RDIR=$HP_RDIR\n"
 printf "export HP_ODIR=$HP_ODIR\n"
 
-printf "export HP_R=$HP_R\n"
-printf "export HP_N=$HP_N\n"
-printf "export HP_H=$HP_H\n"
+printf "export HP_RNAME=$HP_RNAME\n"
+printf "export HP_RMT=$HP_RMT\n"
+printf "export HP_RNUMT=\"$HP_RNUMT\"\n"
+printf "export HP_RCOUNT=$HP_RCOUNT\n"
+printf "export HP_RURL=\"$HP_RURL\"\n"
+
+printf "export HP_O=$HP_O\n"
 printf "export HP_MT=$HP_MT\n"
-printf "export HP_NUMT=\"$HP_NUMT\"\n"
+printf "export HP_NUMT=$HP_NUMT\n"
+
 printf "export HP_E=$HP_E\n"
 printf "export HP_L=$HP_L\n"
 

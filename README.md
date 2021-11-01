@@ -20,8 +20,7 @@
 
 ### SETUP ENVIRONMENT ###
 
-    $ cd HP/scripts/    
-    $ export HP_SDIR=`pwd`  # set script directory variable (add to ~/.bashrc_
+    $ export HP_SDIR=`pwd`/HP/scripts/  # set script directory variable (add to ~/.bashrc)
 
 ### INSTALL PIPELINE PREREQUISITES ; CHECK INSTALL ###
 
@@ -37,6 +36,8 @@
 
 ### SETUP ENVIRONMENT ###
 
+    # go to your working directory 
+
     $ cp -i $HP_SDIR/init.sh .                                     # copy init.sh to working directory
 
     $ nano init.sh                                                 # check variables
@@ -44,26 +45,25 @@
        export HP_ADIR=$PWD/bams/                                   # alignment dir
        export HP_ODIR=$PWD/out/                                    # output dir  
        export HP_IN=$PWD/in.txt                                    # input file
-    
-    $ . ./init.sh                                                  # source init file 
 
-    $ printenv | grep HP_                                          # check pipeline(HP_) variables 
+       find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | \
+        $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN         # automatically generate input file
+      ...                                                          # 3 column, tab delimited, can be edited
 
-    $ find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | \
-        $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN         # generate input file
+    $ . ./init.sh                                                  # source init.sh file 
+
+    $ printenv | grep HP_ | sort                                   # optional ; check pipeline(HP_) variables 
+    $ nano $HP_IN                                                  # optional ; check input file
 
 ### RUN PIPELINE  ###
  
-    $ $HP_SDIR/run.sh > filter.all.sh
-
-    $ bash ./filter.all.sh                                             
-
+    $ $HP_SDIR/run.sh > filter.all.sh                             # create command file
+    $ bash ./filter.all.sh                                        # execute command file      
 
 ### RE-RUN PIPELINE (optional) ###
 
-    $ nano init.sh           			                   # update parameters if needed
-
-    $ $HP_SDIR/run.sh > filter.all.sh
+    $ nano init.sh           			                   # optional ; update parameters
+    $ $HP_SDIR/run.sh > filter.all.sh                              # optional ; recreate command file
 
     $ bash ./filter.all.sh
      

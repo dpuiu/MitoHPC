@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#set -e
+set -e
 
 ###############################################################
 
@@ -7,39 +7,60 @@
 #Variable HP_SDIR must be pre-set
 
 ###############################################################
-#PATHS
+#DIRECTORY PATHS
 
 export HP_HDIR=`readlink -f $HP_SDIR/..`	#HP home directory
 export HP_BDIR=$HP_HDIR/bin/			#bin directory
 export HP_JDIR=$HP_HDIR/java/			#java directory
-export HP_RDIR=$HP_HDIR/RefSeq/			#reference file
+export HP_RDIR=$HP_HDIR/RefSeq/			#reference directory
 export HP_LDIR=					#subsample directory
 
-export PATH=$HP_SDIR:$HP_BDIR:$PATH		#PATH
+###############################################################
+#SOFTWARE PATH
+
+export PATH=$HP_SDIR:$HP_BDIR:$PATH
 
 ################################################################
 #ALIGNMNET REFERENCE
 
-export HP_H=hs38DH          # human assembly FASTA file available under $RDIR; must match the alignment reference
-export HP_MT=chrM ;         export HP_NUMT="chr1:629084-634422 chr17:22521366-22521502"                #if hs38DH        has been used
-#export HP_MT=M;            export HP_NUMT='1:629084-634422 17:22521366-22521502'                      #   grch38_1kgmaj
-#export HP_MT=NC_012920.1;  export HP_NUMT='NC_000001.11:629084-634422 NC_000017.11:22521366-22521502' #   GRCh38.p13
-#export HP_MT=chrM;         export HP_NUMT='chr1:564465-569708 chr17:22020692-22020827'                #   hg19
-#export HP_MT=MT;           export HP_NUMT='1:564465-569708 17:22020692-22020827'                      #   GRCh37-lite,hs37d5
-################################################################
-#SEQUENCE REFERENCES
+#GRCH38(default)
+export HP_RNAME=hs38DH
+export HP_RMT=chrM
+export HP_RNUMT="chr1:628834-634672 chr17:22521116-22521752"	#NUMT+-250
+export HP_RCOUNT=3366
+export HP_RURL=ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa
 
-export HP_R=chrM                 # chrM, rCRS or RSRS, FASTA file available under $HP_RDIR 
-export HP_N=NUMT                 # NUMT FASTA file under $HP_RDIR; based on hs38DH; contains chr1:629084-634422 chr17:22521366-22521502
+#GRCH37
+#export HP_RNAME=hg19
+#export HP_RMT=chrM
+#export HP_RNUMT="chr1:564465-569708 chr17:22020692-22020827"
+#export HP_RCOUNT=93
+#export HP_RURL=http://hgdownload.cse.ucsc.edu/goldenpath/hg19/bigZips/hg19.fa.gz
+
+#CHM13
+#export HP_RNAME=chm13
+#export HP_RMT=chrM
+#export HP_RNUMT=
+#export HP_RCOUNT=24
+#export HP_RURL=https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/assemblies/chm13.draft_v1.1.fasta.gz
+
+################################################################
+#GENOME REFERENCES
+
+export HP_O=Human
+export HP_MT=chrM                # chrM, rCRS or RSRS, FASTA file available under $HP_RDIR
+export HP_NUMT=NUMT              # NUMT FASTA file under $HP_RDIR
+
+################################################################
+#OTHER
+
 export HP_L=222000               # number of MT reads to subsample; 150bp reads => ~2000x MT coverage
 export HP_E=300	                 # extension(circularization)
-
 export HP_FOPT=                  # FASTP options: Ex: " -q 20 -e 30 "
-
 export HP_M=mutect2 	         # SNV caller: mutect2 or mutserve
 export HP_I=2		         # number of SNV iterations : 0,1,2
-				 #  0: compute read counts,mtDNA-CN 
-                                 #  1:1 iteration (mutect2,mutserve) 
+				 #  0: compute read counts,mtDNA-CN
+                                 #  1:1 iteration (mutect2,mutserve)
                                  #  2:2 iterations (mutect2)
 export HP_T1=03                  # heteroplasmy tholds
 export HP_T2=05
@@ -58,9 +79,26 @@ export HP_ADIR=$PWD/bams/	# bams or crams input file directory
 export HP_ODIR=$PWD/out/        # output dir
 export HP_IN=$PWD/in.txt        # input file to be generated
 
+find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN
+
 ###############################################################
 #JOB SCHEDULING
 
-export HP_SH="bash" ;                                                       export HP_SHS="bash"                                       # bash
-#export HP_SH="sbatch  -J HP_$$  --nodes=1 --mem=5G" ;                        export HP_SHS="sbatch -J HP_$$ -d singleton"             # SLURM
+export HP_SH="bash" ;                                                        export HP_SHS="bash"                                      # bash
+#export HP_SH="sbatch  -J HP_$$  --nodes=1 --mem=5G" ;                       export HP_SHS="sbatch -J HP_$$ -d singleton"              # SLURM
 #export HP_SH="qsub -V -N HP_$$ -l mem_free=5G,h_vmem=5G -pe local 1 -cwd" ; export HP_SHS="qsub -V -hold_jid HP_$$ -N HP_S$$ -cwd"    # SGE
+
+#export HP_SH="bash" ;                                                        export HP_SHS="$HP_SH"                    # bash
+#export HP_SH="sbatch  -J HP_$$ --cpus-per-task=1 --nodes=1 --mem=5G" ;        export HP_SHS="$HP_SH -d singleton"       # SLURM
+#export HP_SH="qsub -V -N HP_$$ -l mem_free=5G,h_vmem=5G -pe local 1 -cwd" ;  export HP_SHS="$HP_SH -hold_jid HP_$$"    # SGE
+
+###############################################################
+# Mouse
+#export HP_RDIR=$HP_HDIR/RefSeqMouse/            #reference director
+#export HP_O=Mouse
+#export HP_RNAME=mm39
+#export HP_RMT=chrM
+#export HP_RCOUNT=61
+#export HP_RNUMT="chr1:24650615-24655253 chr2:22477300-22480534 chr12:97028207-97028562"
+#export HP_RURL="https://hgdownload.soe.ucsc.edu/goldenPath/mm39/bigZips/mm39.fa.gz"
+

@@ -69,8 +69,8 @@ echo "HP_RDIR=" $HP_RDIR >> checkInstall.log
 echo "########################"  >> checkInstall.log
 echo "REFERENCES:"  >> checkInstall.log
 
-#test -s $HP_RDIR/$HP_HG
-ls -l $HP_RDIR/$HP_MT.fa | perl -ane 'print "HP_MT= $F[-1]\n";' >> checkInstall.log
-ls -l $HP_RDIR/$HP_R.fa  | perl -ane 'print "HP_R=  $F[-1]\n";' >> checkInstall.log
+test -s $HP_RDIR/$HP_RNAME.fa
+test -s $HP_RDIR/$HP_MT.fa
+test -s $HP_RDIR/$HP_NUMT.fa
 
 echo Success!
