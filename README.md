@@ -38,32 +38,32 @@
 
     # go to your working directory 
 
-    $ cp -i $HP_SDIR/init.sh .                                     # copy init.sh to working dir.
+    $ cp -i $HP_SDIR/init.sh .                                   # copy init to working dir.
 
-    $ nano init.sh                                                 # check variables
+    $ nano init.sh                                               # check/edit local init file
         ...
-       export HP_ADIR=$PWD/bams/                                   # alignment dir
-       export HP_ODIR=$PWD/out/                                    # output dir  
-       export HP_IN=$PWD/in.txt                                    # input file
+       export HP_ADIR=$PWD/bams/                                 # alignment dir
+       export HP_ODIR=$PWD/out/                                  # output dir  
+       export HP_IN=$PWD/in.txt                                  # input file
 
        find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | \
-        $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN         # generate input file; 3 column
-      ...                                                          # tab delimited, can be edited
+        $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN       # generate input file; 3 column
+      ...                                                        # tab delimited, can be edited
 
-    $ . ./init.sh                                                  # source init.sh file 
+    $ . ./init.sh                                                # source init file 
 
-    $ printenv | grep HP_ | sort                                   # optional ; check HP_ variables 
-    $ nano $HP_IN                                                  # optional ; check input file
+    $ printenv | grep HP_ | sort                                 # optional ; check HP_ variables 
+    $ nano $HP_IN                                                # optional ; check input file
 
 ### RUN PIPELINE  ###
  
-    $ $HP_SDIR/run.sh > filter.all.sh                             # create command file
-    $ bash ./filter.all.sh                                        # execute command file      
+    $ $HP_SDIR/run.sh > filter.all.sh                           # create command file
+    $ bash ./filter.all.sh                                      # execute command file      
 
 ### RE-RUN PIPELINE (optional) ###
 
-    $ nano init.sh           			                   # optional ; update parameters
-    $ $HP_SDIR/run.sh > filter.all.sh                              # optional ; recreate command file
+    $ nano init.sh           			                 # optional; update parameters
+    $ $HP_SDIR/run.sh > filter.all.sh                            # optional; recreate command file
 
     $ bash ./filter.all.sh
      
@@ -73,18 +73,18 @@
 
     TAB/SUMMARY/VCF/FASTA Files: 
 
-    count.tab                                                      # reads  & mtDNA-CN counts
-    cvg.tab                                                        # coverage stats
+    count.tab                                                    # reads  & mtDNA-CN counts
+    cvg.tab                                                      # coverage stats
 
 ### 1st ITERATION ### 
 
-    {mutect2,mutserve}.{03,05,10}.{concat,merge[.sitesOnly]}.vcf   # SNVs; 3,5,10% heteroplasmy thold
-    {mutect2,mutserve}.{03,05,10}.tab                              # SNV counts
-    {mutect2,mutserve}.{03,05,10}.summary                          # SNV count summaries
+    {mutect2,mutserve}.{03,05,10}.{concat,merge[.sitesOnly]}.vcf # SNVs; 3,5,10% heteroplasmy thold
+    {mutect2,mutserve}.{03,05,10}.tab                            # SNV counts
+    {mutect2,mutserve}.{03,05,10}.summary                        # SNV count summaries
 
-    {mutect2,mutserve}.fa                                          # consensus sequence
-    {mutect2,mutserve}.haplogroup[1].tab                           # haplogroup
-    {mutect2,mutserve}.haplocheck.tab                              # contamination screen   
+    {mutect2,mutserve}.fa                                        # consensus sequence
+    {mutect2,mutserve}.haplogroup[1].tab                         # haplogroup
+    {mutect2,mutserve}.haplocheck.tab                            # contamination screen   
 
 
 ### 2nd ITERATION ###
