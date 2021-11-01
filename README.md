@@ -57,12 +57,12 @@
 
 ### RUN PIPELINE  ###
  
-    $ $HP_SDIR/run.sh > filter.all.sh                           # create command file
-    $ bash ./filter.all.sh                                      # execute command file      
+    $ $HP_SDIR/run.sh > filter.all.sh                            # create command file
+    $ bash ./filter.all.sh                                       # execute command file      
 
 ### RE-RUN PIPELINE (optional) ###
 
-    $ nano init.sh           			                 # optional; update parameters
+    $ nano init.sh         	                                 # optional; update parameters
     $ $HP_SDIR/run.sh > filter.all.sh                            # optional; recreate command file
 
     $ bash ./filter.all.sh
