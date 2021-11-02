@@ -54,7 +54,7 @@ fi
 cut -f3 $HP_IN | sed "s|$|.$M.fa|"        | xargs cat > $HP_ODIR/$M.fa
 samtools faidx  $HP_ODIR/$M.fa
 
-cut -f3 $HP_IN | sed "s|$|.count|" | xargs cat | $HP_SDIR/uniq.pl > $HP_ODIR/count1.tab
+cut -f3 $HP_IN | sed "s|$|.count|" | xargs cat | $HP_SDIR/uniq.pl > $HP_ODIR/count.sampled.tab
 
 ##########################################################
 # get 2nd iteration stats
@@ -82,4 +82,4 @@ if [[ ! -z "${HP_FNAME}" ]]; then
   snpCount.sh $MM.$HP_FNAME $HP_T3
 fi
 
-cut -f3 $HP_IN | sed "s|$|.$HP_M.count|" | xargs cat | $HP_SDIR/uniq.pl > $HP_ODIR/count2.$HP_M.tab
+cut -f3 $HP_IN | sed "s|$|.$HP_M.count|" | xargs cat | $HP_SDIR/uniq.pl > $HP_ODIR/count.$HP_M.tab

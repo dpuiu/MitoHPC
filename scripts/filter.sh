@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 #######################################################################################################################################
 
@@ -26,38 +26,40 @@ O=$3
 
 test -s $2
 
-#test BAM/CRAM file sorted
-samtools view -H $2 | grep -m 1 -P "^@HD.+coordinate$" > /dev/null
-
 if [ ! -s $2.bai ] && [ ! -s $2.crai ]; then  samtools index -@ $HP_P $2 ; fi
 if [ ! -s $I.idxstats ] ;               then  samtools idxstats -@ $HP_P $2 > $I.idxstats ; fi
 
 if [ ! -s $I.count ] ; then
+  #test BAM/CRAM file sorted
+  samtools view -H $2 | grep -m 1 -P "^@HD.+coordinate$" > /dev/null
+
+  #test reference
+  RCOUNT=`samtools view -H $2 | grep -c "^@SQ"`
+  if [ $HP_RCOUNT != $RCOUNT ] ; then echo "ERROR: HP_RCOUNT=$HP_RCOUNT does not match the number of \@SQ lines=$RCOUNT in $2"; exit 1 ; fi
+
   cat $I.idxstats | idxstats2count.pl -sample $S -chrM $HP_RMT >  $I.count
-  samtools view -F 0x900 $2 $HP_ENUMT -c -T $HP_RDIR/$HP_RNAME.fa | sed 's|^|NUMT\n|' | paste $I.count - > $I.count+ ; mv $I.count+ $I.count
+  samtools view -F 0x900 -@ $HP_P $2 $HP_RNUMT -c -T $HP_RDIR/$HP_RNAME.fa | sed 's|^|NUMT\n|' | paste $I.count - > $I.count+ ; mv $I.count+ $I.count
 fi
 
-if [ $HP_I -lt 1 ] ; then exit 0 ; fi
+#if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 
 
 #########################################################################################################################################
 #sample reads
 
-R=`tail -1 $I.count  | perl -ane '$S=$ENV{HP_L}/$F[3]; $S=0.9999 if($S>0.9999); print $S'`
+R=`tail -1 $I.count  | perl -ane '$R=1.5*$ENV{HP_L}/$F[3]; $R=0.9999 if($R>0.9999); print $R'`
+echo "R=$R"
 if [ ! -s $O.fq ] ; then
-
-  RCOUNT=`samtools view -H $2 | grep -c "^@SQ"`
-  if [ $HP_RCOUNT != $RCOUNT ] ; then echo "ERROR: HP_RCOUNT=$HP_RCOUNT does not match the number of \@SQ lines=$RCOUNT in $2"; exit 1 ; fi
-
-  samtools view -s $R $2 $HP_RMT $HP_RNUMT -bu -F 0x900 -T $HP_RDIR/$HP_RNAME.fa   | \
-    samtools view -h | \
-    samtools sort -n -O SAM -m $HP_MM | \
+  samtools view -s $R $2 $HP_RMT $HP_RNUMT -bu -F 0x900 -T $HP_RDIR/$HP_RNAME.fa -@ $HP_P | \
+    samtools sort -n -O SAM -m $HP_MM -@ $HP_P | \
     perl -ane 'if(/^@/) {print} elsif($P[0] eq $F[0]) {print $p,$_}; @P=@F; $p=$_;' | \
     samblaster --removeDups --addMateTags | \
     samtools view -bu | \
     bedtools bamtofastq  -i /dev/stdin -fq /dev/stdout -fq2 /dev/stdout | \
-    fastp --stdin --interleaved_in --stdout $HP_FOPT  > $O.fq
+    fastp --stdin --interleaved_in --stdout $HP_FOPT | head -n $(($HP_L*4))  > $O.fq
 fi
+
+if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 
 #########################################################################################################################################
 #realign reads
@@ -67,18 +69,18 @@ if  [ ! -s $O.bam ] ; then
     bwa mem $HP_RDIR/${HP_MT}+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" -v 1 | \
     circSam.pl -ref_len $HP_RDIR/$HP_MT.fa.fai | grep -v "^$" | \
     perl -ane 'next if(/^\@SQ\tSN:(\S+)/ and $1 ne $ENV{HP_MT}); next if(!/^\@/ and ($F[2] ne $ENV{HP_MT} or $F[6] ne "=")); print;' | \
-    samtools view -bu | \
-    samtools sort -m $HP_MM > $O.bam
+    samtools view -bu  -@ $HP_P | \
+    samtools sort -m $HP_MM  -@ $HP_P > $O.bam
 
-  samtools index $O.bam
+  samtools index $O.bam -@ $HP_P
 fi
 #########################################################################################################################################
 #count aligned reads; compute cvg; get stats; gets split alignments
 
-if [ ! -s $O.count ]    ; then samtools idxstats $O.bam | idxstats2count.pl -sample $S -chrM $HP_MT > $O.count ; fi
+if [ ! -s $O.count ]    ; then samtools idxstats $O.bam  -@ $HP_P | idxstats2count.pl -sample $S -chrM $HP_MT > $O.count ; fi
 if [ ! -s $O.cvg ]      ; then cat $O.bam | bedtools bamtobed -cigar | grep "^$HP_MT" | bedtools genomecov -i - -g $HP_RDIR/$HP_MT.fa.fai -d > $O.cvg ; fi
 if [ ! -s $O.cvg.stat ] ; then cat $O.cvg | cut -f3 | st.pl  --summary --mean | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{S}\t$_" }'  > $O.cvg.stat ; fi
-if [ ! -s $O.sa.bed ]   ; then samtools view -h $O.bam | sam2bedSA.pl | uniq.pl -i 3 | sort -k2,2n -k3,3n > $O.sa.bed ; fi
+if [ ! -s $O.sa.bed ]   ; then samtools view -h $O.bam  -@ $HP_P | sam2bedSA.pl | uniq.pl -i 3 | sort -k2,2n -k3,3n > $O.sa.bed ; fi
 #########################################################################################################################################
 #compute SNP/INDELs using mutect2 or mutserve
 
@@ -129,7 +131,7 @@ if  [ ! -s $O.fa.fai ]  ; then
   cat $OM.00.vcf | maxVcf.pl | bedtools sort -header |tee $OM.max.vcf | bgzip -f -c > $OM.max.vcf.gz ; tabix -f $OM.max.vcf.gz
   bcftools consensus -f $HP_RDIR/$HP_MT.fa $OM.max.vcf.gz | perl -ane 'chomp; if($.==1) { print ">$ENV{S}\n" } else { s/N//g; print } END {print "\n"}' > $OM.fa
   rm $OM.max.vcf.gz $OM.max.vcf.gz.tbi
-  samtools faidx $OM.fa
+  samtools faidx $OM.fa 
 fi
 
 if [ $HP_I -lt 2 ] ; then exit 0 ; fi
@@ -149,10 +151,10 @@ if  [ ! -s $OM.bam.bai ] ; then
     bwa mem ${OM}+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$S\tSM:$S\tPL:ILLUMINA" -v 1 | \
     circSam.pl -ref_len $OM.fa.fai | grep -v "^$" | \
     perl -ane 'next if(/^\@SQ\tSN:(\S+)/ and $1 ne $ENV{S}); next if(!/^\@/ and ($F[2] ne $ENV{S} or $F[6] ne "=")); print' | \
-    samtools view -bu | \
-    samtools sort -m $HP_MM > $OM.bam
+    samtools view -bu  -@ $HP_P | \
+    samtools sort -m $HP_MM  -@ $HP_P > $OM.bam
 
-  samtools index $OM.bam
+  samtools index $OM.bam  -@ $HP_P
 
   rm  ${OM}+.{sa,amb,ann,bwt,pac}
   #rm  ${OM}+*
@@ -161,9 +163,9 @@ fi
 #########################################################################################################################################
 #count aligned reads; compute cvg; get stats; gets split alignments
 
-if [ ! -s $OM.count ]    ; then samtools idxstats $OM.bam | idxstats2count.pl -sample $S -chrM $S > $OM.count ; fi
-if [ ! -s $OM.cvg ]      ; then cat $OM.bam | bedtools bamtobed -cigar | grep "^$HP_MT" | bedtools genomecov -i - -g $OM.fa.fai -d > $OM.cvg ; fi
-if [ ! -s $OM.cvg.stat ] ; then cat $OM.cvg | cut -f3 | st.pl  --summary --mean | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{N}\t$_" }'  > $OM.cvg.stat ; fi
+if [ ! -s $OM.count ]    ; then samtools idxstats $OM.bam  -@ $HP_P | idxstats2count.pl -sample $S -chrM $S > $OM.count ; fi
+if [ ! -s $OM.cvg ]      ; then cat $OM.bam | bedtools bamtobed -cigar | grep "^$S" | bedtools genomecov -i - -g $OM.fa.fai -d > $OM.cvg ; fi
+if [ ! -s $OM.cvg.stat ] ; then cat $OM.cvg | cut -f3 | st.pl  --summary --mean | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{S}\t$_" }'  > $OM.cvg.stat ; fi
 if [ ! -s $OM.sa.bed ]   ; then samtools view -h $OM.bam | sam2bedSA.pl | uniq.pl -i 3 | sort -k2,2n -k3,3n > $OM.sa.bed ; fi
 
 #########################################################################################################################################

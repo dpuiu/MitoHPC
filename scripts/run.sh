@@ -45,7 +45,7 @@ printf "export HP_FRULE=\"$HP_FRULE\"\n"
 printf "export HP_FOPT=\"$HP_FOPT\"\n"
 printf "export HP_JOPT=\"$HP_JOPT\"\n"
 printf "export HP_MM=\"$HP_MM\"\n"
-printf "export HP_P=\"$HP_P\"\n"
+printf "export HP_P=$HP_P\n"
 
 printf "export PATH=$HP_SDIR:$HP_BDIR:\$PATH\n"
 

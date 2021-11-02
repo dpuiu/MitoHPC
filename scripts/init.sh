@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+#set -e
 
 ###############################################################
 
@@ -13,7 +13,6 @@ export HP_HDIR=`readlink -f $HP_SDIR/..`	#HP home directory
 export HP_BDIR=$HP_HDIR/bin/			#bin directory
 export HP_JDIR=$HP_HDIR/java/			#java directory
 export HP_RDIR=$HP_HDIR/RefSeq/			#reference directory
-export HP_LDIR=					#subsample directory
 
 ###############################################################
 #SOFTWARE PATH
@@ -68,9 +67,10 @@ export HP_T3=10
 export HP_FNAME=                 # FILTERING options: Ex: noMultiallelic
 export HP_FRULE=                 # FILTERING options: Ex: "grep -v multiallelic"
 
-export HP_JOPT="-Xms2G -Xmx2G -XX:ParallelGCThreads=1"  # JAVA options
-export HP_MM="4G"					# maximum memory
-export HP_P=1						# number of processors
+
+export HP_P=1						    # number of processors
+export HP_JOPT="-Xms2G -Xmx2G -XX:ParallelGCThreads=$HP_P"  # JAVA options
+export HP_MM="4G"					    # maximum memory
 ################################################################
 #INPUT/OUTPUT
 
@@ -84,13 +84,9 @@ find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | $HP_SDIR/ls2in.pl -out $HP_ODIR
 ###############################################################
 #JOB SCHEDULING
 
-export HP_SH="bash" ;                                                        export HP_SHS="bash"                                      # bash
-#export HP_SH="sbatch  -J HP_$$  --nodes=1 --mem=5G" ;                       export HP_SHS="sbatch -J HP_$$ -d singleton"              # SLURM
-#export HP_SH="qsub -V -N HP_$$ -l mem_free=5G,h_vmem=5G -pe local 1 -cwd" ; export HP_SHS="qsub -V -hold_jid HP_$$ -N HP_S$$ -cwd"    # SGE
-
-#export HP_SH="bash" ;                                                        export HP_SHS="$HP_SH"                    # bash
-#export HP_SH="sbatch  -J HP_$$ --cpus-per-task=1 --nodes=1 --mem=5G" ;        export HP_SHS="$HP_SH -d singleton"       # SLURM
-#export HP_SH="qsub -V -N HP_$$ -l mem_free=5G,h_vmem=5G -pe local 1 -cwd" ;  export HP_SHS="$HP_SH -hold_jid HP_$$"    # SGE
+export HP_SH="bash" ;                                                            export HP_SHS="$HP_SH"                     # bash
+#export HP_SH="sbatch -J HP_$$ --cpus-per-task=$HP_P --nodes=1 --mem=5G" ;       export HP_SHS="$HP_SH -d singleton"           # SLURM
+#export HP_SH="qsub -V -N HP_$$ -l mem_free=5G,h_vmem=5G -pe local $HP_P -cwd" ; export HP_SHS="$HP_SH -hold_jid HP_$$"     # SGE
 
 ###############################################################
 # Mouse
