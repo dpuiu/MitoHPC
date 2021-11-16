@@ -19,6 +19,7 @@ printf "export HP_ODIR=$HP_ODIR\n"
 
 printf "export HP_RNAME=$HP_RNAME\n"
 printf "export HP_RMT=$HP_RMT\n"
+printf "export HP_RMTLEN=$HP_RMTLEN\n"
 printf "export HP_RNUMT=\"$HP_RNUMT\"\n"
 printf "export HP_RCOUNT=$HP_RCOUNT\n"
 printf "export HP_RURL=\"$HP_RURL\"\n"

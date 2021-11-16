@@ -25,6 +25,7 @@ export PATH=$HP_SDIR:$HP_BDIR:$PATH
 #GRCH38(default)
 export HP_RNAME=hs38DH
 export HP_RMT=chrM
+export HP_RMTLEN=16569
 export HP_RNUMT="chr1:628834-634672 chr17:22521116-22521752"	#NUMT+-250
 export HP_RCOUNT=3366
 export HP_RURL=ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa
@@ -39,21 +40,21 @@ export HP_RURL=ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh
 #CHM13
 #export HP_RNAME=chm13
 #export HP_RMT=chrM
-#export HP_RNUMT=
+#export HP_RNUMT="chr5:81136887-81137073 chr11:10594619-10594811 chr13:12167063-12168420 chr17:23209322-23209958"
 #export HP_RCOUNT=24
 #export HP_RURL=https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/assemblies/chm13.draft_v1.1.fasta.gz
 
 ################################################################
 #GENOME REFERENCES
 
-export HP_O=Human
+export HP_O=Human		 # organism: Human, Mouse... 
 export HP_MT=chrM                # chrM, rCRS or RSRS, FASTA file available under $HP_RDIR
 export HP_NUMT=NUMT              # NUMT FASTA file under $HP_RDIR
 
 ################################################################
 #OTHER
 
-export HP_L=222000               # number of MT reads to subsample; 150bp reads => ~2000x MT coverage
+export HP_L=222000               # number of MT reads to subsample; empty: no subsamling; 222000 150bp reads => ~2000x MT coverage
 export HP_E=300	                 # extension(circularization)
 export HP_FOPT=                  # FASTP options: Ex: " -q 20 -e 30 "
 export HP_M=mutect2 	         # SNV caller: mutect2 or mutserve
@@ -79,7 +80,9 @@ export HP_ADIR=$PWD/bams/	# bams or crams input file directory
 export HP_ODIR=$PWD/out/        # output dir
 export HP_IN=$PWD/in.txt        # input file to be generated
 
-find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN
+if [ -d $HP_ADIR ] ; then
+  if [ -s $HP_IN ] ; then find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN ; fi
+fi
 
 ###############################################################
 #JOB SCHEDULING

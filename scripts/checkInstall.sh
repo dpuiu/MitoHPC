@@ -14,6 +14,7 @@ set -e
 which perl	        #usually available on Linux
 which gcc	        #module load gcc
 which java	        #module load java
+which python		#module load python
 
 which bwa	        #module load bwa
 which samtools          #module load samtools

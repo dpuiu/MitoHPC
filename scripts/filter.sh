@@ -40,27 +40,33 @@ if [ ! -s $I.count ] ; then
   cat $I.idxstats | idxstats2count.pl -sample $S -chrM $HP_RMT >  $I.count
   samtools view -F 0x900 -@ $HP_P $2 $HP_RNUMT -c -T $HP_RDIR/$HP_RNAME.fa | sed 's|^|NUMT\n|' | paste $I.count - > $I.count+ ; mv $I.count+ $I.count
 fi
-
-#if [ $HP_I -lt 1 ] ; then exit 0 ; fi
-
+if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 
 #########################################################################################################################################
 #sample reads
 
-R=`tail -1 $I.count  | perl -ane '$R=1.5*$ENV{HP_L}/$F[3]; $R=0.9999 if($R>0.9999); print $R'`
-echo "R=$R"
 if [ ! -s $O.fq ] ; then
-  samtools view -s $R $2 $HP_RMT $HP_RNUMT -bu -F 0x900 -T $HP_RDIR/$HP_RNAME.fa -@ $HP_P | \
-    samtools sort -n -O SAM -m $HP_MM -@ $HP_P | \
-    perl -ane 'if(/^@/) {print} elsif($P[0] eq $F[0]) {print $p,$_}; @P=@F; $p=$_;' | \
-    samblaster --removeDups --addMateTags | \
-    samtools view -bu | \
-    bedtools bamtofastq  -i /dev/stdin -fq /dev/stdout -fq2 /dev/stdout | \
-    fastp --stdin --interleaved_in --stdout $HP_FOPT | head -n $(($HP_L*4))  > $O.fq
+  if  [ $HP_L ]; then 
+    R=`tail -1 $I.count  | perl -ane '$R=1.5*$ENV{HP_L}/$F[3]; $R=0.9999 if($R>0.9999); print $R'` 
+    samtools view -s $R $2 $HP_RMT $HP_RNUMT -bu -F 0x900 -T $HP_RDIR/$HP_RNAME.fa -@ $HP_P | \
+      samtools sort -n -O SAM -m $HP_MM -@ $HP_P | \
+      perl -ane 'if(/^@/) {print} elsif($P[0] eq $F[0]) {print $p,$_}; @P=@F; $p=$_;' | \
+      samblaster --removeDups --addMateTags | \
+      samtools view -bu | \
+      bedtools bamtofastq  -i /dev/stdin -fq /dev/stdout -fq2 /dev/stdout | \
+      fastp --stdin --interleaved_in --stdout $HP_FOPT | head -n $(($HP_L*4))  > $O.fq
+  else
+    samtools view  $2 $HP_RMT $HP_RNUMT -bu -F 0x900 -T $HP_RDIR/$HP_RNAME.fa -@ $HP_P | \
+      samtools sort -n -O SAM -m $HP_MM -@ $HP_P | \
+      perl -ane 'if(/^@/) {print} elsif($P[0] eq $F[0]) {print $p,$_}; @P=@F; $p=$_;' | \
+      samblaster --removeDups --addMateTags | \
+      samtools view -bu | \
+      bedtools bamtofastq  -i /dev/stdin -fq /dev/stdout -fq2 /dev/stdout | \
+      fastp --stdin --interleaved_in --stdout $HP_FOPT > $O.fq
+  fi
 fi
 
-if [ $HP_I -lt 1 ] ; then exit 0 ; fi
-
+#filtering split reads: perl -ane 'if(/^@/) {print} elsif($F[2] eq $ENV{HP_RMT} and $F[3]>$ENV{HP_E}/2 and  $F[3]<$ENV{HP_RMTLEN}-$ENV{HP_E}/2 and /SA:Z:(.+?),/ and $1 ne $ENV{HP_RMT}) { next} else { print}' |\
 #########################################################################################################################################
 #realign reads
 
@@ -80,14 +86,14 @@ fi
 if [ ! -s $O.count ]    ; then samtools idxstats $O.bam  -@ $HP_P | idxstats2count.pl -sample $S -chrM $HP_MT > $O.count ; fi
 if [ ! -s $O.cvg ]      ; then cat $O.bam | bedtools bamtobed -cigar | grep "^$HP_MT" | bedtools genomecov -i - -g $HP_RDIR/$HP_MT.fa.fai -d > $O.cvg ; fi
 if [ ! -s $O.cvg.stat ] ; then cat $O.cvg | cut -f3 | st.pl  --summary --mean | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{S}\t$_" }'  > $O.cvg.stat ; fi
-if [ ! -s $O.sa.bed ]   ; then samtools view -h $O.bam  -@ $HP_P | sam2bedSA.pl | uniq.pl -i 3 | sort -k2,2n -k3,3n > $O.sa.bed ; fi
+if [ ! -f $O.sa.bed ]   ; then samtools view -h $O.bam  -@ $HP_P | sam2bedSA.pl | uniq.pl -i 3 | sort -k2,2n -k3,3n > $O.sa.bed ; fi
 #########################################################################################################################################
 #compute SNP/INDELs using mutect2 or mutserve
 
 OM=$O.$HP_M
 if [ ! -s $OM.00.vcf ] ; then
   if [ "$HP_M" == "mutect2" ] ; then
-    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_MT.fa -I $O.bam                            -O $OM.vcf-
+    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_MT.fa -I $O.bam                            -O $OM.vcf- # --max-reads-per-alignment-start 1000
     java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $HP_RDIR/$HP_MT.fa -V $OM.vcf- --min-reads-per-strand 2 -O $OM.vcf ; rm $OM.vcf?*
   elif [ "$HP_M" == "mutserve" ] ; then
     if [ "$HP_MT" == "chrM" ] ||  [ "$HP_MT" == "rCRS" ] ||  [ "$HP_MT" == "RSRS" ] ; then
@@ -176,7 +182,7 @@ OMM=$OM.$HP_M
 if [ ! -s $OMM.00.vcf ] ; then
   java $HP_JOPT -jar $HP_JDIR/gatk.jar CreateSequenceDictionary --REFERENCE $OM.fa --OUTPUT $OM.dict
 
-  java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $OM.fa -I $OM.bam                            -O $OMM.vcf-
+  java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $OM.fa -I $OM.bam                            -O $OMM.vcf-  # --max-reads-per-alignment-start 1000 
   java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $OM.fa -V $OMM.vcf- --min-reads-per-strand 2 -O $OMM.vcf+
   fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -file $OM.max.vcf $OMM.vcf+ > $OMM.vcf ; rm $OMM.vcf?*
 

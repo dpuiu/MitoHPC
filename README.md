@@ -22,15 +22,18 @@
 
     $ export HP_SDIR=`pwd`/HP/scripts/  # set script directory variable (add to ~/.bashrc)
 
-### INSTALL PIPELINE PREREQUISITES ; CHECK INSTALL ###
+### INSTALL SYSTEM PREREQUISITES ###
 
-    $ sudo $HP_SDIR/install_sysprerequisites.sh
-    $ $HP_SDIR/install_prerequisites.sh  
+    $ $HP_SDIR/install_sysprerequisites.sh		        # perl,pthon,java,wget ...
+
+### INSTALL PREREQUISITES ; CHECK INSTALL ###
+
+    $ $HP_SDIR/install_prerequisites.sh  			# bwa,samtools,bedtools ...
       
+    $ $HP_SDIR/checkInstall.sh
     # if successfull => "Success message!"
 
-    $ $HP_SDIR/checkInstall.sh
-    $ cat checkInstall.log
+    $ cat checkInstall.log					# contains version/path info
 
 ## USAGE ##
 
@@ -45,7 +48,8 @@
        export HP_ADIR=$PWD/bams/                                 # alignment dir
        export HP_ODIR=$PWD/out/                                  # output dir  
        export HP_IN=$PWD/in.txt                                  # input file
-
+       export HP_L=                                              # number of reads to subsample
+                                                                 #   empty if all reads should be used
        find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | \
         $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN       # generate input file; 3 column
       ...                                                        # tab delimited, can be edited
