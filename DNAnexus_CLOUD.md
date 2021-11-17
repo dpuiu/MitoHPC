@@ -2,7 +2,7 @@
 
 ### Open Web Browser ###
 
-    Create and Login into your DNAneux account
+    Login into your DNAneux account: https://platform.dnanexus.com/login
 
     Create a DNAnexus project (Ex: MyProject)
 
