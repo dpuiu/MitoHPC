@@ -28,10 +28,12 @@
       module load python/3.8
 
 ### Run dxpy on Local Machine => Temporary DNAnexus Client ###
-
+  
+    # select project
     dx select MyProject
 
-    dx run cloud_workstation --ssh -imax_session_length=8h 	# Ex: 8 hrs (default 1)
+    # create client : Ex: 8 hrs (default 1hr)
+    dx run cloud_workstation --ssh -imax_session_length=8h 	
     # job-....
     # you will be logged in the DNAnexus client
 
