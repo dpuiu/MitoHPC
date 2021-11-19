@@ -37,7 +37,7 @@
     # job-...
     # you will be logged in the DNAnexus client
 
-    # installing dxfuse : Linux-life file system
+    # installing dxfuse
     wget https://github.com/dnanexus/dxfuse/releases/download/v1.0.0/dxfuse-linux
 
     # create mount points; mount project directories
