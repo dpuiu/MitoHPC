@@ -8,6 +8,8 @@
 
 ### Install DNAnexus Cloud Workstation App(dxpy) on Local Machine ### 
 
+    # open terminal app
+
     # install/load python3
     module avail
     module load python/3.8
@@ -45,7 +47,7 @@
     dxfuse-linux  ~/Ref/ project-BQpp3Y804Y0xbyG4GJPQ01xv  # reference assemblies
     dxfuse-linux ~/UKbiobank ...                           # alignment files
 
-### Install HP on Temporary DNAnexus Client ###
+### Install HP pipeline ###
 
     # download precompiled version of HP; previously compiled on a DNAnexus ubuntu client
     wget ftp://ftp.ccb.jhu.edu/pub/dpuiu/HP.tgz			
@@ -57,12 +59,13 @@
     cd HP/scripts/
     export HP_SDIR=`pwd`
     ./install_sysprerequisites.sh 
-
-    # download hs38DH.fa from public DNAnexus project
     cd $HP_SDIR/RefSeq/
 
-    #dx download "project-BQpp3Y804Y0xbyG4GJPQ01xv:/H. Sapiens - GRCh38 with alt contigs - hs38DH/hs38DH.fa*"       
+    # download or link the hs38DH.fa reference
+    dx download "project-BQpp3Y804Y0xbyG4GJPQ01xv:/H. Sapiens - GRCh38 with alt contigs - hs38DH/hs38DH.fa*"       
+    #or
     ln -s Ref/'Reference Genome Files: AWS US (East)'/'H. Sapiens - GRCh38 with alt contigs - hs38DH'/hs38DH.fa.gz
+
     zcat hs38DH.fa.gz > hs38DH.fa
 
     # check install; should return Success!!!
@@ -70,20 +73,21 @@
     ./checkInstall.sh	                                                
 
 
-### Download Alignment Files on Temporary DNAnexus Client ####
+### Download/Link Alignment Files  ####
 
      cd ~
      mkdir -p MyProject/bams
      cd MyProject/bams
 
      # transfer alignment files from a different DNAnexus project to DNAnexus Machine
-     #dx download "project-???/path-???/files-???.bam"
+     dx download "project-???/path-???/files-???.bam"
 
-     #link alignment files
+     # or just link then (if dxfuse-linux previously setup)
      ln -s ~/UKbiobank/.../*bam .
+
      cd -
 
-### Run Pipeline on Temporary DNAnexus Client ####
+### Run Pipeline ####
 
      # init HP variables; create $HP_IN file
      cp $HP_SDIR/init.sh .
@@ -104,7 +108,3 @@
 
      # or scp copy to remote machine
      scp out/mutect2.* out/count.* out/cvg.tab user@remotehost:...
-
-     
-     
-
