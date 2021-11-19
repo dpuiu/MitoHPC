@@ -95,13 +95,14 @@
 
      # wait till completes ... => out/{mutect2,count,cvg}.*
 
-### Upload Results from Temporary DNAnexus Client to DNAnexus Project ####
+### Save Results ###
 
+     # upload Results from Temporary DNAnexus Client to DNAnexus Project
      dx mkdir -p out
      dx cd out
      dx upload out/mutect2.* out/count.* out/cvg.tab  
 
-     #or
+     # or scp copy to remote machine
      scp out/mutect2.* out/count.* out/cvg.tab user@remotehost:...
 
      
