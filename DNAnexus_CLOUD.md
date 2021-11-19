@@ -40,10 +40,10 @@
     # install dxfuse for easy file access
     wget https://github.com/dnanexus/dxfuse/releases/download/v1.0.0/dxfuse-linux
 
-    # create mount points; mount project directories
+    # create mount points & mount remote project directories
     mkdir ~/Ref/ ~/UKbiobank
     dxfuse-linux  ~/Ref/ project-BQpp3Y804Y0xbyG4GJPQ01xv  # reference assemblies
-    dxfuse-linux ~/UKbiobank                               # ???  
+    dxfuse-linux ~/UKbiobank ...                           # alignment files
 
 ### Install HP on Temporary DNAnexus Client ###
 
