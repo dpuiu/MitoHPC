@@ -61,8 +61,8 @@
     # download hs38DH.fa from public DNAnexus project
     cd $HP_SDIR/RefSeq/
 
-    #dx download "project-BQpp3Y804Y0xbyG4GJPQ01xv:/H. Sapiens - GRCh38 with alt contigs - hs38DH/hs38DH.fa*"       #
-    ls -l Ref/'Reference Genome Files: AWS US (East)'/'H. Sapiens - GRCh38 with alt contigs - hs38DH'/hs38DH.fa.gz
+    #dx download "project-BQpp3Y804Y0xbyG4GJPQ01xv:/H. Sapiens - GRCh38 with alt contigs - hs38DH/hs38DH.fa*"       
+    ln -s Ref/'Reference Genome Files: AWS US (East)'/'H. Sapiens - GRCh38 with alt contigs - hs38DH'/hs38DH.fa.gz
     zcat hs38DH.fa.gz > hs38DH.fa
 
     # check install; should return Success!!!
