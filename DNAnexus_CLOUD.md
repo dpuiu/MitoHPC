@@ -94,8 +94,8 @@
      . ./init.sh
     
      # create & run command file
-     $HP_SDIR/run.sh > filter.all.sh                            
-     bash ./filter.all.sh &
+     $HP_SDIR/run.sh > run.all.sh                            
+     bash ./run.all.sh &
 
      # wait till completes ... => out/{mutect2,count,cvg}.*
 

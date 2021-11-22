@@ -3,7 +3,7 @@
 
 ## SYSTEM PREREQUISITES ##
 
-    OS:                UNIX/LINIX 
+    OS:                UNIX/LINUX 
     SOFTWARE PACKAGES: git,wget,tar,unzip,make,autoconf,gcc,java,perl,python 
  
 ## PIPELINE PREREQUISITES ##
@@ -61,15 +61,15 @@
 
 ### RUN PIPELINE  ###
  
-    $ $HP_SDIR/run.sh > filter.all.sh                            # create command file
-    $ bash ./filter.all.sh                                       # execute command file      
+    $ $HP_SDIR/run.sh > run.all.sh                               # create command file in working directory
+    $ bash ./run.all.sh                                          # execute command file      
 
 ### RE-RUN PIPELINE (optional) ###
 
     $ nano init.sh                                               # update parameters
-    $ $HP_SDIR/run.sh > filter.all.sh                            # recreate command file
+    $ $HP_SDIR/run.sh > run.all.sh                               # recreate command file
 
-    $ bash ./filter.all.sh
+    $ bash ./run.all.sh
      
 ## OUTPUT ##
 
