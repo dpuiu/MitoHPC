@@ -48,8 +48,13 @@
        export HP_ADIR=$PWD/bams/                                 # alignment dir
        export HP_ODIR=$PWD/out/                                  # output dir  
        export HP_IN=$PWD/in.txt                                  # input file
+
        export HP_L=                                              # number of reads to subsample
-                                                                 #   empty if all reads should be used
+                                                                 #  empty if all reads should be used
+
+       export HP_DOPT="--removeDups"                             # samblaster deduplication option
+                                                                 #  empty if no dedup should be done
+
        find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | \
         $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN       # generate input file; 3 column
       ...                                                        # tab delimited, can be edited
@@ -61,7 +66,7 @@
 
 ### RUN PIPELINE  ###
  
-    $ $HP_SDIR/run.sh > run.all.sh                               # create command file in working directory
+    $ $HP_SDIR/run.sh > run.all.sh                               # create command file in working dir.
     $ bash ./run.all.sh                                          # execute command file      
 
 ### RE-RUN PIPELINE (optional) ###

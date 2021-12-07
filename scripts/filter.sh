@@ -46,12 +46,12 @@ if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 #sample reads
 
 if [ ! -s $O.fq ] ; then
-  if  [ $HP_L ]; then 
+  if [ $HP_L ]; then 
     R=`tail -1 $I.count  | perl -ane '$R=1.5*$ENV{HP_L}/$F[3]; $R=0.9999 if($R>0.9999); print $R'` 
     samtools view -s $R $2 $HP_RMT $HP_RNUMT -bu -F 0x900 -T $HP_RDIR/$HP_RNAME.fa -@ $HP_P | \
       samtools sort -n -O SAM -m $HP_MM -@ $HP_P | \
       perl -ane 'if(/^@/) {print} elsif($P[0] eq $F[0]) {print $p,$_}; @P=@F; $p=$_;' | \
-      samblaster --removeDups --addMateTags | \
+      samblaster $HP_DOPT --addMateTags | \
       samtools view -bu | \
       bedtools bamtofastq  -i /dev/stdin -fq /dev/stdout -fq2 /dev/stdout | \
       fastp --stdin --interleaved_in --stdout $HP_FOPT | head -n $(($HP_L*4))  > $O.fq
@@ -59,7 +59,7 @@ if [ ! -s $O.fq ] ; then
     samtools view  $2 $HP_RMT $HP_RNUMT -bu -F 0x900 -T $HP_RDIR/$HP_RNAME.fa -@ $HP_P | \
       samtools sort -n -O SAM -m $HP_MM -@ $HP_P | \
       perl -ane 'if(/^@/) {print} elsif($P[0] eq $F[0]) {print $p,$_}; @P=@F; $p=$_;' | \
-      samblaster --removeDups --addMateTags | \
+      samblaster $HP_DOPT --addMateTags | \
       samtools view -bu | \
       bedtools bamtofastq  -i /dev/stdin -fq /dev/stdout -fq2 /dev/stdout | \
       fastp --stdin --interleaved_in --stdout $HP_FOPT > $O.fq
@@ -161,6 +161,8 @@ if  [ ! -s $OM.bam.bai ] ; then
     samtools sort -m $HP_MM  -@ $HP_P > $OM.bam
 
   samtools index $OM.bam  -@ $HP_P
+
+  bedtools bamtobed -i $OM.bam -ed | perl -ane 'print if($F[-2]==0);' | bedtools merge -d -3 > $OM.merge.bed
 
   rm  ${OM}+.{sa,amb,ann,bwt,pac}
   #rm  ${OM}+*

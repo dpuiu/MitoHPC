@@ -44,6 +44,15 @@ export HP_RURL=ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh
 #export HP_RCOUNT=24
 #export HP_RURL=https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/assemblies/chm13.draft_v1.1.fasta.gz
 
+#Mouse
+#export HP_RDIR=$HP_HDIR/RefSeqMouse/            #reference director
+#export HP_O=Mouse
+#export HP_RNAME=mm39
+#export HP_RMT=chrM
+#export HP_RCOUNT=61
+#export HP_RNUMT="chr1:24650615-24655253 chr2:22477300-22480534 chr12:97028207-97028562"
+#export HP_RURL="https://hgdownload.soe.ucsc.edu/goldenPath/mm39/bigZips/mm39.fa.gz"
+
 ################################################################
 #GENOME REFERENCES
 
@@ -56,7 +65,8 @@ export HP_NUMT=NUMT              # NUMT FASTA file under $HP_RDIR
 
 export HP_L=222000               # number of MT reads to subsample; empty: no subsamling; 222000 150bp reads => ~2000x MT coverage
 export HP_E=300	                 # extension(circularization)
-export HP_FOPT=                  # FASTP options: Ex: " -q 20 -e 30 "
+export HP_FOPT="-q 15 -e 0"      # FASTP options: Ex: " -q 20 -e 30 "; -q: min base quality; -e: avg quality thold
+export HP_DOPT="--removeDups"    # samblaster option; leave empty if no deduplication should be done
 export HP_M=mutect2 	         # SNV caller: mutect2 or mutserve
 export HP_I=2		         # number of SNV iterations : 0,1,2
 				 #  0: compute read counts,mtDNA-CN
@@ -90,16 +100,5 @@ fi
 #JOB SCHEDULING
 
 export HP_SH="bash" ;                                                            export HP_SHS="$HP_SH"                     # bash
-#export HP_SH="sbatch -J HP_$$ --cpus-per-task=$HP_P --nodes=1 --mem=5G" ;       export HP_SHS="$HP_SH -d singleton"           # SLURM
+#export HP_SH="sbatch -J HP_$$ --cpus-per-task=$HP_P --nodes=1 --mem=5G" ;       export HP_SHS="$HP_SH -d singleton"        # SLURM
 #export HP_SH="qsub -V -N HP_$$ -l mem_free=5G,h_vmem=5G -pe local $HP_P -cwd" ; export HP_SHS="$HP_SH -hold_jid HP_$$"     # SGE
-
-###############################################################
-# Mouse
-#export HP_RDIR=$HP_HDIR/RefSeqMouse/            #reference director
-#export HP_O=Mouse
-#export HP_RNAME=mm39
-#export HP_RMT=chrM
-#export HP_RCOUNT=61
-#export HP_RNUMT="chr1:24650615-24655253 chr2:22477300-22480534 chr12:97028207-97028562"
-#export HP_RURL="https://hgdownload.soe.ucsc.edu/goldenPath/mm39/bigZips/mm39.fa.gz"
-

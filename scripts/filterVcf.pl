@@ -38,6 +38,10 @@ MAIN:
 
 	while(<>)
 	{
+		#0	1	2	3	4		5	6						7					8		9
+		#chrM	1	.	G	GATCACAGGTCT	.	germline;slippage;strict_strand;weak_evidence	INDEL;GT=0/1;DP=1;AF=0.676;DLOOP	SM		SRR0000000
+		#chrM	1	.	G	GATCACAGGTCT	.	germline;slippage;strict_strand;weak_evidence	SM=SRR0000000;INDEL;DLOOP		GT:DP:AF	0/1:1:0.676  # concat
+
 		if(/^#/)
 		{
 			if($opt{header}) { next }
@@ -49,47 +53,63 @@ MAIN:
 		die "NORMALIZATION ERROR:$_\n" if($F[4]=~/,/);
 		#$F[6]="." unless($F[6] eq "PASS");
 
-                if($F[7]!~/SM=/ and defined($opt{sample}))
-                {
-                        $F[7]="SM=$opt{sample}";
-			$F[7].=";INDEL" if($F[7]!~/INDEL/ and ($F[4] eq "*" or length($F[3]) ne length($F[4])));
-                }
-		###############################
-
-		my @F8=split /:/,$F[8];
-		my @F9=split /:/,$F[9];
-		my %h;
-		foreach my $i (0..@F8-1)
+		if($F[8] eq "SM")
 		{
-			$h{$F8[$i]}=$F9[$i];
-		}
-		$h{AF}=1 unless($h{AF});
-		$h{AF}=$1 if($h{AF}=~/(\d\.\d+)/);
-
-		if(!$h{AF} or $h{AF}>1-$opt{percent}) 	{ $h{AF}=1; }
-		elsif($h{AF}<$opt{percent})		{ next;     }
-
-		$F[8]="GT:DP:AF";
-		$F[9]="$h{GT}:$h{DP}:$h{AF}";
-
-		if(length($F[3])>1 and length($F[3])==length($F[4]))
-		{
-			my @F3=split //,$F[3];
-			my @F4=split //,$F[4];
-
-			foreach my $i (0..@F3-1)
+			if($F[7]=~/(.*)AF=(0\.\d+)(.*)/)
 			{
-				if($F3[$i] ne $F4[$i])
-				{
-					print join "\t",($F[0],$F[1]+$i,$F[2],$F3[$i],$F4[$i],@F[5..9]);
-					print "\n";
-				}
+				my $AF=$2;
+				if($AF<$opt{percent})            { next; }
+				elsif($AF>1-$opt{percent})	 { $AF=1; }
+
+				$F[7]="$1AF=$AF$3";
 			}
+
+			print join "\t",@F[0..9];
+			print "\n";
 		}
 		else
 		{
-			print join "\t",@F[0..9];
-			print "\n";
+	                if($F[7]!~/SM=/ and defined($opt{sample}))
+        	        {
+                	        $F[7]="SM=$opt{sample}";
+				$F[7].=";INDEL" if($F[7]!~/INDEL/ and ($F[4] eq "*" or length($F[3]) ne length($F[4])));
+        	        }
+
+			my @F8=split /:/,$F[8];
+			my @F9=split /:/,$F[9];
+			my %h;
+			foreach my $i (0..@F8-1)
+			{
+				$h{$F8[$i]}=$F9[$i];
+			}
+			$h{AF}=1 unless($h{AF});
+			$h{AF}=$1 if($h{AF}=~/(\d\.\d+)/);
+
+			if(!$h{AF} or $h{AF}>1-$opt{percent}) 	{ $h{AF}=1; }
+			elsif($h{AF}<$opt{percent})		{ next;     }
+
+			$F[8]="GT:DP:AF";
+			$F[9]="$h{GT}:$h{DP}:$h{AF}";
+
+			if(length($F[3])>1 and length($F[3])==length($F[4]))
+			{
+				my @F3=split //,$F[3];
+				my @F4=split //,$F[4];
+
+				foreach my $i (0..@F3-1)
+				{
+					if($F3[$i] ne $F4[$i])
+					{
+						print join "\t",($F[0],$F[1]+$i,$F[2],$F3[$i],$F4[$i],@F[5..9]);
+						print "\n";
+					}
+				}
+			}
+			else
+			{
+				print join "\t",@F[0..9];
+				print "\n";
+			}
 		}
 
 	}
