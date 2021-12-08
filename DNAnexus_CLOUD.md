@@ -31,11 +31,17 @@
 
 ### Run dxpy on Local Machine => Temporary DNAnexus Client ###
   
+    # login using DNAnexus username and password
+    dx login
+  
+    # list projects
+    dx select
+    
     # select project
     dx select MyProject
 
-    # create client : Ex: 8 hrs (default 1hr)
-    dx run cloud_workstation --ssh -imax_session_length=8h 	
+    # create client : Ex: 4 hrs (default 1hr)
+    dx run cloud_workstation --ssh -imax_session_length=4h 	
     # job-...
     # you will be logged in the DNAnexus client
 
