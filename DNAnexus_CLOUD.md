@@ -41,7 +41,7 @@
     dx select MyProject
 
     # create client : Ex: 4 hrs (default 1hr)
-    dx run cloud_workstation --ssh -imax_session_length=4h 	
+    dx run cloud_workstation --ssh -imax_session_length=4h # -instance-type mem1_ssd1_v2_x8 --name "default:4hr"
     # job-...
     # you will be logged in the DNAnexus client
 
