@@ -12,6 +12,11 @@ MAIN:
 	#$opt{ref}=  3099922541;	#hs38DH size (195 sequences)
 	$opt{female}=3160119502;
 	$opt{male}=  3110712762;
+
+	#$opt{ref}=3032259390;		#CHM13 avg
+	#$opt{female}=3054832041;	#CHM13     
+	#$opt{male}=3009686739;		#CHM13/1.015
+
 	$opt{chrM}=  16569;
 
 	my $result = GetOptions(

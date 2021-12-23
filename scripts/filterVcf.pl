@@ -93,23 +93,12 @@ MAIN:
 
 			if(length($F[3])>1 and length($F[3])==length($F[4]))
 			{
-				my @F3=split //,$F[3];
-				my @F4=split //,$F[4];
+				$F[3]=substr($F[3],0,1);
+				$F[4]=substr($F[4],0,1);
+			}
 
-				foreach my $i (0..@F3-1)
-				{
-					if($F3[$i] ne $F4[$i])
-					{
-						print join "\t",($F[0],$F[1]+$i,$F[2],$F3[$i],$F4[$i],@F[5..9]);
-						print "\n";
-					}
-				}
-			}
-			else
-			{
-				print join "\t",@F[0..9];
-				print "\n";
-			}
+			print join "\t",@F[0..9];
+			print "\n";
 		}
 
 	}

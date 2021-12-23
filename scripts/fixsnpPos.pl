@@ -21,44 +21,58 @@ Program that recalculates snp positions
 MAIN:
 {
 	my %opt;
+	$opt{ref}="chrM";
+	$opt{rlen}=16569;
+
 	my $result = GetOptions(
 		"ref=s"		=> \$opt{ref},
-		"rfile=s"       => \$opt{rfile},
+		"rlen=i"         => \$opt{rlen},
  	        "file=s" 	=> \$opt{file},
+		"rfile=s"	=> \$opt{rfile},
  	);
 	die "ERROR: $! " if (!$result);
-	die "ERROR: $! " if (!defined($opt{ref}) or !defined($opt{rfile}) or !defined($opt{file}));
+	die "ERROR: $! " if (!defined($opt{file}));
+	die "ERROR: $! " if (!defined($opt{rfile}));
 
 	#####################################################################################
 
 	my %diff;
+	my %max;
 	open(IN,$opt{file}) or die "ERROR:$!";
         while(<IN>)
         {
-		if(!/^#/ and /INDEL/)
+		if(!/^#/)
 		{
 			my @F=split;
+			$max{$F[1]}=$_;
 			$diff{$F[1]}=length($F[4])-length($F[3]);
 		}
         }
 	close(IN);
 
-	my $MT="";
-	open(IN,$opt{rfile}) or die "ERROR:$!";
-        while(<IN>)
-        {
-                if(/^>/){}
-		else
-		{
-			chomp;
-			$MT.=$_;
-		}
-	}
-
 	if($opt{ref} eq "rCRS" or $opt{ref} eq "chrM") 
 	{
 		$diff{3107}=-1
 	}
+	elsif($opt{ref} eq "RSRS") 
+	{
+		$diff{523}=-1;
+		$diff{524}=-1;
+		$diff{3107}=-1;
+	}
+
+        my $MT="";
+        open(IN,$opt{rfile}) or die "ERROR:$!";
+        while(<IN>)
+        {
+                if(/^>/){}
+                else
+                {
+                        chomp;
+                        $MT.=$_;
+                }
+        }
+
 
 	####################################################################################
 	my %diff2;
@@ -67,8 +81,7 @@ MAIN:
 	foreach my $pos (@pos)
 	{
 		$diff+=$diff{$pos};
-		#$diff{$pos}=$diff; 		# Dec 8
-		$diff2{$pos+$diff}=$diff	# Dec 8
+		$diff2{$pos+$diff}=$diff;
 	}
 	my @pos2=(sort {$a<=>$b} keys %diff2);
 
@@ -85,7 +98,7 @@ MAIN:
 		elsif(/^##reference/ or /^##contig/)
 		{
 			print "##reference=file://$opt{rfile}\n";
-			print "##contig=<ID=$opt{ref},length=16569>\n" if($opt{ref} eq "rCRS" or $opt{ref} eq "chrM");
+			print "##contig=<ID=$opt{ref},length=$opt{rlen}>\n";
 		}
 		elsif(/^#/)
 		{
@@ -105,29 +118,29 @@ MAIN:
 			}
 
 			$F[0]=$opt{ref};
-			$F[1]-=$diff2; 
-			#$F[1]+=$diff2;
+			$F[1]-=$diff2;
 
-			my $F3=substr($MT,$F[1]-1,length($F[3]));	# new 02/24/2021
-			if($F3 eq $F[4] and $F[-2]=~/^GT:AD:AF/ and $F[-1]=~/([01])(.)([01]):(\d+),(\d+):(0\.\d+)(:.+)$/)
+			my $F3=substr($MT,$F[1]-1,length($F[3]));
+
+			if($F[3] ne $F3)
 			{
-				$F[4]=$F[3];
-				#$F[-1]=(1-$1).$2.(1-$3).":$5,$4:".(1-$6).$7."***";
-
-				my $F_1="";
-				while($F[-1]=~/(.+?):(.+)/)
+				if($max{$F[1]})
 				{
-					$F[-1]=$2;
-
-					if($1=~/^(0\.\d+)$/ or $1=~/^(\d+.*e-\d+)$/)      { $F_1.=(1-$1).":" }
-					elsif($1=~/(\d+)(\D)(\d+)/)    { $F_1.="$3$2$1:"  }
-					else                           { $F_1.="$1:"      }
+					my @max=split /\s+/,$max{$F[1]};
+					if($max[3] eq $F[4] and $max[4] eq $F[3])
+					{
+						@F=@max;
+					}
+					else
+					{
+						$F[3]=$F3;
+					}
 				}
-				$F_1.=$F[-1];
-				$F[-1]=$F_1;
+				else
+				{
+					$F[3]=$F3;
+				}
 			}
-			$F[3]=$F3;
-
 			print join "\t",@F;
 			print "\n";
 		}

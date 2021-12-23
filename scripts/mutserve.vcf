@@ -5,19 +5,7 @@
 ##INFO=<ID=SNP,Number=0,Type=Flag,Description="SNP">
 ##INFO=<ID=INDEL,Number=0,Type=Flag,Description="INDEL">
 ##INFO=<ID=SM,Number=1,Type=String,Description="Sample">
-##INFO=<ID=SNP,Number=0,Type=Flag,Description="SNP">
-##INFO=<ID=INDEL,Number=0,Type=Flag,Description="INDEL">
 ##FORMAT=<ID=SM,Number=1,Type=String,Description="Sample">
-##INFO=<ID=HP,Number=0,Type=Flag,Description="Homoloplymer">
-##INFO=<ID=HS,Number=0,Type=Flag,Description="Hot spot">
-##INFO=<ID=CDS,Number=0,Type=Flag,Description="CDS">
-##INFO=<ID=RNR,Number=0,Type=Flag,Description="RNR">
-##INFO=<ID=TRN,Number=0,Type=Flag,Description="TRN">
-##INFO=<ID=DLOOP,Number=0,Type=Flag,Description="DLOOP">
-##INFO=<ID=HG,Number=1,Type=String,Description="haplogroup">
-##INFO=<ID=NUMT,Number=0,Type=Flag,Description="NUMT">
-##INFO=<ID=HV,Number=0,Type=Flag,Description="Hypervariable">
-##INFO=<ID=SM,Number=1,Type=String,Description="Sample">
 ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
 ##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
 ##FORMAT=<ID=AF,Number=A,Type=Float,Description="Allele Frequency">

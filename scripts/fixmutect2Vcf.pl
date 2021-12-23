@@ -27,43 +27,9 @@ MAIN:
 
 	############################################################
 
-	my @P;
-	my $PAF;
 	while(<>)
 	{
-		if(/^#/)
-		{
-			print;
-			next;
-		}
-
-		chomp;
-		my @F=split /\t/;
-		if(@P and $P[1]==$F[1] and $P[4] eq $F[4])
-		{
-			my $PAF=0;
-			$P[9]=~/.+:(.+)/;
-			$PAF+=$1;
-
-			$F[9]=~/(.+):(.+)/;
-			$PAF+=$2;
-			$PAF=1 if($PAF>1);
-
-			$F[9]="$1:$PAF";
-		}
-		elsif(@P)
-		{
-			print join "\t",@P; 
-			print "\n"
-		}
-
-		@P=@F
-	}
-
-	if(@P)
-	{
-		print join "\t",@P; 
-		print "\n"
+		print;
 	}
 }
 

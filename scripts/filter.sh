@@ -20,6 +20,15 @@ IDIR=`dirname $2`
 I=$IDIR/$N
 ODIR=`dirname $3`; mkdir -p $ODIR
 O=$3
+OA="$O.all"
+ON="$O.$HP_NUMT"
+OM=$O.$HP_M
+OMM=$OM.$HP_M
+
+########################################################################################################################################
+
+if [ $HP_I -eq 1 ] && [ -s $OM.00.vcf ]  ; then exit 0 ; fi
+if [ $HP_I -ge 2 ] && [ -s $OMM.00.vcf ] ; then exit 0 ; fi
 
 #########################################################################################################################################
 #test input files
@@ -27,9 +36,8 @@ O=$3
 test -s $2
 
 if [ ! -s $2.bai ] && [ ! -s $2.crai ]; then  samtools index -@ $HP_P $2 ; fi
-if [ ! -s $I.idxstats ] ;               then  samtools idxstats -@ $HP_P $2 > $I.idxstats ; fi
 
-if [ ! -s $I.count ] ; then
+if [ ! -s $OA.count ] ; then
   #test BAM/CRAM file sorted
   samtools view -H $2 | grep -m 1 -P "^@HD.+coordinate$" > /dev/null
 
@@ -37,8 +45,12 @@ if [ ! -s $I.count ] ; then
   RCOUNT=`samtools view -H $2 | grep -c "^@SQ"`
   if [ $HP_RCOUNT != $RCOUNT ] ; then echo "ERROR: HP_RCOUNT=$HP_RCOUNT does not match the number of \@SQ lines=$RCOUNT in $2"; exit 1 ; fi
 
-  cat $I.idxstats | idxstats2count.pl -sample $S -chrM $HP_RMT >  $I.count
-  samtools view -F 0x900 -@ $HP_P $2 $HP_RNUMT -c -T $HP_RDIR/$HP_RNAME.fa | sed 's|^|NUMT\n|' | paste $I.count - > $I.count+ ; mv $I.count+ $I.count
+  if [ $HP_CN ] ; then
+    if [ ! -s $OA.idxstats ] ;               then  samtools idxstats -@ $HP_P $2 > $OA.idxstats ; fi
+    cat $OA.idxstats | idxstats2count.pl -sample $S -chrM $HP_RMT> $OA.count
+  else
+    samtools view -@ $HP_P -F 0x900 $2 $HP_RMT -c -T $HP_RDIR/$HP_RNAME.fa | perl -ane 'print "Run\tMT\n$ENV{S}\t$_"' > $OA.count
+  fi
 fi
 if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 
@@ -46,38 +58,41 @@ if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 #sample reads
 
 if [ ! -s $O.fq ] ; then
-  if [ $HP_L ]; then 
-    R=`tail -1 $I.count  | perl -ane '$R=1.5*$ENV{HP_L}/$F[3]; $R=0.9999 if($R>0.9999); print $R'` 
-    samtools view -s $R $2 $HP_RMT $HP_RNUMT -bu -F 0x900 -T $HP_RDIR/$HP_RNAME.fa -@ $HP_P | \
-      samtools sort -n -O SAM -m $HP_MM -@ $HP_P | \
-      perl -ane 'if(/^@/) {print} elsif($P[0] eq $F[0]) {print $p,$_}; @P=@F; $p=$_;' | \
-      samblaster $HP_DOPT --addMateTags | \
-      samtools view -bu | \
-      bedtools bamtofastq  -i /dev/stdin -fq /dev/stdout -fq2 /dev/stdout | \
-      fastp --stdin --interleaved_in --stdout $HP_FOPT | head -n $(($HP_L*4))  > $O.fq
-  else
-    samtools view  $2 $HP_RMT $HP_RNUMT -bu -F 0x900 -T $HP_RDIR/$HP_RNAME.fa -@ $HP_P | \
-      samtools sort -n -O SAM -m $HP_MM -@ $HP_P | \
-      perl -ane 'if(/^@/) {print} elsif($P[0] eq $F[0]) {print $p,$_}; @P=@F; $p=$_;' | \
-      samblaster $HP_DOPT --addMateTags | \
-      samtools view -bu | \
-      bedtools bamtofastq  -i /dev/stdin -fq /dev/stdout -fq2 /dev/stdout | \
-      fastp --stdin --interleaved_in --stdout $HP_FOPT > $O.fq
+  R=""
+  if [ $HP_L ]; then
+    R=`tail -1 $OA.count  | perl -ane '$R=$ENV{HP_L}/$F[-1]; print $R if($R<1)'`
+    if [ $R ] ; then R="-s $R"  ; fi
   fi
-fi
 
-#filtering split reads: perl -ane 'if(/^@/) {print} elsif($F[2] eq $ENV{HP_RMT} and $F[3]>$ENV{HP_E}/2 and  $F[3]<$ENV{HP_RMTLEN}-$ENV{HP_E}/2 and /SA:Z:(.+?),/ and $1 ne $ENV{HP_RMT}) { next} else { print}' |\
+  samtools view $R $2 $HP_RMT $HP_RNUMT -bu -F 0x900 -T $HP_RDIR/$HP_RNAME.fa -@ $HP_P | \
+    samtools sort -n -O SAM -m $HP_MM -@ $HP_P | \
+    perl -ane 'if(/^@/) {print} elsif($P[0] eq $F[0]) {print $p,$_}; @P=@F; $p=$_;' | \
+    samblaster $HP_DOPT --addMateTags | \
+    samtools view -bu | \
+    bedtools bamtofastq  -i /dev/stdin -fq /dev/stdout -fq2 /dev/stdout | \
+    fastp --stdin --interleaved_in --stdout $HP_FOPT  > $O.fq
+fi
 #########################################################################################################################################
 #realign reads
 
 if  [ ! -s $O.bam ] ; then
   cat $O.fq | \
-    bwa mem $HP_RDIR/${HP_MT}+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" -v 1 | \
-    circSam.pl -ref_len $HP_RDIR/$HP_MT.fa.fai | grep -v "^$" | \
-    perl -ane 'next if(/^\@SQ\tSN:(\S+)/ and $1 ne $ENV{HP_MT}); next if(!/^\@/ and ($F[2] ne $ENV{HP_MT} or $F[6] ne "=")); print;' | \
-    samtools view -bu  -@ $HP_P | \
-    samtools sort -m $HP_MM  -@ $HP_P > $O.bam
+    bwa mem $HP_RDIR/$HP_MT+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" -v 1 | \
+    circSam.pl -ref_len $HP_RDIR/$HP_MT.fa.fai | tee $O.sam  | \
+    bedtools bamtobed -i /dev/stdin -ed | perl -ane '$F[3]=$1 if($F[3]=~/(.+)\//); $F[4]=$F[2]-$F[1]-$F[4]; print join "\t",@F; print "\n";' | \
+    count.pl -i 3 -j 4  | sort > $O.score
 
+  cat $O.fq | \
+    bwa mem $HP_RDIR/$HP_NUMT - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" -v 1 | \
+    bedtools bamtobed -i /dev/stdin -ed | perl -ane '$F[3]=$1 if($F[3]=~/(.+)\//); $F[4]=$F[2]-$F[1]-$F[4]; print join "\t",@F; print "\n";' | \
+    count.pl -i 3 -j 4  | sort > $ON.score
+
+  join $O.score $ON.score -a 1 | perl -ane 'next if(@F==3 and $F[2]>$F[1]);print' | \
+     intersectSam.pl $O.sam - | \
+     samtools view -bu | \
+     samtools sort -m $HP_MM -@ $HP_P  > $O.bam
+
+  rm $O.sam #$O.score
   samtools index $O.bam -@ $HP_P
 fi
 #########################################################################################################################################
@@ -90,11 +105,10 @@ if [ ! -f $O.sa.bed ]   ; then samtools view -h $O.bam  -@ $HP_P | sam2bedSA.pl 
 #########################################################################################################################################
 #compute SNP/INDELs using mutect2 or mutserve
 
-OM=$O.$HP_M
 if [ ! -s $OM.00.vcf ] ; then
   if [ "$HP_M" == "mutect2" ] ; then
-    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_MT.fa -I $O.bam                            -O $OM.vcf- # --max-reads-per-alignment-start 1000
-    java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $HP_RDIR/$HP_MT.fa -V $OM.vcf- --min-reads-per-strand 2 -O $OM.vcf ; rm $OM.vcf?*
+    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_MT.fa -I $O.bam                                -O $OM.orig.vcf $HP_GOPT
+    java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $HP_RDIR/$HP_MT.fa -V $OM.orig.vcf --min-reads-per-strand 2 -O $OM.vcf #; rm $OM.orig.vcf
   elif [ "$HP_M" == "mutserve" ] ; then
     if [ "$HP_MT" == "chrM" ] ||  [ "$HP_MT" == "rCRS" ] ||  [ "$HP_MT" == "RSRS" ] ; then
       java $HP_JOPT -jar $HP_JDIR/mutserve.jar call --deletions --insertions --level 0.01 --output $OM.vcf --reference $HP_RDIR/$HP_MT.fa $O.bam
@@ -113,6 +127,7 @@ if [ ! -s $OM.00.vcf ] ; then
   cat $HP_SDIR/$HP_M.vcf > $OM.00.vcf ; echo "##sample=$S" >> $OM.00.vcf
   fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OM.00.vcf
   cat $OM.vcf  | bcftools norm -m - | filterVcf.pl -sample $S -source $HP_M |  grep -v "^#" | sort -k2,2n -k4,4 -k5,5 | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa >> $OM.00.vcf
+  cat $OM.00.vcf | maxVcf.pl | bedtools sort -header |tee $OM.max.vcf | bgzip -f -c > $OM.max.vcf.gz ; tabix -f $OM.max.vcf.gz
   annotateVcf.sh $OM.00.vcf
 fi
 
@@ -133,11 +148,11 @@ fi
 #########################################################################################################################################
 #get new consensus; format reference
 
-if  [ ! -s $O.fa.fai ]  ; then
-  cat $OM.00.vcf | maxVcf.pl | bedtools sort -header |tee $OM.max.vcf | bgzip -f -c > $OM.max.vcf.gz ; tabix -f $OM.max.vcf.gz
+if  [ ! -s $OM.fa ]  ; then
   bcftools consensus -f $HP_RDIR/$HP_MT.fa $OM.max.vcf.gz | perl -ane 'chomp; if($.==1) { print ">$ENV{S}\n" } else { s/N//g; print } END {print "\n"}' > $OM.fa
   rm $OM.max.vcf.gz $OM.max.vcf.gz.tbi
-  samtools faidx $OM.fa 
+  samtools faidx $OM.fa
+  rm -f $OM.dict; java $HP_JOPT -jar $HP_JDIR/gatk.jar CreateSequenceDictionary --REFERENCE $OM.fa --OUTPUT $OM.dict
 fi
 
 if [ $HP_I -lt 2 ] ; then exit 0 ; fi
@@ -145,27 +160,25 @@ if [ $HP_M != "mutect2" ] ; then exit 0 ; fi
 
 ########################################################################################################################################
 
-
 #realign reads
-
-if  [ ! -s $OM.bam.bai ] ; then
-  samtools faidx $OM.fa $S:1-$HP_E | grep -v ">" | cat $OM.fa - > ${OM}+.fa
-  cat $HP_RDIR/$HP_NUMT.fa >> ${OM}+.fa
-  bwa index ${OM}+.fa -p ${OM}+
-
+if  [ ! -s $OM.bam ] ; then
+  samtools faidx $OM.fa $S:1-$HP_E | grep -v ">" | cat $OM.fa - > $OM+.fa
+  bwa index $OM+.fa -p $OM+
   cat $O.fq | \
-    bwa mem ${OM}+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$S\tSM:$S\tPL:ILLUMINA" -v 1 | \
-    circSam.pl -ref_len $OM.fa.fai | grep -v "^$" | \
-    perl -ane 'next if(/^\@SQ\tSN:(\S+)/ and $1 ne $ENV{S}); next if(!/^\@/ and ($F[2] ne $ENV{S} or $F[6] ne "=")); print' | \
-    samtools view -bu  -@ $HP_P | \
-    samtools sort -m $HP_MM  -@ $HP_P > $OM.bam
+    bwa mem $OM+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" -v 1 | \
+    circSam.pl -ref_len $OM.fa.fai | tee $OM.sam  | \
+    bedtools bamtobed -i /dev/stdin -ed | perl -ane '$F[3]=$1 if($F[3]=~/(.+)\//); $F[4]=$F[2]-$F[1]-$F[4]; print join "\t",@F; print "\n";' | \
+    count.pl -i 3 -j 4  | sort > $OM.score
+  
+  join $OM.score $ON.score -a 1 | perl -ane 'next if(@F==3 and $F[2]>$F[1]);print'  | \
+     intersectSam.pl $OM.sam - | \
+     samtools view -bu | \
+     samtools sort -m $HP_MM -@ $HP_P  > $OM.bam
 
-  samtools index $OM.bam  -@ $HP_P
+  samtools index $OM.bam -@ $HP_P
+  bedtools bamtobed -i $OM.bam -ed | perl -ane 'print if($F[-2]==0);' | bedtools merge -d -3 | bed2bed.pl -min 3 > $OM.merge.bed
 
-  bedtools bamtobed -i $OM.bam -ed | perl -ane 'print if($F[-2]==0);' | bedtools merge -d -3 > $OM.merge.bed
-
-  rm  ${OM}+.{sa,amb,ann,bwt,pac}
-  #rm  ${OM}+*
+  rm $OM.sam #$OM.score $ON.score
 fi
 
 #########################################################################################################################################
@@ -178,16 +191,11 @@ if [ ! -s $OM.sa.bed ]   ; then samtools view -h $OM.bam | sam2bedSA.pl | uniq.p
 
 #########################################################################################################################################
 #compute SNP/INDELs using mutect2 or mutserve
-
-OMM=$OM.$HP_M
-
 if [ ! -s $OMM.00.vcf ] ; then
-  java $HP_JOPT -jar $HP_JDIR/gatk.jar CreateSequenceDictionary --REFERENCE $OM.fa --OUTPUT $OM.dict
+  java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $OM.fa -I $OM.bam                                -O $OMM.orig.vcf  $HP_GOPT
+  java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $OM.fa -V $OMM.orig.vcf --min-reads-per-strand 2 -O $OMM.filt.vcf
 
-  java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $OM.fa -I $OM.bam                            -O $OMM.vcf-  # --max-reads-per-alignment-start 1000 
-  java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $OM.fa -V $OMM.vcf- --min-reads-per-strand 2 -O $OMM.vcf+
-  fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -file $OM.max.vcf $OMM.vcf+ > $OMM.vcf ; rm $OMM.vcf?*
-
+  fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN  -file $OM.max.vcf $OMM.filt.vcf > $OMM.vcf
   test -s $OMM.vcf
 
   # filter SNPs
@@ -195,7 +203,4 @@ if [ ! -s $OMM.00.vcf ] ; then
   fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OMM.00.vcf
   cat $OMM.vcf  | bcftools norm -m - | filterVcf.pl -sample $S -source $HP_M |  grep -v "^#" | sort -k2,2n -k4,4 -k5,5 | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa >> $OMM.00.vcf
   annotateVcf.sh $OMM.00.vcf
-
-  rm $OM.dict
 fi
-

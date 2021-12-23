@@ -9,6 +9,7 @@ MAIN:
 	# define variables
 	my %opt;
 	my %count;
+	$opt{sample}=".";
 	$opt{chrM}="chrM";
 
 	my $result = GetOptions(

@@ -34,7 +34,8 @@ MAIN:
 	my $result = GetOptions(
 		"min=i"	=>	\$opt{min},
 		"add=i"	=>	\$opt{add},
-		"offset" =>     \$opt{offset}
+		"offset" =>     \$opt{offset},
+		"ed"	=>	\$opt{ed}
         );
         die "ERROR: $HELPTEXT " if (!$result);
 
@@ -52,11 +53,13 @@ MAIN:
                         $F[2]+=$2;
                 }
 
-		$F[1]+=$opt{add};
-		$F[2]-=$opt{add};
+		if($opt{add})
+		{
+			$F[1]+=$opt{add};
+			$F[2]-=$opt{add};
+		}
 
 		push @F,"$F[0]:$F[1]-$F[2]" if(@F==3);
- 
 		push @F,$F[2]-$F[1] if(@F==4);
 		push @F,"." if(@F==5); 
 

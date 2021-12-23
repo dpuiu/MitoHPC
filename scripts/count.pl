@@ -20,12 +20,14 @@ Program that counts the values in a specific column (default 0)
 MAIN:
 {
 	my $i=0;
+	my $j;
 	my $min;
 	my $max;
 	my %count;
 
         my $result = GetOptions(
 		"i=i"	=> \$i,
+		"j=i"	=> \$j,
 		"min=i"	=> \$min,
 		"max=i"	=> \$max
 	);
@@ -42,7 +44,10 @@ MAIN:
 		my @F=split;
 
 		next if(@F<=$i);
-		$count{$F[$i]}++;
+		next if(defined($j) and @F<=$j);
+
+		if(defined($j)) { $count{$F[$i]}+=$F[$j] }
+		else		{ $count{$F[$i]}++;      }
 	}
 
 	##########################################################

@@ -19,15 +19,16 @@ printf "export HP_ODIR=$HP_ODIR\n"
 
 printf "export HP_RNAME=$HP_RNAME\n"
 printf "export HP_RMT=$HP_RMT\n"
-printf "export HP_RMTLEN=$HP_RMTLEN\n"
 printf "export HP_RNUMT=\"$HP_RNUMT\"\n"
 printf "export HP_RCOUNT=$HP_RCOUNT\n"
 printf "export HP_RURL=\"$HP_RURL\"\n"
 
 printf "export HP_O=$HP_O\n"
 printf "export HP_MT=$HP_MT\n"
+printf "export HP_MTLEN=$HP_MTLEN\n"
 printf "export HP_NUMT=$HP_NUMT\n"
 
+printf "export HP_CN=$HP_CN\n"
 printf "export HP_E=$HP_E\n"
 printf "export HP_L=$HP_L\n"
 
@@ -45,6 +46,7 @@ printf "export HP_FRULE=\"$HP_FRULE\"\n"
 
 printf "export HP_FOPT=\"$HP_FOPT\"\n"
 printf "export HP_DOPT=\"$HP_DOPT\"\n"
+printf "export HP_GOPT=\"$HP_GOPT\"\n"
 printf "export HP_JOPT=\"$HP_JOPT\"\n"
 printf "export HP_MM=\"$HP_MM\"\n"
 printf "export HP_P=$HP_P\n"

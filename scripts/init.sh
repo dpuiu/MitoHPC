@@ -25,8 +25,8 @@ export PATH=$HP_SDIR:$HP_BDIR:$PATH
 #GRCH38(default)
 export HP_RNAME=hs38DH
 export HP_RMT=chrM
-export HP_RMTLEN=16569
 export HP_RNUMT="chr1:628834-634672 chr17:22521116-22521752"	#NUMT+-250
+export HP_RNUMT="chr1:628834-635104 chr1:76970973-76971529 chr5:80651184-80651847 chr5:134926533-134927184 chr13:109423874-109424630 chr17:22521116-22521752"
 export HP_RCOUNT=3366
 export HP_RURL=ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa
 
@@ -58,15 +58,18 @@ export HP_RURL=ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh
 
 export HP_O=Human		 # organism: Human, Mouse... 
 export HP_MT=chrM                # chrM, rCRS or RSRS, FASTA file available under $HP_RDIR
+export HP_MTLEN=16569
 export HP_NUMT=NUMT              # NUMT FASTA file under $HP_RDIR
 
 ################################################################
 #OTHER
 
+export HP_CN=1			 # do compute copy number
 export HP_L=222000               # number of MT reads to subsample; empty: no subsamling; 222000 150bp reads => ~2000x MT coverage
 export HP_E=300	                 # extension(circularization)
 export HP_FOPT="-q 15 -e 0"      # FASTP options: Ex: " -q 20 -e 30 "; -q: min base quality; -e: avg quality thold
 export HP_DOPT="--removeDups"    # samblaster option; leave empty if no deduplication should be done
+export HP_GOPT=                  # gatk mutect2 additional options : Ex "-max-reads-per-alignment-start 50"
 export HP_M=mutect2 	         # SNV caller: mutect2 or mutserve
 export HP_I=2		         # number of SNV iterations : 0,1,2
 				 #  0: compute read counts,mtDNA-CN
@@ -81,11 +84,11 @@ export HP_FRULE=                 # FILTERING options: Ex: "grep -v multiallelic"
 
 export HP_P=1						    # number of processors
 export HP_JOPT="-Xms2G -Xmx2G -XX:ParallelGCThreads=$HP_P"  # JAVA options
-export HP_MM="4G"					    # maximum memory
+export HP_MM="3G"					    # maximum memory; 4G before
 ################################################################
 #INPUT/OUTPUT
 
-PWD=`pwd`
+PWD=`pwd -P`
 export HP_ADIR=$PWD/bams/	# bams or crams input file directory
 export HP_ODIR=$PWD/out/        # output dir
 export HP_IN=$PWD/in.txt        # input file to be generated
