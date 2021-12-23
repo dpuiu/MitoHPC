@@ -22,14 +22,16 @@
 
     $ export HP_SDIR=`pwd`/HP/scripts/  # set script directory variable (add to ~/.bashrc)
 
-### INSTALL SYSTEM PREREQUISITES ###
+### INSTALL SYSTEM PREREQUISITES (optional) ###
 
-    $ $HP_SDIR/install_sysprerequisites.sh		        # perl,pthon,java,wget ...
+    $ sudo $HP_SDIR/install_sysprerequisites.sh		        # perl,pthon,java,wget ...
 
 ### INSTALL PREREQUISITES ; CHECK INSTALL ###
 
     $ $HP_SDIR/install_prerequisites.sh  			# bwa,samtools,bedtools ...
-      
+      or
+    $ $HP_SDIR/install_prerequisites.sh -f                      # force install
+
     $ $HP_SDIR/checkInstall.sh
     # if successfull => "Success message!"
 

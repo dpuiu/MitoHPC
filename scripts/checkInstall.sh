@@ -23,7 +23,6 @@ which fastp             #install from "https://github.com/OpenGene/fastp"
 which samblaster        #install from "https://github.com/GregoryFaust/samblaster"
 which bcftools
 which tabix
-which vcftools
 
 test -f $HP_JDIR/gatk.jar
 test -f $HP_JDIR/mutserve.jar

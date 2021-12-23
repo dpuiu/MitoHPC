@@ -64,7 +64,7 @@
     # install sysprerequisites : java, perl, python ...
     cd HP/scripts/
     export HP_SDIR=`pwd`
-    ./install_sysprerequisites.sh 
+    sudo ./install_sysprerequisites.sh 
     cd $HP_SDIR/RefSeq/
 
     # download or link the hs38DH.fa reference
