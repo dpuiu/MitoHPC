@@ -25,6 +25,16 @@ ON="$O.$HP_NUMT"
 OM=$O.$HP_M
 OMM=$OM.$HP_M
 
+
+#################################
+#temp
+#  cat $HP_SDIR/$HP_M.vcf > $OMM.00.vcf ; echo "##sample=$S" >> $OMM.00.vcf
+#  fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OMM.00.vcf
+#  cat $OMM.filt.vcf  | bcftools norm -m - | filterVcf.pl -sample $S -source $HP_M |  grep -v "^#" | sort -k2,2n -k4,4 -k5,5 | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa | \
+#   fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN  -file $OM.max.vcf >> $OMM.00.vcf
+#  annotateVcf.sh $OMM.00.vcf
+#exit 0
+
 ########################################################################################################################################
 
 if [ $HP_I -eq 1 ] && [ -s $OM.00.vcf ]  ; then exit 0 ; fi
@@ -34,7 +44,6 @@ if [ $HP_I -ge 2 ] && [ -s $OMM.00.vcf ] ; then exit 0 ; fi
 #test input files
 
 test -s $2
-
 if [ ! -s $2.bai ] && [ ! -s $2.crai ]; then  samtools index -@ $HP_P $2 ; fi
 
 if [ ! -s $OA.count ] ; then
@@ -195,12 +204,17 @@ if [ ! -s $OMM.00.vcf ] ; then
   java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $OM.fa -I $OM.bam                                -O $OMM.orig.vcf  $HP_GOPT
   java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $OM.fa -V $OMM.orig.vcf --min-reads-per-strand 2 -O $OMM.filt.vcf
 
-  fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN  -file $OM.max.vcf $OMM.filt.vcf > $OMM.vcf
-  test -s $OMM.vcf
+  #fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN  -file $OM.max.vcf $OMM.filt.vcf > $OMM.vcf
+  #test -s $OMM.vcf
+fi
 
+if [ ! -s $OMM.00.vcf ] ; then
   # filter SNPs
   cat $HP_SDIR/$HP_M.vcf > $OMM.00.vcf ; echo "##sample=$S" >> $OMM.00.vcf
   fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OMM.00.vcf
-  cat $OMM.vcf  | bcftools norm -m - | filterVcf.pl -sample $S -source $HP_M |  grep -v "^#" | sort -k2,2n -k4,4 -k5,5 | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa >> $OMM.00.vcf
+  cat $OMM.filt.vcf  | bcftools norm -m - | filterVcf.pl -sample $S -source $HP_M |  grep -v "^#" | sort -k2,2n -k4,4 -k5,5 | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa | \
+   fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN  -file $OM.max.vcf >> $OMM.00.vcf
+  test -s $OMM.vcf
+
   annotateVcf.sh $OMM.00.vcf
 fi
