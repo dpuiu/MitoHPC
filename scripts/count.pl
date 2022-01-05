@@ -24,15 +24,16 @@ MAIN:
 	my $min;
 	my $max;
 	my %count;
+	my $round;
 
         my $result = GetOptions(
 		"i=i"	=> \$i,
 		"j=i"	=> \$j,
 		"min=i"	=> \$min,
-		"max=i"	=> \$max
+		"max=i"	=> \$max,
+		"round=i"	=> \$round
 	);
 	die "ERROR" if (!$result);
-
 
 	######################################################
 	while(<>)
@@ -45,6 +46,8 @@ MAIN:
 
 		next if(@F<=$i);
 		next if(defined($j) and @F<=$j);
+
+		$F[$i]=int($F[$i]*$round+.5)/$round if(defined($round));
 
 		if(defined($j)) { $count{$F[$i]}+=$F[$j] }
 		else		{ $count{$F[$i]}++;      }

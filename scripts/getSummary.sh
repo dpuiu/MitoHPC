@@ -20,11 +20,9 @@ M=$HP_M
 #count,cvg
 awk '{print $3}' $HP_IN | sed "s|$|.count|" | xargs cat | $HP_SDIR/uniq.pl > $HP_ODIR/count.tab
 awk '{print $3}' $HP_IN | sed "s|$|.cvg.stat|" | xargs cat | uniq.pl -i 0  > $HP_ODIR/cvg.tab
-
 awk '{print $3}' $HP_IN | sed "s|$|.$M.00.vcf|" | xargs cat | bedtools sort -header  > $HP_ODIR/$M.00.concat.vcf
-cat $HP_ODIR/$M.00.concat.vcf | grep "^#" > $HP_ODIR/$M.00.concat.vcf+
-cat $HP_ODIR/$M.00.concat.vcf | grep -v "^#" | sort -k1,1 -k2,2n -k4,4 -k5,5 >> $HP_ODIR/$M.00.concat.vcf+
-mv  $HP_ODIR/$M.00.concat.vcf+  $HP_ODIR/$M.00.concat.vcf
+snpSort.sh $HP_ODIR/$M.00.concat
+cat $HP_ODIR/$M.00.concat.vcf | grep -v "^#" | sed 's|:|\t|g'  | count.pl -i -1 -round 100| sort -n > $HP_ODIR/$M.00.AF.histo
 
 #snv counts
 snpCount.sh $M $HP_T1
@@ -64,12 +62,12 @@ if [ $HP_M != "mutect2" ] ; then exit 0 ; fi
 
 MM=$M.$M
 #count,cvg
+awk '{print $3}' $HP_IN | sed "s|$|.$M.merge.bed|" | xargs cat > $HP_ODIR/$M.merge.bed
 awk '{print $3}' $HP_IN | sed "s|$|.$M.count|" | xargs cat | $HP_SDIR/uniq.pl > $HP_ODIR/$M.count.tab
 awk '{print $3}' $HP_IN | sed "s|$|.$M.cvg.stat|" | xargs cat | uniq.pl -i 0  > $HP_ODIR/$M.cvg.tab
 awk '{print $3}' $HP_IN | sed "s|$|.$MM.00.vcf|" | xargs cat | bedtools sort -header  > $HP_ODIR/$MM.00.concat.vcf
-cat $HP_ODIR/$MM.00.concat.vcf | grep "^#" > $HP_ODIR/$MM.00.concat.vcf+
-cat $HP_ODIR/$MM.00.concat.vcf | grep -v "^#" | sort -k1,1 -k2,2n -k4,4 -k5,5 >> $HP_ODIR/$MM.00.concat.vcf+
-mv  $HP_ODIR/$MM.00.concat.vcf+  $HP_ODIR/$MM.00.concat.vcf
+snpSort.sh $HP_ODIR/$MM.00.concat
+cat $HP_ODIR/$MM.00.concat.vcf | grep -v "^#" | sed 's|:|\t|g'  | count.pl -i -1 -round 100| sort -n > $HP_ODIR/$MM.00.AF.histo
 
 #snv counts
 snpCount.sh $MM $HP_T1

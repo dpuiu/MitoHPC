@@ -20,21 +20,25 @@ MAIN:
 		#chrM	567	.	A	ACCCC	.	multiallelic	INDEL;DP=190;AF=0.237;HP	SM	SRR0000000
 		#chrM	567	.	A	ACCC	.	multiallelic	INDEL;DP=190;AF=0.095;HP	SM	SRR0000000
 
-		my $POS="$F[1] $F[9]";
+		my $SM="";
+		if($F[8] eq "SM") { $SM=$F[9]}
+		elsif($F[7]=~/SM=(.+?);/ or $F[7]=~/SM=(.+)$/) { $SM=$1}
+	
+		my $key=join "\t",(@F[0..4],$SM);
 
 		my $AF=1;
 		$AF=$1 if($F[7]=~/AF=(\S+?);/ or $F[7]=~/AF=(\S+)$/);
 
-		if(!$max{$POS} or $AF>$max{$POS})
+		if(!$max{$key} or $AF>$max{$key})
 		{
-			$max{$POS}=$AF;
-			$line{$POS}=$_;
+			$max{$key}=$AF;
+			$line{$key}=$_;
 		}
 	}
 
-	foreach my $POS ( keys %max )
+	foreach my $key ( keys %max )
 	{
-		print $line{$POS};
+		print $line{$key};
 	}
 }
 

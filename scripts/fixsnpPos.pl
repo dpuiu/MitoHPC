@@ -25,20 +25,23 @@ MAIN:
 	$opt{rlen}=16569;
 
 	my $result = GetOptions(
-		"ref=s"		=> \$opt{ref},
-		"rlen=i"         => \$opt{rlen},
- 	        "file=s" 	=> \$opt{file},
-		"rfile=s"	=> \$opt{rfile},
+		"ref=s"		=> \$opt{ref},		#chrM
+		"rlen=i"        => \$opt{rlen},		#16569
+ 	        "mfile=s" 	=> \$opt{mfile},	#.max.vcf
+		"ffile=s"	=> \$opt{ffile},        #.fix.vcf
+		"rfile=s"	=> \$opt{rfile},	#chrM.fa
  	);
 	die "ERROR: $! " if (!$result);
-	die "ERROR: $! " if (!defined($opt{file}));
+	die "ERROR: $! " if (!defined($opt{mfile}));
+	die "ERROR: $! " if (!defined($opt{ffile}));
 	die "ERROR: $! " if (!defined($opt{rfile}));
 
 	#####################################################################################
 
 	my %diff;
 	my %max;
-	open(IN,$opt{file}) or die "ERROR:$!";
+	my %fix;
+	open(IN,$opt{mfile}) or die "ERROR:$!";
         while(<IN>)
         {
 		if(!/^#/)
@@ -49,6 +52,17 @@ MAIN:
 		}
         }
 	close(IN);
+
+        open(IN,$opt{ffile}) or die "ERROR:$!";
+        while(<IN>)
+        {
+                if(!/^#/)
+                {
+                        my @F=split;
+			$fix{$F[1]}.=$_;
+                }
+        }
+        close(IN);
 
 	if($opt{ref} eq "rCRS" or $opt{ref} eq "chrM") 
 	{
@@ -86,8 +100,6 @@ MAIN:
 	my @pos2=(sort {$a<=>$b} keys %diff2);
 
 	###################################################
-	##reference=file://out/chrM.L0/chrM.L0.mutect2.fa>
-	##contig=<ID=chrM.L0,length=16567>
 
 	while(<>)
 	{
@@ -120,29 +132,19 @@ MAIN:
 			$F[0]=$opt{ref};
 			$F[1]-=$diff2;
 
-			my $F3=substr($MT,$F[1]-1,length($F[3]));
-
-			if($F[3] ne $F3)
+			if($max{$F[1]})
 			{
-				if($max{$F[1]})
+				if($fix{$F[1]})
 				{
-					my @max=split /\s+/,$max{$F[1]};
-					if($max[3] eq $F[4] and $max[4] eq $F[3])
-					{
-						@F=@max;
-					}
-					else
-					{
-						$F[3]=$F3;
-					}
-				}
-				else
-				{
-					$F[3]=$F3;
+					print $fix{$F[1]};
+					$fix{$F[1]}="";
 				}
 			}
-			print join "\t",@F;
-			print "\n";
+			else
+			{
+				print join "\t",@F;
+				print "\n";
+			}
 		}
 	}
 }

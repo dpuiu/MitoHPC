@@ -57,7 +57,7 @@ MAIN:
 		chomp;
 		my @F=split /\t/;
 
-		if($F[1]==3105 and $F[4] eq "*")    { next }
+		if($F[1]==3105    and $F[4] eq "*") { next }
 		elsif($F[1]==3106 and $F[4] eq "*") { next }
 		elsif($F[1]==3107)                  { next }
 		elsif($F[1]==3108 and $F[4] eq "*") { next }
@@ -73,7 +73,6 @@ MAIN:
 				$P[4]=substr($chrM,$P[1]-1,1);
 				$P[3]="$P[4]$P[3]";
 				print join "\t",@P;print "\n";
-				#print;print "\n";
 				@P=();
 			}
 		}

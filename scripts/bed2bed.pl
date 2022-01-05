@@ -33,7 +33,7 @@ MAIN:
 	$opt{add}=0;
 	my $result = GetOptions(
 		"min=i"	=>	\$opt{min},
-		"add=i"	=>	\$opt{add},
+		"rmsuffix"	=>	\$opt{rmsuffix},
 		"offset" =>     \$opt{offset},
 		"ed"	=>	\$opt{ed}
         );
@@ -53,14 +53,20 @@ MAIN:
                         $F[2]+=$2;
                 }
 
-		if($opt{add})
+		if($F[3] and $F[3]=~/(.+)\// and $opt{rmsuffix})
 		{
-			$F[1]+=$opt{add};
-			$F[2]-=$opt{add};
+			$F[3]=$1;
 		}
 
 		push @F,"$F[0]:$F[1]-$F[2]" if(@F==3);
-		push @F,$F[2]-$F[1] if(@F==4);
+		if(@F==4)
+		{
+			push @F,$F[2]-$F[1];
+		}
+		elsif($opt{ed})
+		{
+			$F[4]=$F[2]-$F[1]-$F[4];
+		}
 		push @F,"." if(@F==5); 
 
 		($F[1],$F[2],$F[5])=($F[2],$F[1],"-") if($F[1]>$F[2]);

@@ -91,12 +91,6 @@ MAIN:
 			$F[8]="GT:DP:AF";
 			$F[9]="$h{GT}:$h{DP}:$h{AF}";
 
-			if(length($F[3])>1 and length($F[3])==length($F[4]))
-			{
-				$F[3]=substr($F[3],0,1);
-				$F[4]=substr($F[4],0,1);
-			}
-
 			print join "\t",@F[0..9];
 			print "\n";
 		}
