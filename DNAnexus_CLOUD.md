@@ -56,6 +56,7 @@
     mkdir ~/Ref/ ~/UKbiobank
     ./dxfuse-linux  ~/Ref/ project-BQpp3Y804Y0xbyG4GJPQ01xv        # reference assemblies
     ./dxfuse-linux ~/UKbiobank project-G6gkYGjJ38vqByQ42Q3ZvqBX    
+                               project-G7KB5zQJz55qG0158ZXb2J5p
 
 ### Install HP pipeline ###
 
