@@ -74,6 +74,7 @@
 ### RE-RUN PIPELINE (optional) ###
 
     $ nano init.sh                                               # update parameters
+    $ . ./init.sh                                                # source init file
     $ $HP_SDIR/run.sh > run.all.sh                               # recreate command file
 
     $ bash ./run.all.sh

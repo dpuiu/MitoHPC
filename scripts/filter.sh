@@ -24,12 +24,11 @@ OA="$O.all"
 ON="$O.$HP_NUMT"
 OM=$O.$HP_M
 OMM=$OM.$HP_M
-OMMM=${OM}_${HP_M}${HP_M}
 
 ########################################################################################################################################
 
-if [ $HP_I -eq 1 ] && [ -s $OM.00.vcf ]  ; then exit 0 ; fi
-if [ $HP_I -ge 2 ] && [ -s $OMM.00.vcf ] ; then exit 0 ; fi
+#if [ $HP_I -eq 1 ] && [ -s $OM.00.vcf ]  ; then exit 0 ; fi
+#if [ $HP_I -ge 2 ] && [ -s $OMM.00.vcf ] ; then exit 0 ; fi
 
 #########################################################################################################################################
 #test input file exists and is sorted
@@ -110,12 +109,10 @@ if [ ! -f $O.sa.bed ]   ; then samtools view -h $O.bam  -@ $HP_P | sam2bedSA.pl 
 #########################################################################################################################################
 #compute SNP/INDELs using mutect2 or mutserve
 
-if [ ! -s $OM.00.vcf ] ; then
+if [ ! -s $OM.vcf ] ; then
   if [ "$HP_M" == "mutect2" ] ; then
     java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_MT.fa -I $O.bam                                -O $OM.orig.vcf $HP_GOPT
     java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $HP_RDIR/$HP_MT.fa -V $OM.orig.vcf --min-reads-per-strand 2 -O $OM.vcf 
-    #cat $OM.filt.vcf  | bcftools norm -m - > $OM.vcf
-    #rm $OM.orig.vcf* $OM.filt.vcf*
   elif [ "$HP_M" == "mutserve" ] ; then
     if [ "$HP_MT" == "chrM" ] ||  [ "$HP_MT" == "rCRS" ] ||  [ "$HP_MT" == "RSRS" ] ; then
       java $HP_JOPT -jar $HP_JDIR/mutserve.jar call --deletions --insertions --level 0.01 --output $OM.vcf --reference $HP_RDIR/$HP_MT.fa $O.bam
@@ -127,8 +124,9 @@ if [ ! -s $OM.00.vcf ] ; then
     echo "Unsuported SNV caller"
     exit 1
   fi
-  test -s $OM.vcf
+fi
 
+#if [ ! -s $OM.00.vcf ] ; then
   # filter SNPs
   cat $HP_SDIR/$HP_M.vcf > $OM.00.vcf ; echo "##sample=$S" >> $OM.00.vcf
   fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OM.00.vcf
@@ -138,7 +136,7 @@ if [ ! -s $OM.00.vcf ] ; then
 
   cat $OM.00.vcf | maxVcf.pl | bedtools sort -header |tee $OM.max.vcf | bgzip -f -c > $OM.max.vcf.gz ; tabix -f $OM.max.vcf.gz
   annotateVcf.sh $OM.00.vcf
-fi
+#fi
 ########################################################################################################################################
 # get haplogroup
 
@@ -205,11 +203,9 @@ if [ ! -f $OM.sa.bed ]   ; then samtools view -h $OM.bam | sam2bedSA.pl | uniq.p
 if [ ! -s $OMM.vcf ] ; then
   java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $OM.fa -I $OM.bam                                -O $OMM.orig.vcf  $HP_GOPT
   java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $OM.fa -V $OMM.orig.vcf --min-reads-per-strand 2 -O $OMM.vcf
-  #cat $OMM.filt.vcf  | bcftools norm -m - > $OMM.vcf
-  #rm $OMM.orig.vcf* $OMM.filt.vcf*
 fi
 
-if [ ! -s $OMM.00.vcf ] ; then
+#if [ ! -s $OMM.00.vcf ] ; then
   # filter SNPs
   cat $HP_SDIR/$HP_M.vcf > $OMM.00.vcf ; echo "##sample=$S" >> $OMM.00.vcf
   fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OMM.00.vcf
@@ -218,11 +214,5 @@ if [ ! -s $OMM.00.vcf ] ; then
   snpSort.sh $OMM.fix
   cat $OMM.fix.vcf | fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN -mfile $OM.max.vcf -ffile $OM.fix.vcf | filterVcf.pl -sample $S -source $HP_M | grep -v "^#" >> $OMM.00.vcf
   annotateVcf.sh $OMM.00.vcf
-fi
+#fi
 
-#rm $OM.bam* $O.fq
-
-#cat $OMM.00.vcf | filterVcf.pl -p 0.$HP_T1 > $OMMM.$HP_T1.vcf
-#cat $OM.00.vcf  | filterVcf.pl -p 0.$HP_T1 | grep ":1$" >> $OMMM.$HP_T1.vcf
-#bedtools sort -header -i $OMMM.$HP_T1.vcf > $OMMM.$HP_T1.srt.vcf 
-#mv $OMMM.$HP_T1.srt.vcf $OMMM.$HP_T1.vcf

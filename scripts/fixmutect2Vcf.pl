@@ -20,7 +20,7 @@ Program that corrects mutect2 VCF output
 MAIN:
 {
         my %opt;
-	my %h;
+	my (%h,%AF);
         my $result = GetOptions(
 		"file=s"         => \$opt{file},
 	);
@@ -37,13 +37,25 @@ MAIN:
 			next
 		}
 		my @F=split;
+		$F[8]=~/^GT:AD:AF/ or die "ERROR: $_";
+		$F[9]=~/^.+?:.+?:(.+?):/ or die "ERROR: $_";
+		my $AF=$1;
+
 		if(length($F[3]) eq length($F[4]) and length($F[3])>1)
 		{
 			foreach my $i (0..length($F[3])-1)
 			{
-				my $key=join "\t",($F[0],$F[1]+$i,$F[2],substr($F[3],$i,1),substr($F[4],$i,1));
-				my $val=join "\t",($key,@F[5..@F-1]); $val.="\n";
-				$h{$key}=$val;
+				if(substr($F[3],$i,1) ne substr($F[4],$i,1))
+				{
+					my $key=join "\t",($F[0],$F[1]+$i,$F[2],substr($F[3],$i,1),substr($F[4],$i,1));
+					my $val=join "\t",($key,@F[5..@F-1]); $val.="\n";
+
+					if(!$AF{$key} or $AF>$AF{$key})
+					{
+						$h{$key}=$val;
+						$AF{$key}=$AF;
+					}
+				}
 			}
 		}
 		else
@@ -55,10 +67,14 @@ MAIN:
 				$F[1]+=$min;
 				$F[3]=substr($F[3],$min);
 				$F[4]=substr($F[4],$min);
-			}	
+			}
 			my $key=join "\t",@F[0..4];
                         my $val=join "\t",($key,@F[5..@F-1]); $val.="\n";
-                        $h{$key}=$val;
+			if(!$AF{$key} or $AF>$AF{$key})
+                        {
+				$h{$key}=$val;
+                                $AF{$key}=$AF;
+                        }
 		}
 	}
 	my @keys=sort keys %h;
