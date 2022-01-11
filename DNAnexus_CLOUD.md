@@ -45,13 +45,17 @@
     # job-...
     # you will be logged in the DNAnexus client
 
+    # reconnect terminal if the connection drops
+    # dx ssh job-...
+  
     # install dxfuse for easy file access
     wget https://github.com/dnanexus/dxfuse/releases/download/v1.0.0/dxfuse-linux
+    chmod u+x dxfuse-linux
 
     # create mount points & mount remote project directories
     mkdir ~/Ref/ ~/UKbiobank
-    dxfuse-linux  ~/Ref/ project-BQpp3Y804Y0xbyG4GJPQ01xv  # reference assemblies
-    dxfuse-linux ~/UKbiobank ...                           # alignment files
+    ./dxfuse-linux  ~/Ref/ project-BQpp3Y804Y0xbyG4GJPQ01xv        # reference assemblies
+    ./dxfuse-linux ~/UKbiobank project-G6gkYGjJ38vqByQ42Q3ZvqBX    
 
 ### Install HP pipeline ###
 
