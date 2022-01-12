@@ -101,9 +101,10 @@
 
     cd $HP_SDIR/scripts/
 
-    ./checkInstall.sh	                                                
+    ./checkInstall.sh	          
+    # should returm Success!                                      
 
-### Download/Link Alignment Files  (to update) ####
+### Download/Link Alignment Files  ####
 
      cd ~
      mkdir crams
