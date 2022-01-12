@@ -91,12 +91,12 @@ if  [ ! -s $O.bam.bai ] ; then
     bedtools bamtobed -i /dev/stdin -ed | bed2bed.pl -rmsuffix -ed | \
     count.pl -i 3 -j 4  | sort > $ON.score
 
-  join $O.score $ON.score -a 1 | perl -ane 'next if(@F==3 and $F[2]>$F[1]);print' | \
+  join $O.score $ON.score -a 1 | perl -ane 'next if(@F==3 and $F[2]>$F[1]);print' | tee $O.score+ | \
      intersectSam.pl $O.sam - | \
      samtools view -bu | \
      samtools sort -m $HP_MM -@ $HP_P  > $O.bam
 
-  rm $O.sam #$O.score
+  rm $O.sam $O.score
   samtools index $O.bam -@ $HP_P
 fi
 #########################################################################################################################################
@@ -126,7 +126,7 @@ if [ ! -s $OM.vcf ] ; then
   fi
 fi
 
-#if [ ! -s $OM.00.vcf ] ; then
+if [ ! -s $OM.00.vcf ] ; then
   # filter SNPs
   cat $HP_SDIR/$HP_M.vcf > $OM.00.vcf ; echo "##sample=$S" >> $OM.00.vcf
   fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OM.00.vcf
@@ -136,7 +136,7 @@ fi
 
   cat $OM.00.vcf | maxVcf.pl | bedtools sort -header |tee $OM.max.vcf | bgzip -f -c > $OM.max.vcf.gz ; tabix -f $OM.max.vcf.gz
   annotateVcf.sh $OM.00.vcf
-#fi
+fi
 ########################################################################################################################################
 # get haplogroup
 
@@ -179,7 +179,7 @@ if  [ ! -s $OM.bam.bai ] ; then
     count.pl -i 3 -j 4  | sort > $OM.score
   rm $OM+.*
 
-  join $OM.score $ON.score -a 1 | perl -ane 'next if(@F==3 and $F[2]>$F[1]);print'  | \
+  join $OM.score $ON.score -a 1 | perl -ane 'next if(@F==3 and $F[2]>$F[1]);print'  | tee $OM.score+ | \
      intersectSam.pl $OM.sam - | \
      samtools view -bu | \
      samtools sort -m $HP_MM -@ $HP_P  > $OM.bam
@@ -187,7 +187,7 @@ if  [ ! -s $OM.bam.bai ] ; then
   samtools index $OM.bam -@ $HP_P
   bedtools bamtobed -i $OM.bam -ed | perl -ane 'print if($F[-2]==0);' | bedtools merge -d -3 | bed2bed.pl -min 3 > $OM.merge.bed
 
-  rm $OM.sam #$OM.score $ON.score
+  rm $OM.sam $OM.score $ON.score
 fi
 
 #########################################################################################################################################
@@ -205,7 +205,7 @@ if [ ! -s $OMM.vcf ] ; then
   java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $OM.fa -V $OMM.orig.vcf --min-reads-per-strand 2 -O $OMM.vcf
 fi
 
-#if [ ! -s $OMM.00.vcf ] ; then
+if [ ! -s $OMM.00.vcf ] ; then
   # filter SNPs
   cat $HP_SDIR/$HP_M.vcf > $OMM.00.vcf ; echo "##sample=$S" >> $OMM.00.vcf
   fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OMM.00.vcf
@@ -214,5 +214,5 @@ fi
   snpSort.sh $OMM.fix
   cat $OMM.fix.vcf | fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN -mfile $OM.max.vcf -ffile $OM.fix.vcf | filterVcf.pl -sample $S -source $HP_M | grep -v "^#" >> $OMM.00.vcf
   annotateVcf.sh $OMM.00.vcf
-#fi
+fi
 
