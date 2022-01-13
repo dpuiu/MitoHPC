@@ -79,9 +79,10 @@ fi
 #########################################################################################################################################
 #realign reads
 
-if  [ ! -s $O.bam.bai ] ; then
+if  [ ! -s $O.bam ] ; then
   cat $O.fq | \
     bwa mem $HP_RDIR/$HP_MT+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" -v 1 | \
+    samtools view  -F 0x90C -h | \
     circSam.pl -ref_len $HP_RDIR/$HP_MT.fa.fai | tee $O.sam  | \
     bedtools bamtobed -i /dev/stdin -ed | bed2bed.pl -rmsuffix -ed | \
     count.pl -i 3 -j 4  | sort > $O.score
@@ -91,7 +92,7 @@ if  [ ! -s $O.bam.bai ] ; then
     bedtools bamtobed -i /dev/stdin -ed | bed2bed.pl -rmsuffix -ed | \
     count.pl -i 3 -j 4  | sort > $ON.score
 
-  join $O.score $ON.score -a 1 | perl -ane 'next if(@F==3 and $F[2]>$F[1]);print' | tee $O.score+ | \
+  join $O.score $ON.score -a 1 | perl -ane 'next if(@F==3 and $F[2]>$F[1]);print' | \
      intersectSam.pl $O.sam - | \
      samtools view -bu | \
      samtools sort -m $HP_MM -@ $HP_P  > $O.bam
@@ -126,13 +127,14 @@ if [ ! -s $OM.vcf ] ; then
   fi
 fi
 
+#rm $O.bam*
+
 if [ ! -s $OM.00.vcf ] ; then
   # filter SNPs
   cat $HP_SDIR/$HP_M.vcf > $OM.00.vcf ; echo "##sample=$S" >> $OM.00.vcf
   fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OM.00.vcf
-  bcftools norm -m - $OM.vcf | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa > $OM.fix.vcf
-  snpSort.sh $OM.fix
-  cat $OM.fix.vcf | filterVcf.pl -sample $S -source $HP_M | grep -v "^#" >> $OM.00.vcf
+  bcftools norm -m - $OM.vcf | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa | bedtools sort -header> $OM.fix.vcf
+  cat $OM.fix.vcf | filterVcf.pl -sample $S -source $HP_M | bedtools sort >> $OM.00.vcf
 
   cat $OM.00.vcf | maxVcf.pl | bedtools sort -header |tee $OM.max.vcf | bgzip -f -c > $OM.max.vcf.gz ; tabix -f $OM.max.vcf.gz
   annotateVcf.sh $OM.00.vcf
@@ -161,25 +163,21 @@ if  [ ! -s $OM.fa ]  ; then
   rm -f $OM.dict; java $HP_JOPT -jar $HP_JDIR/gatk.jar CreateSequenceDictionary --REFERENCE $OM.fa --OUTPUT $OM.dict
 fi
 
-#rm $O.bam*
-
-if [ $HP_I -lt 2 ] ; then exit 0 ; fi
-if [ $HP_M != "mutect2" ] ; then exit 0 ; fi
-
 ########################################################################################################################################
 
 #realign reads
-if  [ ! -s $OM.bam.bai ] ; then
+if  [ ! -s $OM.bam ] ; then
   samtools faidx $OM.fa $S:1-$HP_E | grep -v ">" | cat $OM.fa - > $OM+.fa
   bwa index $OM+.fa -p $OM+
   cat $O.fq | \
     bwa mem $OM+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" -v 1 | \
+    samtools view  -F 0x90C -h | \
     circSam.pl -ref_len $OM.fa.fai | tee $OM.sam  | \
     bedtools bamtobed -i /dev/stdin -ed | bed2bed.pl -rmsuffix -ed | \
     count.pl -i 3 -j 4  | sort > $OM.score
   rm $OM+.*
 
-  join $OM.score $ON.score -a 1 | perl -ane 'next if(@F==3 and $F[2]>$F[1]);print'  | tee $OM.score+ | \
+  join $OM.score $ON.score -a 1 | perl -ane 'next if(@F==3 and $F[2]>$F[1]);print'  | \
      intersectSam.pl $OM.sam - | \
      samtools view -bu | \
      samtools sort -m $HP_MM -@ $HP_P  > $OM.bam
@@ -187,7 +185,12 @@ if  [ ! -s $OM.bam.bai ] ; then
   samtools index $OM.bam -@ $HP_P
   bedtools bamtobed -i $OM.bam -ed | perl -ane 'print if($F[-2]==0);' | bedtools merge -d -3 | bed2bed.pl -min 3 > $OM.merge.bed
 
-  rm $OM.sam $OM.score $ON.score
+  rm $OM.sam $OM.score $ON.score $O.fq
+fi
+
+if [ $HP_I -lt 2 ] || [ $HP_M != "mutect2" ] ; then
+  #rm $OM.bam*
+  exit 0
 fi
 
 #########################################################################################################################################
@@ -205,14 +208,15 @@ if [ ! -s $OMM.vcf ] ; then
   java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $OM.fa -V $OMM.orig.vcf --min-reads-per-strand 2 -O $OMM.vcf
 fi
 
+#rm $OM.bam*
+
 if [ ! -s $OMM.00.vcf ] ; then
   # filter SNPs
   cat $HP_SDIR/$HP_M.vcf > $OMM.00.vcf ; echo "##sample=$S" >> $OMM.00.vcf
   fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OMM.00.vcf
+  bcftools norm -m - $OMM.vcf | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa | bedtools sort -header> $OMM.fix.vcf 
+  cat $OMM.fix.vcf | fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN -mfile $OM.max.vcf -ffile $OM.fix.vcf | filterVcf.pl -sample $S -source $HP_M | bedtools sort  >> $OMM.00.vcf
 
-  bcftools norm -m - $OMM.vcf  | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa > $OMM.fix.vcf
-  snpSort.sh $OMM.fix
-  cat $OMM.fix.vcf | fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN -mfile $OM.max.vcf -ffile $OM.fix.vcf | filterVcf.pl -sample $S -source $HP_M | grep -v "^#" >> $OMM.00.vcf
   annotateVcf.sh $OMM.00.vcf
 fi
 

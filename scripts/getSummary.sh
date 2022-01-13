@@ -9,7 +9,7 @@ set -ex
 ###########################################################
 #get count stats
 
-if [ $HP_CN ]  && [ $HP_CN -ne 0 ] ; then awk '{print $3}' $HP_IN | sed "s|$|.all.count|" | xargs cat | $HP_SDIR/uniq.pl | $HP_SDIR/getCN.pl > $HP_ODIR/count.tab ; fi
+if [ $HP_CN ]  && [ $HP_CN -ne 0 ] ; then awk '{print $3}' $HP_IN | sed "s|$|.all.count|" | xargs cat | uniq.pl | getCN.pl > $HP_ODIR/count.tab ; fi
 if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 
 ###########################################################
@@ -18,7 +18,7 @@ if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 M=$HP_M
 
 #count,cvg
-awk '{print $3}' $HP_IN | sed "s|$|.count|" | xargs cat | $HP_SDIR/uniq.pl > $HP_ODIR/count.tab
+awk '{print $3}' $HP_IN | sed "s|$|.count|" | xargs cat | uniq.pl > $HP_ODIR/count.tab
 awk '{print $3}' $HP_IN | sed "s|$|.cvg.stat|" | xargs cat | uniq.pl -i 0  > $HP_ODIR/cvg.tab
 awk '{print $3}' $HP_IN | sed "s|$|.$M.00.vcf|" | xargs cat | bedtools sort -header  > $HP_ODIR/$M.00.concat.vcf
 snpSort.sh $HP_ODIR/$M.00.concat
@@ -63,7 +63,7 @@ if [ $HP_M != "mutect2" ] ; then exit 0 ; fi
 MM=$M.$M
 #count,cvg
 awk '{print $3}' $HP_IN | sed "s|$|.$M.merge.bed|" | xargs cat > $HP_ODIR/$M.merge.bed
-awk '{print $3}' $HP_IN | sed "s|$|.$M.count|" | xargs cat | $HP_SDIR/uniq.pl > $HP_ODIR/$M.count.tab
+awk '{print $3}' $HP_IN | sed "s|$|.$M.count|" | xargs cat | uniq.pl > $HP_ODIR/$M.count.tab
 awk '{print $3}' $HP_IN | sed "s|$|.$M.cvg.stat|" | xargs cat | uniq.pl -i 0  > $HP_ODIR/$M.cvg.tab
 awk '{print $3}' $HP_IN | sed "s|$|.$MM.00.vcf|" | xargs cat | bedtools sort -header  > $HP_ODIR/$MM.00.concat.vcf
 snpSort.sh $HP_ODIR/$MM.00.concat

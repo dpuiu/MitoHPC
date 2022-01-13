@@ -95,7 +95,7 @@ export HP_IN=$PWD/in.txt        # input file to be generated
 
 if [ -d $HP_ADIR ] ; then
   if [ ! -s $HP_IN ] ; then 
-    find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN
+    find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | ls2in.pl -out $HP_ODIR | sort -V > $HP_IN
   fi
 fi
 
