@@ -9,7 +9,9 @@ set -ex
 ###########################################################
 #get count stats
 
-if [ $HP_CN ]  && [ $HP_CN -ne 0 ] ; then awk '{print $3}' $HP_IN | sed "s|$|.all.count|" | xargs cat | uniq.pl | getCN.pl > $HP_ODIR/count.tab ; fi
+if [ $HP_CN ]  && [ $HP_CN -ne 0 ] ; then awk '{print $3}' $HP_IN | sed "s|$|.all.count|" | xargs cat | uniq.pl | getCN.pl > $HP_ODIR/all.count.tab 
+else                                      awk '{print $3}' $HP_IN | sed "s|$|.all.count|" | xargs cat | uniq.pl            > $HP_ODIR/all.count.tab
+fi
 if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 
 ###########################################################

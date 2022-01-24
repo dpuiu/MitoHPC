@@ -34,12 +34,9 @@
     # login using DNAnexus username and password
     dx login
   
-    # list projects
+    # list & select project
     dx select
     
-    # select project
-    dx select 
-
     # create client : Ex: 4 hrs (default 1hr)
     dx run cloud_workstation --ssh -y -imax_session_length=4h # -instance-type mem1_ssd1_v2_x8 --name "default:4hr"
     # job-...
@@ -49,7 +46,7 @@
     # dx ssh job-...
 
     # terminate early
-    #dx terminate job-...
+    # dx terminate job-...
   
 ### Install Software on DNANexus Client ###
 
@@ -57,11 +54,12 @@
     wget https://github.com/dnanexus/dxfuse/releases/download/v1.0.0/dxfuse-linux
     chmod u+x dxfuse-linux
 
-    sudo apt-get install paralle samtools bwa bcftools samblaster bedtools fastp tabix
+    sudo apt-get update 
+    sudo apt-get install parallel samtools bwa bcftools samblaster bedtools fastp tabix
 
  ### Mount Project(s) Data ###
 
-    mkdir ~/Ref/ ~/UKB
+    mkdir ~/Ref ~/UKB
     ./dxfuse-linux ~/Ref/ project-BQpp3Y804Y0xbyG4GJPQ01xv        # reference assemblies
     ./dxfuse-linux ~/UKB/ project-G7KB5zQJz55qG0158ZXb2J5p        # UKB project which includes the 200K samples
 
@@ -103,6 +101,10 @@
 
     ./checkInstall.sh	          
     # should returm Success!                                      
+
+    cd
+    tar -czvf HP.tgz HP/
+    dx upload HP.tgz
 
 ### Download/Link Alignment Files  ####
 

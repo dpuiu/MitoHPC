@@ -37,25 +37,21 @@ test -s $2
 samtools view -H $2 | grep -m 1 -P "^@HD.+coordinate$" > /dev/null
 
 #generate index if necessary
-if [ ! -s $2.bai ] && [ ! -s $2.crai ]; then  samtools index -@ $HP_P $2 ; fi
+if [ ! -s $2.bai ] && [ ! -s $2.crai ]; then exit 1 ; fi
 
 #test reference
 RCOUNT=`samtools view -H $2 | grep -c "^@SQ"`
 if [ $HP_RCOUNT != $RCOUNT ] ; then echo "ERROR: HP_RCOUNT=$HP_RCOUNT does not match the number of \@SQ lines=$RCOUNT in $2"; exit 1 ; fi
 
-# copy idxstats and count files if they exists
-if [ -s $IDIR/$N.idxstats ] ; then cp $IDIR/$N.idxstats $OA.idxstats ; fi
-if [ -s $IDIR/$N.count ]    ; then cut -f1,2,3,4 $IDIR/$N.count  > $OA.count    ; fi
-
-#generate idxstats and counts for mtDNA-CN computation
-if [ ! -s $OA.count ] ; then
-  if [ $HP_CN ] && [ $HP_CN -ne 0 ] ; then
-    if [ ! -s $OA.idxstats ] ; then  samtools idxstats -@ $HP_P $2 > $OA.idxstats ; fi
-    cat $OA.idxstats | idxstats2count.pl -sample $S -chrM $HP_RMT> $OA.count
-  else
-    samtools view -@ $HP_P -F 0x900 $2 $HP_RMT -c -T $HP_RDIR/$HP_RNAME.fa | perl -ane 'print "Run\tMT\n$ENV{S}\t$_"' > $OA.count
-  fi
+# get read counts
+if [ -s $IDIR/$N.idxstats ] ; then
+  cat $IDIR/$N.idxstats | idxstats2count.pl -sample $S -chrM $HP_RMT > $OA.count
+elif [ -s $IDIR/$N.count ]    ; then
+  cut -f1,2,3,4 $IDIR/$N.count  > $OA.count
+else
+  samtools view -@ $HP_P -F 0x900 $2 $HP_RMT -c -T $HP_RDIR/$HP_RNAME.fa | perl -ane 'print "Run\tMT\n$ENV{S}\t$_"' > $OA.count
 fi
+
 if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 
 #########################################################################################################################################
@@ -69,13 +65,14 @@ if [ ! -s $O.fq ] ; then
   fi
 
   samtools view $R $2 $HP_RMT $HP_RNUMT -bu -F 0x900 -T $HP_RDIR/$HP_RNAME.fa -@ $HP_P | \
-    samtools sort -n -O SAM -m $HP_MM -@ $HP_P | \
+    samtools sort -n -O SAM -m $HP_MM -@ $HP_P |  \
     perl -ane 'if(/^@/) {print} elsif($P[0] eq $F[0]) {print $p,$_}; @P=@F; $p=$_;' | \
     samblaster $HP_DOPT --addMateTags | \
     samtools view -bu | \
     bedtools bamtofastq  -i /dev/stdin -fq /dev/stdout -fq2 /dev/stdout | \
     fastp --stdin --interleaved_in --stdout $HP_FOPT  > $O.fq
 fi
+
 #########################################################################################################################################
 #realign reads
 
@@ -127,7 +124,7 @@ if [ ! -s $OM.vcf ] ; then
   fi
 fi
 
-#rm $O.bam*
+rm $O.bam*
 
 if [ ! -s $OM.00.vcf ] ; then
   # filter SNPs
@@ -189,7 +186,7 @@ if  [ ! -s $OM.bam ] ; then
 fi
 
 if [ $HP_I -lt 2 ] || [ $HP_M != "mutect2" ] ; then
-  #rm $OM.bam*
+  rm $OM.bam* *score
   exit 0
 fi
 
@@ -208,7 +205,7 @@ if [ ! -s $OMM.vcf ] ; then
   java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $OM.fa -V $OMM.orig.vcf --min-reads-per-strand 2 -O $OMM.vcf
 fi
 
-#rm $OM.bam*
+rm $OM.bam*
 
 if [ ! -s $OMM.00.vcf ] ; then
   # filter SNPs
