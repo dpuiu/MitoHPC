@@ -12,7 +12,12 @@
 export HP_HDIR=`readlink -f $HP_SDIR/..`	#HP home directory
 export HP_BDIR=$HP_HDIR/bin/			#bin directory
 export HP_JDIR=$HP_HDIR/java/			#java directory
+
+#Human
 export HP_RDIR=$HP_HDIR/RefSeq/			#reference directory
+
+#Mouse
+#export HP_RDIR=$HP_HDIR/RefSeqMouse/           #Mouse reference directory
 
 ###############################################################
 #SOFTWARE PATH
@@ -45,8 +50,6 @@ export HP_RURL=ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh
 #export HP_RURL=https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/assemblies/chm13.draft_v1.1.fasta.gz
 
 #Mouse
-#export HP_RDIR=$HP_HDIR/RefSeqMouse/            #reference director
-#export HP_O=Mouse
 #export HP_RNAME=mm39
 #export HP_RMT=chrM
 #export HP_RCOUNT=61
@@ -60,6 +63,13 @@ export HP_O=Human		 # organism: Human, Mouse...
 export HP_MT=chrM                # chrM, rCRS or RSRS, FASTA file available under $HP_RDIR
 export HP_MTLEN=16569
 export HP_NUMT=NUMT              # NUMT FASTA file under $HP_RDIR
+
+
+#Mouse
+#export HP_O=Mouse                # organism: Human, Mouse... 
+#export HP_MT=chrM                # chrM, rCRS or RSRS, FASTA file available under $HP_RDIR
+#export HP_MTLEN=16299
+#export HP_NUMT=NUMT              # NUMT FASTA file under $HP_RDIR
 
 ################################################################
 #OTHER
