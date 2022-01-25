@@ -30,7 +30,8 @@ export PATH=$HP_SDIR:$HP_BDIR:$PATH
 #GRCH38(default)
 export HP_RNAME=hs38DH
 export HP_RMT=chrM
-export HP_RNUMT="chr1:628834-634672 chr17:22521116-22521752"	#NUMT+-250
+#export HP_RNUMT="chr1:628834-634672 chr17:22521116-22521752"	#NUMT+-250
+export HP_RNUMT="chr1:629084-634672 chr17:22521208-22521639"    #NUMT
 #export HP_RNUMT="chr1:628834-635104 chr1:76970973-76971529 chr5:80651184-80651847 chr5:134926533-134927184 chr13:109423874-109424630 chr17:22521116-22521752"
 export HP_RCOUNT=3366
 export HP_RURL=ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa
@@ -53,7 +54,7 @@ export HP_RURL=ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh
 #export HP_RNAME=mm39
 #export HP_RMT=chrM
 #export HP_RCOUNT=61
-#export HP_RNUMT="chr1:24650615-24655253 chr2:22477300-22480534 chr12:97028207-97028562"
+#export HP_RNUMT="chr1:24650615-24655265 chr2:22477298-22480547 chr10:95913385-95913756 chr12:97028201-97028567 chr13:85274752-85275567"
 #export HP_RURL="https://hgdownload.soe.ucsc.edu/goldenPath/mm39/bigZips/mm39.fa.gz"
 
 ################################################################

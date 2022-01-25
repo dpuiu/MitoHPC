@@ -123,7 +123,6 @@ if [ ! -s $OM.vcf ] ; then
     exit 1
   fi
 fi
-
 rm $O.bam*
 
 if [ ! -s $OM.00.vcf ] ; then
