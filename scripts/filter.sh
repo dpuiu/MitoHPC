@@ -27,8 +27,8 @@ OMM=$OM.$HP_M
 
 ########################################################################################################################################
 
-if [ $HP_I -eq 1 ] && [ -s $OM.00.vcf ]  ; then exit 0 ; fi
-if [ $HP_I -ge 2 ] && [ -s $OMM.00.vcf ] ; then exit 0 ; fi
+#if [ $HP_I -eq 1 ] && [ -s $OM.00.vcf ]  ; then exit 0 ; fi
+#if [ $HP_I -ge 2 ] && [ -s $OMM.00.vcf ] ; then exit 0 ; fi
 
 #########################################################################################################################################
 #test input file exists and is sorted
@@ -44,15 +44,19 @@ RCOUNT=`samtools view -H $2 | grep -c "^@SQ"`
 if [ $HP_RCOUNT != $RCOUNT ] ; then echo "ERROR: HP_RCOUNT=$HP_RCOUNT does not match the number of \@SQ lines=$RCOUNT in $2"; exit 1 ; fi
 
 # get read counts
-if [ -s $IDIR/$N.idxstats ] ; then
-  cat $IDIR/$N.idxstats | idxstats2count.pl -sample $S -chrM $HP_RMT > $OA.count
-elif [ -s $IDIR/$N.count ]    ; then
-  cut -f1,2,3,4 $IDIR/$N.count  > $OA.count
-else
-  samtools view -@ $HP_P -F 0x900 $2 $HP_RMT -c -T $HP_RDIR/$HP_RNAME.fa | perl -ane 'print "Run\tMT\n$ENV{S}\t$_"' > $OA.count
+if [ ! -s $OA.count ]; then 
+  if [ -s $IDIR/$N.idxstats ] ; then
+    cat $IDIR/$N.idxstats | idxstats2count.pl -sample $S -chrM $HP_RMT > $OA.count
+  elif [ -s $IDIR/$N.count ]    ; then
+    cut -f1,2,3,4 $IDIR/$N.count  > $OA.count
+  else
+    samtools view -@ $HP_P -F 0x900 $2 $HP_RMT -c -T $HP_RDIR/$HP_RNAME.fa | perl -ane 'print "Run\tMT\n$ENV{S}\t$_"' > $OA.count
+  fi
 fi
 
-if [ $HP_I -lt 1 ] ; then exit 0 ; fi
+if [ $HP_I -eq 1 ] && [ -s $OM.00.vcf ]  ; then exit 0 ; fi
+if [ $HP_I -ge 2 ] && [ -s $OMM.00.vcf ] ; then exit 0 ; fi
+#if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 
 #########################################################################################################################################
 #sample reads

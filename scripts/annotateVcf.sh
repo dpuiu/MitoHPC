@@ -24,7 +24,7 @@ if [ -s $HP_RDIR/TRN.bed.gz ]   ; then bcftools annotate -a $HP_RDIR/TRN.bed.gz 
 if [ -s $HP_RDIR/DLOOP.bed.gz ] ; then bcftools annotate -a $HP_RDIR/DLOOP.bed.gz $O.gz -c "CHROM,FROM,TO,DLOOP"  -h <(echo '##INFO=<ID=DLOOP,Number=0,Type=Flag,Description="DLOOP">') > $O ; bgzip -f $O ; tabix -f $O.gz ; fi
 
 if [ -s $HP_RDIR/HG.vcf.gz ]    ; then bcftools annotate -a $HP_RDIR/HG.vcf.gz    $O.gz -c "INFO"  > $O ; bgzip -f $O ; tabix -f $O.gz ; fi
-if [ -s $HP_RDIR/NUMT+.vcf.gz ]  ; then bcftools annotate -a $HP_RDIR/NUMT+.vcf.gz  $O.gz -c "INFO"  > $O ; bgzip -f $O ; tabix -f $O.gz ; fi
+if [ -s $HP_RDIR/NUMT.vcf.gz ]  ; then bcftools annotate -a $HP_RDIR/NUMT.vcf.gz  $O.gz -c "INFO"  > $O ; bgzip -f $O ; tabix -f $O.gz ; fi
 if [ -s $HP_RDIR/dbSNP.vcf.gz ] ; then bcftools annotate -a $HP_RDIR/dbSNP.vcf.gz $O.gz -c "ID"    > $O ; bgzip -f $O ; tabix -f $O.gz ; fi
 if [ -s $HP_RDIR/CADD.vcf.gz ] ; then bcftools annotate -a $HP_RDIR/CADD.vcf.gz   $O.gz -c "INFO"  > $O ; bgzip -f $O ; tabix -f $O.gz ; fi
 

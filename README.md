@@ -85,8 +85,9 @@
 
     TAB/SUMMARY/VCF/FASTA Files: 
 
-    count.tab                                                    # reads  & mtDNA-CN counts
-    cvg.tab                                                      # coverage stats
+    all.count.tab                                                # total reads & mtDNA-CN counts
+    count.tab                                                    # subsampled read counts
+    cvg.tab                                                      # subsampled coverage stats
 
 ### 1st ITERATION ### 
 
