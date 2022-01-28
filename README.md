@@ -42,7 +42,7 @@
     $ $HP_SDIR/checkInstall.sh
     # if successfull => "Success message!"
 
-    $ cat checkInstall.log					 # contains version/path info
+    $ cat checkInstall.log                                       # records software version/path info
 
 ## USAGE ##
 
