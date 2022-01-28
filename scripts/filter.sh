@@ -27,8 +27,8 @@ OMM=$OM.$HP_M
 
 ########################################################################################################################################
 
-#if [ $HP_I -eq 1 ] && [ -s $OM.00.vcf ]  ; then exit 0 ; fi
-#if [ $HP_I -ge 2 ] && [ -s $OMM.00.vcf ] ; then exit 0 ; fi
+if [ $HP_I -eq 1 ] && [ -s $OA.all.count ] && [ -s $OM.00.vcf  ] ; then exit 0 ; fi
+if [ $HP_I -ge 2 ] && [ -s $OA.all.count ] && [ -s $OMM.00.vcf ] ; then exit 0 ; fi
 
 #########################################################################################################################################
 #test input file exists and is sorted
@@ -54,9 +54,9 @@ if [ ! -s $OA.count ]; then
   fi
 fi
 
+if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 if [ $HP_I -eq 1 ] && [ -s $OM.00.vcf ]  ; then exit 0 ; fi
 if [ $HP_I -ge 2 ] && [ -s $OMM.00.vcf ] ; then exit 0 ; fi
-#if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 
 #########################################################################################################################################
 #sample reads
@@ -85,11 +85,13 @@ if  [ ! -s $O.bam ] ; then
     bwa mem $HP_RDIR/$HP_MT+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" -v 1 | \
     samtools view  -F 0x90C -h | \
     circSam.pl -ref_len $HP_RDIR/$HP_MT.fa.fai | tee $O.sam  | \
+    samtools view -bu | \
     bedtools bamtobed -i /dev/stdin -ed | bed2bed.pl -rmsuffix -ed | \
     count.pl -i 3 -j 4  | sort > $O.score
 
   cat $O.fq | \
     bwa mem $HP_RDIR/$HP_NUMT - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" -v 1 | \
+    samtools view -bu | \
     bedtools bamtobed -i /dev/stdin -ed | bed2bed.pl -rmsuffix -ed | \
     count.pl -i 3 -j 4  | sort > $ON.score
 
@@ -173,6 +175,7 @@ if  [ ! -s $OM.bam ] ; then
     bwa mem $OM+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" -v 1 | \
     samtools view  -F 0x90C -h | \
     circSam.pl -ref_len $OM.fa.fai | tee $OM.sam  | \
+    samtools  view -bu | \
     bedtools bamtobed -i /dev/stdin -ed | bed2bed.pl -rmsuffix -ed | \
     count.pl -i 3 -j 4  | sort > $OM.score
   rm $OM+.*
