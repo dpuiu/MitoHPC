@@ -1,6 +1,6 @@
 # HP : Mitochondrial Heteroplasmy Pipeline # 
 
-## Input: Illumina paired-end reads pre-aligned to a refernce genome
+## Input: Illumina paired-end reads pre-aligned to a reference ##
 
 ## SYSTEM PREREQUISITES ##
 
