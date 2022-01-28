@@ -20,8 +20,8 @@
 
 ### UPDATE PIPELINE ###
 
-   $ cd HP/
-   $ git pull
+    $ cd HP/
+    $ git pull
 
 ### SETUP ENVIRONMENT ###
 
