@@ -1,5 +1,6 @@
-# HP : Heteroplasmy Pipeline # 
+# HP : Mitochondrial Heteroplasmy Pipeline # 
 
+## Input: Illumina paired-end reads pre-aligned to a refernce genome
 
 ## SYSTEM PREREQUISITES ##
 
@@ -18,7 +19,7 @@
 
     $ git clone https://github.com/dpuiu/HP.git
 
-### UPDATE PIPELINE ###
+### UPDATE PIPELINE (optional) ###
 
     $ cd HP/
     $ git pull
@@ -26,42 +27,45 @@
 ### SETUP ENVIRONMENT ###
 
     $ cd HP/scripts
-    $ export HP_SDIR=`pwd`                                      # set script directory variable 
+    $ export HP_SDIR=`pwd`                                       # set script directory variable 
 
 ### INSTALL SYSTEM PREREQUISITES (optional) ###
 
-    $ sudo $HP_SDIR/install_sysprerequisites.sh		        # perl,pthon,java,wget ...
+    $ sudo $HP_SDIR/install_sysprerequisites.sh                  # install perl,pthon,java,wget ...
 
 ### INSTALL PREREQUISITES ; CHECK INSTALL ###
 
-    $ $HP_SDIR/install_prerequisites.sh  			# bwa,samtools,bedtools ...
+    $ $HP_SDIR/install_prerequisites.sh                          # bwa,samtools,bedtools ...
       or
-    $ $HP_SDIR/install_prerequisites.sh -f                      # force install
+    $ $HP_SDIR/install_prerequisites.sh -f                       # force install
 
     $ $HP_SDIR/checkInstall.sh
     # if successfull => "Success message!"
 
-    $ cat checkInstall.log					# contains version/path info
+    $ cat checkInstall.log					 # contains version/path info
 
 ## USAGE ##
 
 ### SETUP ENVIRONMENT ###
 
-    # go to your working directory 
-
+    # go to your working directory ; copy over the init.sh file
     $ cp -i $HP_SDIR/init.sh .                                   # copy init to working dir.
 
+    # Edit init.sh file
     $ nano init.sh                                               # check/edit local init file
         ...
-       export HP_ADIR=$PWD/bams/                                 # alignment dir
+       export HP_ADIR=$PWD/bams/                                 # alignment dir; contains .bam, .bam.bai and/or .idxstats file
+       # or  
+       export HP_ADIR=$PWD/crams/                                 # alignment dir; contains .cram, .cram.crai and/or .idxstats file
+      
        export HP_ODIR=$PWD/out/                                  # output dir  
        export HP_IN=$PWD/in.txt                                  # input file
 
-       export HP_L=                                              # number of reads to subsample
-                                                                 #  empty if all reads should be used
+       export HP_L=222000                                        #  Use at most 222K reads
 
        export HP_DOPT="--removeDups"                             # samblaster deduplication option
-                                                                 #  empty if no dedup should be done
+       export HP_GOPT="-max-reads-per-alignment-start 20 -mitochondria-mode"  # GATK mutect2 options
+       export HP_FOPT="-q 20 -e 20"                             # FASTP options
 
        find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | \
         $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN       # generate input file; 3 column
