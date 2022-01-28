@@ -51,7 +51,7 @@
     # go to your working directory ; copy over the init.sh file
     $ cp -i $HP_SDIR/init.sh .                                   # copy init to working dir.
 
-    # Edit init.sh file
+    # edit init.sh file
     $ nano init.sh                                               # check/edit local init file
         ...
        export HP_ADIR=$PWD/bams/                                 # alignment dir; contains .bam, .bam.bai and/or .idxstats file
@@ -91,7 +91,7 @@
      
 ## OUTPUT ##
 
-    under $HP_ODIR:
+    # under $HP_ODIR:
 
     TAB/SUMMARY/VCF/FASTA Files: 
 
