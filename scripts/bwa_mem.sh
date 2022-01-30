@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 set -ex
+#1: input prefix
+#2: output prefix
 
 I=$1
 O=$2
