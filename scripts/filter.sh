@@ -82,7 +82,7 @@ fi
 
 if  [ ! -s $O.bam ] ; then
   cat $O.fq | \
-    bwa mem $HP_RDIR/$HP_MT+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" -v 1 | \
+    bwa mem $HP_RDIR/$HP_MT+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" | \
     samtools view  -F 0x90C -h | \
     circSam.pl -ref_len $HP_RDIR/$HP_MT.fa.fai | tee $O.sam  | \
     samtools view -bu | \
@@ -90,7 +90,7 @@ if  [ ! -s $O.bam ] ; then
     count.pl -i 3 -j 4  | sort > $O.score
 
   cat $O.fq | \
-    bwa mem $HP_RDIR/$HP_NUMT - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" -v 1 | \
+    bwa mem $HP_RDIR/$HP_NUMT - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" | \
     samtools view -bu | \
     bedtools bamtobed -i /dev/stdin -ed | bed2bed.pl -rmsuffix -ed | \
     count.pl -i 3 -j 4  | sort > $ON.score
@@ -115,8 +115,8 @@ if [ ! -f $O.sa.bed ]   ; then samtools view -h $O.bam  -@ $HP_P | sam2bedSA.pl 
 
 if [ ! -s $OM.vcf ] ; then
   if [ "$HP_M" == "mutect2" ] ; then
-    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_MT.fa -I $O.bam                                -O $OM.orig.vcf $HP_GOPT
-    java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $HP_RDIR/$HP_MT.fa -V $OM.orig.vcf --min-reads-per-strand 2 -O $OM.vcf 
+    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_MT.fa -I $O.bam       -O $OM.orig.vcf $HP_GOPT --native-pair-hmm-threads $HP_P
+    java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $HP_RDIR/$HP_MT.fa -V $OM.orig.vcf -O $OM.vcf --min-reads-per-strand 2
   elif [ "$HP_M" == "mutserve" ] ; then
     if [ "$HP_MT" == "chrM" ] ||  [ "$HP_MT" == "rCRS" ] ||  [ "$HP_MT" == "RSRS" ] ; then
       java $HP_JOPT -jar $HP_JDIR/mutserve.jar call --deletions --insertions --level 0.01 --output $OM.vcf --reference $HP_RDIR/$HP_MT.fa $O.bam
@@ -172,7 +172,7 @@ if  [ ! -s $OM.bam ] ; then
   samtools faidx $OM.fa $S:1-$HP_E | grep -v ">" | cat $OM.fa - > $OM+.fa
   bwa index $OM+.fa -p $OM+
   cat $O.fq | \
-    bwa mem $OM+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" -v 1 | \
+    bwa mem $OM+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" | \
     samtools view  -F 0x90C -h | \
     circSam.pl -ref_len $OM.fa.fai | tee $OM.sam  | \
     samtools  view -bu | \
@@ -207,8 +207,8 @@ if [ ! -f $OM.sa.bed ]   ; then samtools view -h $OM.bam | sam2bedSA.pl | uniq.p
 #########################################################################################################################################
 #compute SNP/INDELs using mutect2 or mutserve
 if [ ! -s $OMM.vcf ] ; then
-  java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $OM.fa -I $OM.bam                                -O $OMM.orig.vcf  $HP_GOPT
-  java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $OM.fa -V $OMM.orig.vcf --min-reads-per-strand 2 -O $OMM.vcf
+  java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $OM.fa -I $OM.bam       -O $OMM.orig.vcf  $HP_GOPT --native-pair-hmm-threads $HP_P
+  java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $OM.fa -V $OMM.orig.vcf -O $OMM.vcf  --min-reads-per-strand 2
 fi
 
 rm $OM.bam*
