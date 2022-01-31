@@ -35,7 +35,8 @@ MAIN:
 		"min=i"	=>	\$opt{min},
 		"rmsuffix"	=>	\$opt{rmsuffix},
 		"offset" =>     \$opt{offset},
-		"ed"	=>	\$opt{ed}
+		"ed"	=>	\$opt{ed},
+		"add=i"	=>	\$opt{add}
         );
         die "ERROR: $HELPTEXT " if (!$result);
 
@@ -52,6 +53,12 @@ MAIN:
                         $F[1]+=$2;
                         $F[2]+=$2;
                 }
+
+		if($opt{add})
+		{
+			$F[1]-=$opt{add};
+			$F[2]+=$opt{add};
+		}
 
 		if($F[3] and $F[3]=~/(.+)\// and $opt{rmsuffix})
 		{
