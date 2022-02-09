@@ -1,6 +1,10 @@
 # HP : Mitochondrial Heteroplasmy Pipeline # 
 
-## Input: Illumina paired-end reads pre-aligned to a reference ##
+## INPUT ##
+ 
+    Illumina paired-end reads pre-aligned to a reference: .bam or .cram files 
+    Alignment indeces .bai or .crai .files
+    Alignment indexstats .idxstats 
 
 ## SYSTEM PREREQUISITES ##
 
@@ -23,6 +27,8 @@
 
     $ cd HP/
     $ git pull
+      or
+    $ git checkout .
 
 ### SETUP ENVIRONMENT ###
 
@@ -44,12 +50,13 @@
 
     $ cat checkInstall.log                                       # records software version/path info
 
-## USAGE ##
+## PIPELINE USAGE ##
 
 ### SETUP ENVIRONMENT ###
 
     # go to your working directory ; copy over the init.sh file
     $ cp -i $HP_SDIR/init.sh .                                   # copy init to working dir.
+
 
     # edit init.sh file
     $ nano init.sh                                               # check/edit local init file

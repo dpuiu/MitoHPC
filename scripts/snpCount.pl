@@ -69,20 +69,35 @@ MAIN:
 	                	}
 			}
 
+
+                        if($F[7]!~/;HP/ and $F[7]!~/;NUMT/)
+                        {
+                                if($F[-1]=~/.+:1$/)
+                                {
+                                        $count{$sample}{Hpn}++ ;
+                                        if($F[7]!~/;INDEL/)  { $count{$sample}{Spn}++ } else { $count{$sample}{Ipn}++ }
+                                }
+                                else
+                                {
+                                        $count{$sample}{hpn}++ ;
+                                        if($F[7]!~/;INDEL/)  { $count{$sample}{spn}++ } else { $count{$sample}{ipn}++ }
+                                }
+                        }
+
 			$snp{$sample}{$F[1]}=1;
 		}
 	}
 
 	#########################################################
 
-	print join "\t",("Run","H","h","S","s","I","i","Hp","hp","Sp","sp","Ip","ip","A"); print "\n";
+	print join "\t",("Run","H","h","S","s","I","i","Hp","hp","Sp","sp","Ip","ip", "Hpn","hpn","Spn","spn","Ipn","ipn","A"); print "\n";
 
 	foreach my $i (1..@samples)
         {
 		my $sample=$samples[$i-1];
 		my @counts=();
 
-		foreach ("H","h","S","s","I","i","Hp","hp","Sp","sp","Ip","ip","A")
+		foreach ("H","h","S","s","I","i","Hp","hp","Sp","sp","Ip","ip","Hpn","hpn","Spn","spn","Ipn","ipn","A")
 		{
 			 push @counts,($count{$sample}{$_})?$count{$sample}{$_}:0;
 		}

@@ -4,15 +4,14 @@ set -ex
 #######################################################################################################################################
 
 #Program that runs the heteroplasmy pipeline on a single sample
-
 #Input arguments
 #1: sample names
 #2: BAM/CRAM alignment file; full path
 #3: output prefix; full path
 
 ########################################################################################################################################
-#set variables
 
+#set variables
 export S=$1
 N=`basename $2 .bam`
 export N=`basename $N .cram`
@@ -27,23 +26,24 @@ OMM=$OM.$HP_M
 
 ########################################################################################################################################
 
+#test if VCF output file exist and exit if they do
 if [ $HP_I -eq 1 ] && [ -s $OA.count ] && [ -s $OM.00.vcf  ] ; then exit 0 ; fi
 if [ $HP_I -ge 2 ] && [ -s $OA.count ] && [ -s $OMM.00.vcf ] ; then exit 0 ; fi
 
 #########################################################################################################################################
-#test input file exists and is sorted
 
+#test alignment file exists and is sorted by coordinates
 test -s $2
 samtools view -H $2 | grep -m 1 -P "^@HD.+coordinate$" > /dev/null
 
-#generate index if necessary
+#text index file exists
 if [ ! -s $2.bai ] && [ ! -s $2.crai ]; then exit 1 ; fi
 
-#test reference
+#test references match
 RCOUNT=`samtools view -H $2 | grep -c "^@SQ"`
 if [ $HP_RCOUNT != $RCOUNT ] ; then echo "ERROR: HP_RCOUNT=$HP_RCOUNT does not match the number of \@SQ lines=$RCOUNT in $2"; exit 1 ; fi
 
-# get read counts
+#get read counts; if idxstats available, generate mtDNA-CN
 if [ ! -s $OA.count ]; then 
   if [ -s $IDIR/$N.idxstats ] ; then
     cat $IDIR/$N.idxstats | idxstats2count.pl -sample $S -chrM $HP_RMT > $OA.count
@@ -59,8 +59,8 @@ if [ $HP_I -eq 1 ] && [ -s $OM.00.vcf ]  ; then exit 0 ; fi
 if [ $HP_I -ge 2 ] && [ -s $OMM.00.vcf ] ; then exit 0 ; fi
 
 #########################################################################################################################################
-#sample reads
 
+#sample reads
 if [ ! -s $O.fq ] ; then
   R=""
   if [ $HP_L ]; then
@@ -78,8 +78,8 @@ if [ ! -s $O.fq ] ; then
 fi
 
 #########################################################################################################################################
-#realign reads
 
+#realign reads
 if  [ ! -s $O.bam ] ; then
   cat $O.fq | \
     bwa mem $HP_RDIR/$HP_MT+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" | \
@@ -103,16 +103,18 @@ if  [ ! -s $O.bam ] ; then
   rm $O.sam $O.score
   samtools index $O.bam -@ $HP_P
 fi
-#########################################################################################################################################
-#count aligned reads; compute cvg; get stats; gets split alignments
 
+#########################################################################################################################################
+
+#count aligned reads; compute cvg; get stats; gets split alignments
 if [ ! -s $O.count ]    ; then samtools idxstats $O.bam  -@ $HP_P | idxstats2count.pl -sample $S -chrM $HP_MT > $O.count ; fi
 if [ ! -s $O.cvg ]      ; then cat $O.bam | bedtools bamtobed -cigar | grep "^$HP_MT" | bedtools genomecov -i - -g $HP_RDIR/$HP_MT.fa.fai -d > $O.cvg ; fi
 if [ ! -s $O.cvg.stat ] ; then cat $O.cvg | cut -f3 | st.pl | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{S}\t$_" }'  > $O.cvg.stat ; fi
 if [ ! -f $O.sa.bed ]   ; then samtools view -h $O.bam  -@ $HP_P | sam2bedSA.pl | uniq.pl -i 3 | sort -k2,2n -k3,3n > $O.sa.bed ; fi
-#########################################################################################################################################
-#compute SNP/INDELs using mutect2 or mutserve
 
+#########################################################################################################################################
+
+#compute SNP/INDELs using mutect2 or mutserve
 if [ ! -s $OM.vcf ] ; then
   if [ "$HP_M" == "mutect2" ] ; then
     java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_MT.fa -I $O.bam       -O $OM.orig.vcf $HP_GOPT --native-pair-hmm-threads $HP_P
@@ -141,9 +143,10 @@ if [ ! -s $OM.00.vcf ] ; then
   cat $OM.00.vcf | maxVcf.pl | bedtools sort -header |tee $OM.max.vcf | bgzip -f -c > $OM.max.vcf.gz ; tabix -f $OM.max.vcf.gz
   annotateVcf.sh $OM.00.vcf
 fi
-########################################################################################################################################
-# get haplogroup
 
+########################################################################################################################################
+
+# get haplogroup
 if [ "$HP_O" == "Human" ] ; then
 
   if [ ! -s $OM.haplogroup ] ; then
@@ -156,8 +159,8 @@ if [ "$HP_O" == "Human" ] ; then
 fi
 
 #########################################################################################################################################
-#get new consensus; format reference
 
+#get new consensus; format reference
 if  [ ! -s $OM.fa ]  ; then
   bcftools consensus -f $HP_RDIR/$HP_MT.fa $OM.max.vcf.gz | perl -ane 'chomp; if($.==1) { print ">$ENV{S}\n" } else { s/N//g; print } END {print "\n"}' > $OM.fa
   rm $OM.max.vcf.gz $OM.max.vcf.gz.tbi
@@ -167,7 +170,7 @@ fi
 
 ########################################################################################################################################
 
-#realign reads
+#realign reads; check coverage
 if  [ ! -s $OM.bam ] ; then
   samtools faidx $OM.fa $S:1-$HP_E | grep -v ">" | cat $OM.fa - > $OM+.fa
   bwa index $OM+.fa -p $OM+
@@ -191,20 +194,22 @@ if  [ ! -s $OM.bam ] ; then
   rm $OM.sam $OM.score $ON.score $O.fq
 fi
 
+#exit if the number of iterations is set to 1
 if [ $HP_I -lt 2 ] || [ $HP_M != "mutect2" ] ; then
   rm $OM.bam* *score
   exit 0
 fi
 
 #########################################################################################################################################
-#count aligned reads; compute cvg; get stats; gets split alignments
 
+#count aligned reads; compute cvg; get stats; gets split alignments
 if [ ! -s $OM.count ]    ; then samtools idxstats $OM.bam  -@ $HP_P | idxstats2count.pl -sample $S -chrM $S > $OM.count ; fi
 if [ ! -s $OM.cvg ]      ; then cat $OM.bam | bedtools bamtobed -cigar | grep "^$S" | bedtools genomecov -i - -g $OM.fa.fai -d > $OM.cvg ; fi
 if [ ! -s $OM.cvg.stat ] ; then cat $OM.cvg | cut -f3 | st.pl | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{S}\t$_" }'  > $OM.cvg.stat ; fi
 if [ ! -f $OM.sa.bed ]   ; then samtools view -h $OM.bam | sam2bedSA.pl | uniq.pl -i 3 | sort -k2,2n -k3,3n > $OM.sa.bed ; fi
 
 #########################################################################################################################################
+
 #compute SNP/INDELs using mutect2 or mutserve
 if [ ! -s $OMM.vcf ] ; then
   java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $OM.fa -I $OM.bam       -O $OMM.orig.vcf  $HP_GOPT --native-pair-hmm-threads $HP_P

@@ -64,6 +64,7 @@ export HP_MM="3G"					    # maximum memory; 4G before
 #INPUT/OUTPUT
 
 PWD=`pwd -P`
+export HP_FDIR=$PWD/fastq/      # fastq input file directory ; .fq or .fq.gz file extension
 export HP_ADIR=$PWD/bams/	# bams or crams input file directory
 export HP_ODIR=$PWD/out/        # output dir
 export HP_IN=$PWD/in.txt        # input file to be generated
