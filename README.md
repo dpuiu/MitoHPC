@@ -2,20 +2,20 @@
 
 ## INPUT ##
  
-    Illumina paired-end reads pre-aligned to a reference: .bam or .cram files 
-    Alignment indeces .bai or .crai .files
-    Alignment indexstats .idxstats 
+    * Illumina paired-end reads pre-aligned to a reference: .bam or .cram files 
+    * Alignment indeces: .bai or .crai files
+    * Alignment indexstats: .idxstats files
 
 ## SYSTEM PREREQUISITES ##
 
-    OS:                UNIX/LINUX 
-    SOFTWARE PACKAGES: git,wget,tar,unzip,make,autoconf,gcc,java,perl,python 
+    * OS:                UNIX/LINUX 
+    * SOFTWARE PACKAGES: git,wget,tar,unzip,make,autoconf,gcc,java,perl,python 
  
 ## PIPELINE PREREQUISITES ##
 
-    SOFTWARE PACKAGES: bwa,samtools,bedtools,fastp,samblaster,bcftools,htslib
-    JAVA JARS:         gatk,mutserve,haplogrep,haplocheck
-    HUMAN ASSEMBLY:    hs38DH
+    * SOFTWARE PACKAGES: bwa,samtools,bedtools,fastp,samblaster,bcftools,htslib
+    * JAVA JARS:         gatk,mutserve,haplogrep,haplocheck
+    * HUMAN ASSEMBLY:    hs38DH
 
 ## INSTALL ## 
 
