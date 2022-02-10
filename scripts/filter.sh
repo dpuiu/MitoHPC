@@ -120,12 +120,14 @@ if [ ! -s $OM.vcf ] ; then
       echo "Wrong mutserve reference"
       exit 1
     fi
+  elif [ "$HP_M" == "freebayes" ] ; then
+    freebayes -p 1 --pooled-continuous --min-alternate-fraction 0.01 $O.bam -f $HP_RDIR/$HP_MT.fa | bcftools norm -f $HP_RDIR/$HP_MT.fa  > $OM.vcf
   else
     echo "Unsuported SNV caller"
     exit 1
   fi
 fi
-rm $O.bam*
+##rm $O.bam*
 
 if [ ! -s $OM.00.vcf ] ; then
   # filter SNPs
@@ -133,7 +135,6 @@ if [ ! -s $OM.00.vcf ] ; then
   fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OM.00.vcf
   bcftools norm -m - $OM.vcf | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa | bedtools sort -header> $OM.fix.vcf
   cat $OM.fix.vcf | filterVcf.pl -sample $S -source $HP_M | bedtools sort >> $OM.00.vcf
-
   cat $OM.00.vcf | maxVcf.pl | bedtools sort -header |tee $OM.max.vcf | bgzip -f -c > $OM.max.vcf.gz ; tabix -f $OM.max.vcf.gz
   annotateVcf.sh $OM.00.vcf
 fi
@@ -185,12 +186,14 @@ if  [ ! -s $OM.bam ] ; then
   samtools index $OM.bam -@ $HP_P
   bedtools bamtobed -i $OM.bam -ed | perl -ane 'print if($F[-2]==0);' | bedtools merge -d -3 | bed2bed.pl -min 3 > $OM.merge.bed
 
-  rm $OM.sam $OM.score $ON.score $O.fq
+  rm $OM.sam $OM.score 
+  ##rm $ON.score $O.fq
 fi
 
 #exit if the number of iterations is set to 1
-if [ $HP_I -lt 2 ] || [ $HP_M != "mutect2" ] ; then
-  rm $OM.bam* *score
+if [ $HP_I -lt 2 ] || [ $HP_M == "mutserve" ] ; then
+  ##rm $OM.bam* 
+  ##rm $ON.score
   exit 0
 fi
 
@@ -206,11 +209,18 @@ if [ ! -f $OM.sa.bed ]   ; then samtools view -h $OM.bam | sam2bedSA.pl | uniq.p
 
 #compute SNP/INDELs using mutect2 or mutserve
 if [ ! -s $OMM.vcf ] ; then
-  java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $OM.fa -I $OM.bam       -O $OMM.orig.vcf  $HP_GOPT --native-pair-hmm-threads $HP_P
-  java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $OM.fa -V $OMM.orig.vcf -O $OMM.vcf  --min-reads-per-strand 2
+  if [ "$HP_M" == "mutect2" ] ; then
+    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $OM.fa -I $OM.bam       -O $OMM.orig.vcf  $HP_GOPT --native-pair-hmm-threads $HP_P
+    java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $OM.fa -V $OMM.orig.vcf -O $OMM.vcf  --min-reads-per-strand 2
+  elif [ "$HP_M" == "freebayes" ] ; then
+    freebayes -p 1 --pooled-continuous --min-alternate-fraction 0.01 $OM.bam -f $OM.fa | bcftools norm -f $OM.fa  > $OMM.vcf
+  else
+    echo "Unsuported SNV caller"
+    exit 1
+  fi
 fi
 
-rm $OM.bam*
+##rm $OM.bam*
 
 if [ ! -s $OMM.00.vcf ] ; then
   # filter SNPs

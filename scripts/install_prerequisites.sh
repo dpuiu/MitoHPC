@@ -8,7 +8,7 @@ set -x
 
 ########################################################################
 
-. $HP_SDIR/init.sh
+#. $HP_SDIR/init.sh
 cd $HP_HDIR
 mkdir -p prerequisites/ $HP_BDIR/ $HP_JDIR/ $HP_RDIR/
 cd prerequisites/
@@ -106,6 +106,13 @@ if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
   wget -N -c http://opengene.org/fastp/fastp
   cp fastp $HP_BDIR/
   chmod a+x $HP_BDIR/fastp
+fi
+
+which freebayes
+if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
+  wget -N -c https://github.com/freebayes/freebayes/releases/download/v1.3.6/freebayes-1.3.6-linux-amd64-static.gz
+  gunzip freebayes-1.3.6-linux-amd64-static.gz  -c >  $HP_BDIR/freebayes
+  chmod a+x $HP_BDIR//freebayes
 fi
 
 if [ ! -s $HP_JDIR/gatk.jar ] ; then

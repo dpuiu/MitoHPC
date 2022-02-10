@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -eux
 
 #########################################################
 
@@ -8,7 +8,7 @@ set -e
 
 ##########################################################
 
-. $HP_SDIR/init.sh
+#. $HP_SDIR/init.sh
 
 #test executables and Java jars
 which perl	        #usually available on Linux

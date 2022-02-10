@@ -56,15 +56,17 @@ fi
 awk '{print $3}' $HP_IN | sed "s|$|.$M.fa|"        | xargs cat > $HP_ODIR/$M.fa
 samtools faidx  $HP_ODIR/$M.fa
 
+#cvg
+awk '{print $3}' $HP_IN | sed "s|$|.$M.merge.bed|" | xargs cat > $HP_ODIR/$M.merge.bed
+
 ##########################################################
 # get 2nd iteration stats
 
 if [ $HP_I -lt 2 ] ; then exit 0 ; fi
-if [ $HP_M != "mutect2" ] ; then exit 0 ; fi
+if [ $HP_M == "mutserve" ] ; then exit 0 ; fi
 
 MM=$M.$M
 #count,cvg
-awk '{print $3}' $HP_IN | sed "s|$|.$M.merge.bed|" | xargs cat > $HP_ODIR/$M.merge.bed
 awk '{print $3}' $HP_IN | sed "s|$|.$M.count|" | xargs cat | uniq.pl > $HP_ODIR/$M.count.tab
 awk '{print $3}' $HP_IN | sed "s|$|.$M.cvg.stat|" | xargs cat | uniq.pl -i 0  > $HP_ODIR/$M.cvg.tab
 awk '{print $3}' $HP_IN | sed "s|$|.$MM.00.vcf|" | xargs cat | bedtools sort -header  > $HP_ODIR/$MM.00.concat.vcf

@@ -13,7 +13,7 @@
  
 ## PIPELINE PREREQUISITES ##
 
-    * SOFTWARE PACKAGES: bwa,samtools,bedtools,fastp,samblaster,bcftools,htslib
+    * SOFTWARE PACKAGES: bwa,samtools,bedtools,fastp,samblaster,bcftools,htslib,freebayes
     * JAVA JARS:         gatk,mutserve,haplogrep,haplocheck
     * HUMAN ASSEMBLY:    hs38DH
 
@@ -34,6 +34,7 @@
 
     $ cd HP/scripts
     $ export HP_SDIR=`pwd`                                       # set script directory variable 
+    $ . ./init.sh                                                # or init.hs38DH.sh or init.mm39.sh
 
 ### INSTALL SYSTEM PREREQUISITES (optional) ###
 
@@ -105,17 +106,17 @@
     cvg.tab                                                      # subsampled coverage stats
 
     # 1st ITERATION
-    {mutect2,mutserve}.{03,05,10}.{concat,merge[.sitesOnly]}.vcf # SNVs; 3,5,10% heteroplasmy thold
-    {mutect2,mutserve}.{03,05,10}.tab                            # SNV counts
-    {mutect2,mutserve}.{03,05,10}.summary                        # SNV count summaries
+    {mutect2,mutserve,freebayes}.{03,05,10}.{concat,merge[.sitesOnly]}.vcf # SNVs; 3,5,10% heteroplasmy thold
+    {mutect2,mutserve,freebayes}.{03,05,10}.tab                            # SNV counts
+    {mutect2,mutserve,freebayes}.{03,05,10}.summary                        # SNV count summaries
 
-    {mutect2,mutserve}.fa                                        # consensus sequence
-    {mutect2,mutserve}.haplogroup[1].tab                         # haplogroup
-    {mutect2,mutserve}.haplocheck.tab                            # contamination screen   
+    {mutect2,mutserve,freebayes}.fa                                        # consensus sequence
+    {mutect2,mutserve,freebayes}.haplogroup[1].tab                         # haplogroup
+    {mutect2,mutserve,freebayes}.haplocheck.tab                            # contamination screen   
 
-    #2nd ITERATION ###
-    mutect2.mutect2.{03,05,10}.{concat,merge[.sitesOnly]}.vcf	
-    mutect2.mutect2.{03,05,10}.tab
+    # 2nd ITERATION
+    {mutect2.mutect2,freebayes.freebayes}.{03,05,10}.{concat,merge[.sitesOnly]}.vcf	
+    {mutect2.mutect2,freebayes.freebayes}.{03,05,10}.tab
 
 ## EXAMPLE ##
 

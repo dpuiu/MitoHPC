@@ -6,6 +6,9 @@ set -e
 
 test -s $HP_IN
 
+if [ $HP_I != "0" ]       && [ $HP_I != "1" ]        && [ $HP_I != "2" ] ;         then  echo "Wrong HP_I parameter" ; exit 1 ; fi
+if [ $HP_M != "mutect2" ] && [ $HP_M != "mutserve" ] && [ $HP_M != "freebayes" ] ; then  echo "Wrong HP_M parameter" ; exit 1 ; fi
+
 mkdir -p $HP_ODIR
 test -w $HP_ODIR
 
