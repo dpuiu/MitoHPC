@@ -61,9 +61,9 @@
     # edit init.sh file
     $ nano init.sh                                               # check/edit local init file
         ...
-       export HP_ADIR=$PWD/bams/                                 # alignment dir; contains .bam, .bam.bai and/or .idxstats file
+       export HP_ADIR=$PWD/bams/                                 # alignment dir; .bam, .bai, [.idxstats] files
        # or  
-       export HP_ADIR=$PWD/crams/                                 # alignment dir; contains .cram, .cram.crai and/or .idxstats file
+       export HP_ADIR=$PWD/crams/                                # alignment dir; .cram, .crai, [.idxstats] files
       
        export HP_ODIR=$PWD/out/                                  # output dir  
        export HP_IN=$PWD/in.txt                                  # input file
@@ -122,13 +122,11 @@
     mutect2.mutect2.{03,05,10}.{concat,merge[.sitesOnly]}.vcf	
     mutect2.mutect2.{03,05,10}.tab
 
-## EXAMPLE 1 : Usage ##
+## EXAMPLE 1 ##
 
-    $ $HP_SDIR/run.sh     
+    3 simulated datasets
 
-## EXAMPLE 2 : 3 simulated datasets  ##
-
-### input file ###
+### INPUT ###
 
     $ head $HP_IN
       #sampleName     inputFile          outputPath/prefix
@@ -137,16 +135,17 @@
       chrM.C          bams/chrM.C.bam    out/chrM.C/chrM.C
       ...
 
- ### read counts and mtDNA-CN(M)
+### OUTPUT ###
 
-     $ head $HP_ODIR/count.tab
-       Run	 all        mapped     chrM    M
-       chrM.A    851537886  848029490  396766  181.7
-       chrM.B    884383716  882213718  506597  223.01
-       chrM.C    786560467  785208588  503241  248.9
-       ...
+#### output directories : 1/sample ####
 
-### directory structure ###
+    $ ls out/
+      chrM.A/
+      chrM.B/
+      chrM.C/
+      ...
+
+#### directory structure ####
 
     $ ls $HP_ADIR/*
       bams/chrM.A.bam
@@ -155,22 +154,24 @@
       bams/chrM.A.count
      ...
 
-### after running the pipeline ###
+#### read counts and mtDNA-CN(M) ####
 
-#### output directories : 1/sample ####
-  
-    $ ls out/
-      chrM.A/
-      chrM.B/
-      chrM.C/ 
-      ...
+     $ head $HP_ODIR/all.count.tab
+       Run       all        mapped     chrM    M
+       chrM.A    851537886  848029490  396766  181.7
+       chrM.B    884383716  882213718  506597  223.01
+       chrM.C    786560467  785208588  503241  248.9
+       ...
 
 #### vcf files : concat & merge ####
 
     # 1st iteration : homoplasmies(AF=1) and heteroplasmies(AF<1)
     $ cat mutect2.03.concat.vcf  
       ...
-      ##INFO=<ID=SM,Number=1,Type=String,Description="Sample">
+      ##INFO=<ID=INDEL,Number=0,Type=Flag,Description="INDEL">
+      ##INFO=<ID=GT,Number=1,Type=String,Description="Genotype">
+      ##INFO=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
+      ##INFO=<ID=AF,Number=A,Type=Float,Description="Allele Frequency">
       ##INFO=<ID=HP,Number=0,Type=Flag,Description="Homoloplymer">
       ##INFO=<ID=HS,Number=0,Type=Flag,Description="Hot spot">
       ##INFO=<ID=CDS,Number=0,Type=Flag,Description="coding region">
@@ -180,55 +181,41 @@
       ##INFO=<ID=HG,Number=1,Type=String,Description="haplogroup">
       ##INFO=<ID=NUMT,Number=0,Type=Flag,Description="NUMT like">
       ##INFO=<ID=HV,Number=0,Type=Flag,Description="Hypervariable">
-      ##INFO=<ID=SM,Number=1,Type=String,Description="Sample">
-      ##INFO=<ID=CR,Number=1,Type=String,Description="CADD Raw score">
-      ##INFO=<ID=CP,Number=1,Type=String,Description="CADD PHREDD score">
+      ##INFO=<ID=AP,Number=1,Type=String,Description="Mitimpact APOGEE">
+      ##INFO=<ID=APS,Number=1,Type=String,Description="Mitimpact APOGEE_score">
       ...
-      ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
-      ##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
-      ##FORMAT=<ID=AF,Number=A,Type=Float,Description="Allele Frequency">
+      #CHROM POS   ID REF ALT  QUAL  FILTER                      INFO                                                                               FORMAT SAMPLE
+      chrM   64    .  C   T    .     clustered_events;haplotype  HV=HV-II;DLOOP;GT=0|1;DP=66;AF=1                                                   SM     chrM.A
+      chrM   73    .  A   G    .     PASS                        HV=HV-II;DLOOP;NUMT=MT780574.1|KM281532.1|KM281533.1|KM281524.1;GT=0/1;DP=51;AF=1  SM     chrM.B
+      chrM   73    .  A   G    .     PASS                        HV=HV-II;DLOOP;NUMT=MT780574.1|KM281532.1|KM281533.1|KM281524.1;GT=0/1;DP=46;AF=1  SM     chrM.C
+      chrM   73    .  A   G    .     clustered_events;haplotype  HV=HV-II;DLOOP;NUMT=MT780574.1|KM281532.1|KM281533.1|KM281524.1;GT=0|1;DP=70;AF=1  SM     chrM.A
+      chrM   146   .  T   C    .     clustered_events;haplotype  HV=HV-II;DLOOP;GT=0|1;DP=88;AF=1                                                   SM     chrM.A
       ...
-      #CHROM  POS  ID  REF  ALT  QUAL  FILTER                        INFO                                          FORMAT    SAMPLE
-      chrM    64   .   C    T    .     clustered_events;haplotype    SM=chrM.A;HV;DLOOP;CR=1.140555;CP=11.43       GT:DP:AF  0|1:67:1
-      chrM    73   .   A    G    .     PASS                          SM=chrM.B;HV;DLOOP;NUMT;CR=1.039800;CP=10.89  GT:DP:AF  0/1:52:1
-      chrM    73   .   A    G    .     PASS                          SM=chrM.C;HV;DLOOP;NUMT;CR=1.039800;CP=10.89  GT:DP:AF  0/1:43:1
-      chrM    73   .   A    G    .     clustered_events;haplotype    SM=chrM.A;HV;DLOOP;NUMT;CR=1.039800;CP=10.89  GT:DP:AF  0|1:70:1
-      chrM    146  .   T    C    .     clustered_events;haplotype    SM=chrM.A;HV;DLOOP;CR=0.949142;CP=10.37       GT:DP:AF  0|1:88:1
+      chrM   1037  .  A   C    .     PASS                        RNR=RNR1;GT=0/1;DP=70;AF=0.178                                                     SM     chrM.B
+      chrM   1038  .  C   G    .     PASS                        RNR=RNR1;GT=0/1;DP=70;AF=0.165                                                     SM     chrM.A
+      chrM   1042  .  T   A    .     PASS                        RNR=RNR1;GT=0/1;DP=60;AF=0.24                                                      SM     chrM.C
       ...
-      chrM    374  .   A    G    .     clustered_events              SM=chrM.A;DLOOP;CR=0.998787;CP=10.66          GT:DP:AF  0/1:76:0.139
-      chrM    375  .   C    T    .     clustered_events;strand_bias  SM=chrM.B;DLOOP;CR=1.074472;CP=11.08          GT:DP:AF  0/1:65:0.162
-      chrM    378  .     C    T    .   clustered_events;strand_bias  SM=chrM.C;DLOOP;CR=1.043995;CP=10.91          GT:DP:AF  0/1:82:0.128
+      chrM   3988  .  T   G    .     PASS                        CDS=ND1;AP=Pathogenic;APS=0.52;GT=0/1;DP=60;AF=0.224                               SM     chrM.B 
+      chrM   3989  .  A   T    .     PASS                        CDS=ND1;AP=Pathogenic;APS=0.52;GT=0/1;DP=65;AF=0.237                               SM     chrM.A
+      chrM   5186  .  A   T    .     PASS                        CDS=ND2;HG=U;AP=Pathogenic;APS=0.51;GT=0|1;DP=97;AF=0.212                          SM     chrM.C
       ...
-      chrM    1037 .   A    C    .     PASS                          SM=chrM.B;RNR;CR=0.682748;CP=8.714            GT:DP:AF  0/1:70:0.178
-      chrM    1038 .   C    G    .     PASS                          SM=chrM.A;RNR;CR=0.822718;CP=9.603            GT:DP:AF  0/1:70:0.165
-      chrM    1042 .   T    A     .    PASS                          SM=chrM.C;RNR;CR=1.104043;CP=11.24            GT:DP:AF  0/1:60:0.24
-      ...
+
     $ cat mutect2.03.merge.vcf  
-      ...  
-      #CHROM  POS  ID  REF  ALT  QUAL  FILTER  INFO                                          FORMAT    chrM.A    chrM.B    chrM.C
-      chrM    64   .   C    T    .     .       AC=1;AN=2;HV;DLOOP;CR=1.140555;CP=11.43       GT:DP:AF  0|1:67:1  .:.:.     .:.:.
-      chrM    73   .   A    G    .     .       AC=3;AN=6;HV;DLOOP;NUMT;CR=1.039800;CP=10.89  GT:DP:AF  0|1:70:1  0/1:52:1  0/1:43:1
-      chrM    146  .   T    C    .     .       AC=1;AN=2;HV;DLOOP;CR=0.949142;CP=10.37       GT:DP:AF  0|1:88:1  .:.:.     .:.:.
+      ...      
+      #CHROM POS   ID REF ALT  QUAL  FILTER  INFO                                      FORMAT    chrM.A        chrM.B        chrM.C
+      ...
+      chrM   3988  .  T   G    .     .       AC=1;AN=2;CDS=ND1;AP=Pathogenic;APS=0.52  GT:DP:AF  .:.:.         0/1:60:0.224  .:.:.
+      chrM   3989  .  A   T    .     .       AC=1;AN=2;CDS=ND1;AP=Pathogenic;APS=0.52  GT:DP:AF  0/1:65:0.237  .:.:.         .:.:.
+      chrM   3993  .  A   T    .     .       AC=1;AN=2;CDS=ND1                         GT:DP:AF  .:.:.         .:.:.         0/1:52:0.258
       ...
 
     $ cat mutect2.03.merge.sitesOnly.vcf
-     ...
-      #CHROM  POS  ID  REF  ALT  QUAL  FILTER  INFO
-      chrM    64   .   C    T    .     .       AC=1;AN=2;HV;DLOOP;CR=1.140555;CP=11.43
-      chrM    73   .   A    G    .     .       AC=3;AN=6;HV;DLOOP;NUMT;CR=1.039800;CP=10.89
-      chrM    146  .   T    C    .     .       AC=1;AN=2;HV;DLOOP;CR=0.949142;CP=10.37
+       ...
+      #CHROM POS   ID REF ALT  QUAL  FILTER  INFO                                      
       ...
-
-    # 2nd iteration ; mostly heteroplasmies(AF<1)
-    $ cat mutect2.mutect2.03.concat.vcf 
-      #CHROM  POS   ID  REF   ALT  QUAL  FILTER  INFO                                  FORMAT    SAMPLE
-      chrM    374   .   A     G    .     PASS    SM=chrM.A;DLOOP;CR=0.998787;CP=10.66  GT:DP:AF  0/1:62:0.138
-      chrM    375   .   C     T    .     PASS    SM=chrM.B;DLOOP;CR=1.074472;CP=11.08  GT:DP:AF  0/1:48:0.178
-      chrM    378   .   C     T    .     PASS    SM=chrM.C;DLOOP;CR=1.043995;CP=10.91  GT:DP:AF  0/1:71:0.121
-      ...
-      chrM    1037  .   A     C    .     PASS    SM=chrM.B;RNR;CR=0.682748;CP=8.714    GT:DP:AF  0/1:70:0.178
-      chrM    1038  .   C     G    .     PASS    SM=chrM.A;RNR;CR=0.822718;CP=9.603    GT:DP:AF  0/1:70:0.165
-      chrM    1042  .   T     A    .     PASS    SM=chrM.C;RNR;CR=1.104043;CP=11.24    GT:DP:AF  0/1:60:0.24
+      chrM   3988  .  T   G    .     .       AC=1;AN=2;CDS=ND1;AP=Pathogenic;APS=0.52
+      chrM   3989  .  A   T    .     .       AC=1;AN=2;CDS=ND1;AP=Pathogenic;APS=0.52
+      chrM   3993  .  A   T    .     .       AC=1;AN=2;CDS=ND1                       
       ...
      
 #### SNV counts ####
@@ -249,10 +236,11 @@
       chrM.C  0  42  0  34  0  8  0   41  0   33  0   8   42
       ...
 
-#### Summaries ####
+#### SNV Summaries ####
+
     # 1st iteration
     $ cat mutect2.03.summary  | column -t
-      id  count  nonZero  min  max  median  mean   sum
+      id   count  nonZero  min  max  median  mean   sum
        H   3      3        27   39   31      32.33  97
        h   3      3        42   44   43      43     129
        S   3      3        25   35   28      29.33  88
@@ -276,7 +264,7 @@
       chrM.C                     C           
       ...
 
-#### Contamination ####
+#### Haplocheck Contamination ####
 
     $ cat mutect2.haplocheck.tab  | column -t
       Run     ContaminationStatus  ContaminationLevel  Distance  SampleCoverage
@@ -285,23 +273,20 @@
       chrM.C  NO                   ND                  14        78
       ...
 
-## EXAMPLE 3 : CUSTOM FILTERING ##
+## EXAMPLE 2 : CUSTOM FILTERING ##
 
-### using init.sh ###
-
+    # define filter name and command
     $ nano init.sh
       export HP_FNAME="no_qual_haplotype_strand"
       export HP_FRULE="egrep -v \"qual|haplotype|strand\""
-    # rerun run.sh ...
 
-### command line ###    
+    # reinit and rerun
+    $ . ./init.sh 
+    $ $HP_SDIR/run.sh > run.all.sh 
+    $ bash ./run.all.sh  
 
-    $ HP_M=mutect2
-    $ cat $HP_ODIR/$M.00.concat.vcf  | egrep -v 'qual|haplotype|strand'  > \
-        $HP_ODIR/$M.no_qual_haplotype_strand.00.concat.vcf
-    $ $HP_SDIR/snpCount.sh $HP_IN $ODIR $HP_M.no_qual_haplotype_strand 03
-    $ $HP_SDIR/snpCount.sh $HP_IN $ODIR $HP_M.no_qual_haplotype_strand 05
-    $ $HP_SDIR/snpCount.sh $HP_IN $ODIR $HP_M.no_qual_haplotype_strand 10
+    # check additional output files
+    $ ls $HP_OUT/$HP_M.no_qual_haplotype_strand.*
 
 ### LEGEND ###
 

@@ -26,7 +26,7 @@ OMM=$OM.$HP_M
 
 ########################################################################################################################################
 
-#test if VCF output file exist and exit if they do
+#test if count and VCF output files exist; exit if they do
 if [ $HP_I -eq 1 ] && [ -s $OA.count ] && [ -s $OM.00.vcf  ] ; then exit 0 ; fi
 if [ $HP_I -ge 2 ] && [ -s $OA.count ] && [ -s $OMM.00.vcf ] ; then exit 0 ; fi
 
@@ -36,31 +36,25 @@ if [ $HP_I -ge 2 ] && [ -s $OA.count ] && [ -s $OMM.00.vcf ] ; then exit 0 ; fi
 test -s $2
 samtools view -H $2 | grep -m 1 -P "^@HD.+coordinate$" > /dev/null
 
-#text index file exists
-if [ ! -s $2.bai ] && [ ! -s $2.crai ]; then exit 1 ; fi
-
 #test references match
 RCOUNT=`samtools view -H $2 | grep -c "^@SQ"`
 if [ $HP_RCOUNT != $RCOUNT ] ; then echo "ERROR: HP_RCOUNT=$HP_RCOUNT does not match the number of \@SQ lines=$RCOUNT in $2"; exit 1 ; fi
 
-#get read counts; if idxstats available, generate mtDNA-CN
-if [ ! -s $OA.count ]; then 
-  if [ -s $IDIR/$N.idxstats ] ; then
-    cat $IDIR/$N.idxstats | idxstats2count.pl -sample $S -chrM $HP_RMT > $OA.count
-  elif [ -s $IDIR/$N.count ]    ; then
-    cut -f1,2,3,4 $IDIR/$N.count  > $OA.count
-  else
-    samtools view -@ $HP_P -F 0x900 $2 $HP_RMT -c -T $HP_RDIR/$HP_RNAME.fa | perl -ane 'print "Run\tMT\n$ENV{S}\t$_"' > $OA.count
-  fi
-fi
+#generate index and indexstats files
+if [ ! -s $2.bai ] && [ ! -s $2.crai ]; then samtools index $2 -@ $HP_P ; fi
+if [ ! -s $I.idxstats ] ; then               samtools idxstats $2 > $I.idxstats ; fi
 
+#get read counts
+if [ ! -s $OA.count ]; then cat $I.idxstats | idxstats2count.pl -sample $S -chrM $HP_RMT > $OA.count ; fi
+
+#test if VCF output files exist; exit if they do
 if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 if [ $HP_I -eq 1 ] && [ -s $OM.00.vcf ]  ; then exit 0 ; fi
 if [ $HP_I -ge 2 ] && [ -s $OMM.00.vcf ] ; then exit 0 ; fi
 
 #########################################################################################################################################
 
-#sample reads
+#subsample reads
 if [ ! -s $O.fq ] ; then
   R=""
   if [ $HP_L ]; then
@@ -79,7 +73,7 @@ fi
 
 #########################################################################################################################################
 
-#realign reads
+#realign subsampled reads
 if  [ ! -s $O.bam ] ; then
   cat $O.fq | \
     bwa mem $HP_RDIR/$HP_MT+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" | \

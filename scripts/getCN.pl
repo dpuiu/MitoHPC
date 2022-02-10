@@ -10,12 +10,12 @@ MAIN:
 	my %opt;
 	$opt{ref}=   3217346917;	#hs38DH size (3355 sequences) 
 	#$opt{ref}=  3099922541;	#hs38DH size (195 sequences)
-	$opt{female}=3160119502;
-	$opt{male}=  3110712762;
+	#$opt{female}=3160119502;	#hs38DH  based estimates
+	#$opt{male}=  3110712762;	#hs38DH  based estimates
 
-	#$opt{ref}=3032259390;		#CHM13 avg
-	#$opt{female}=3054832041;	#CHM13     
-	#$opt{male}=3009686739;		#CHM13/1.015
+	$opt{ref}=3031865587;		#CHM13 v1.1.	94.23% of prev estimate 
+	$opt{female}=3054815472;	#CHM13 v1.1     96.66% of prev estimate 
+	$opt{male}=3008915703;		#CHM13 v1.1;  	96.72% of prev estimate 
 
 	$opt{chrM}=  16569;
 
@@ -48,7 +48,6 @@ MAIN:
 				my $M=($F[3]*2*$opt{ref})/($F[2]*$opt{chrM});
 				#$M=int($M*100+.5)/100;
 				$M=int($M+.5);
-				#$M="." if($M>10000);
 				push @F,$M ;
 			}
 		}

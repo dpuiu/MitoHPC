@@ -75,7 +75,7 @@ MAIN:
 
 	#########################################################
 
-	print join "\t",("Run","H","h","S","s","I","i","Hp","hp","Sp","sp","Ip","ip""A"); print "\n";
+	print join "\t",("Run","H","h","S","s","I","i","Hp","hp","Sp","sp","Ip","ip","A"); print "\n";
 
 	foreach my $i (1..@samples)
         {
