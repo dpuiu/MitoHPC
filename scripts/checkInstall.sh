@@ -23,6 +23,7 @@ which fastp             #install from "https://github.com/OpenGene/fastp"
 which samblaster        #install from "https://github.com/GregoryFaust/samblaster"
 which bcftools
 which tabix
+which freebayes
 
 test -f $HP_JDIR/gatk.jar
 test -f $HP_JDIR/mutserve.jar
@@ -51,7 +52,7 @@ java -version | head -1               >> checkInstall.log
 echo "########################"  >> checkInstall.log
 echo "JAVA:"  >> checkInstall.log
 
-echo "JAVA_HOME=" $JAVA_HOME >> checkInstall.log
+#echo "JAVA_HOME=" $JAVA_HOME >> checkInstall.log
 ls -l $HP_JDIR/gatk.jar       | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
 ls -l $HP_JDIR/mutserve.jar   | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
 ls -l $HP_JDIR/haplogrep.jar  | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
