@@ -98,16 +98,13 @@
      
 ## OUTPUT ##
 
-    # under $HP_ODIR:
-
-    TAB/SUMMARY/VCF/FASTA Files: 
+    # under $HP_ODIR: TAB/SUMMARY/VCF/FASTA Files: 
 
     all.count.tab                                                # total reads & mtDNA-CN counts
     count.tab                                                    # subsampled read counts
     cvg.tab                                                      # subsampled coverage stats
 
-### 1st ITERATION ### 
-
+    # 1st ITERATION
     {mutect2,mutserve}.{03,05,10}.{concat,merge[.sitesOnly]}.vcf # SNVs; 3,5,10% heteroplasmy thold
     {mutect2,mutserve}.{03,05,10}.tab                            # SNV counts
     {mutect2,mutserve}.{03,05,10}.summary                        # SNV count summaries
@@ -116,13 +113,11 @@
     {mutect2,mutserve}.haplogroup[1].tab                         # haplogroup
     {mutect2,mutserve}.haplocheck.tab                            # contamination screen   
 
-
-### 2nd ITERATION ###
-
+    #2nd ITERATION ###
     mutect2.mutect2.{03,05,10}.{concat,merge[.sitesOnly]}.vcf	
     mutect2.mutect2.{03,05,10}.tab
 
-## EXAMPLE 1 ##
+## EXAMPLE ##
 
     3 simulated datasets
 
@@ -273,7 +268,7 @@
       chrM.C  NO                   ND                  14        78
       ...
 
-## EXAMPLE 2 : CUSTOM FILTERING ##
+#### Custom Filtering ####
 
     # define filter name and command
     $ nano init.sh
