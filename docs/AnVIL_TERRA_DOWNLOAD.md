@@ -9,6 +9,7 @@
 ## LOCAL LINUX MACHINE ##
 
 * Download and install gcloud CLI
+
      wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-371.0.0-linux-x86_64.tar.gz
      tar -xzvf google-cloud-sdk-371.0.0-linux-x86_64.tar.gz 
      cd google-cloud-sdk/
@@ -16,6 +17,7 @@
      cd ..
 
 * Login and Configure
+
      gcloud auth login
      gcloud auth list
 
@@ -23,4 +25,5 @@
      gcloud config list
 
 * Run the gsutil command , adding the -u option for billing project
+
      gsutil -u $PROJECT -m cp  "gs://fc-secure-ff8156a3-ddf3-42e4-9211-0fd89da62108/file1.bam" "gs://fc-secure-ff8156a3-ddf3-42e4-9211-0fd89da62108/file2.bam.bai"   .
