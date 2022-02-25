@@ -2,8 +2,8 @@
 
 ## INPUT ##
  
-    Illumina paired-end reads .fq.gz
-    Reference genome
+     Illumina paired-end reads .fq.gz
+     Reference genome
 
 ### SETUP ENVIRONMENT ###
 

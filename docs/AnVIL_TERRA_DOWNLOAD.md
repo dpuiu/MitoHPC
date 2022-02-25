@@ -8,16 +8,14 @@
 
 ## LOCAL LINUX MACHINE ##
 
-* Download and install gcloud CLI
-
+    # Download and install gcloud CLI
     wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-371.0.0-linux-x86_64.tar.gz
     tar -xzvf google-cloud-sdk-371.0.0-linux-x86_64.tar.gz 
     cd google-cloud-sdk/
     ./install.sh 
     cd ..
 
-* Login and Configure
-
+    # Login and Configure
     gcloud auth login
     gcloud auth list
     gcloud config set project ...
