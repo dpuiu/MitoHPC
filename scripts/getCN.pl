@@ -51,7 +51,7 @@ MAIN:
 				push @F,$M ;
 			}
 		}
-		print join "\t",@F;  
+		print join "\t",@F[0,-1];  
 		print "\n";
 	}
 	exit 0;

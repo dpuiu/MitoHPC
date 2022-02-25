@@ -64,17 +64,20 @@ MAIN:
         }
         close(IN);
 
-	if($opt{ref} eq "rCRS" or $opt{ref} eq "chrM") 
-	{
-		$diff{3107}=-1
-	}
-	elsif($opt{ref} eq "RSRS") 
-	{
-		$diff{523}=-1;
-		$diff{524}=-1;
-		$diff{3107}=-1;
-	}
-
+	#human
+	#if($opt{rlen}==16569)
+	#{
+	#	if($opt{ref} eq "rCRS" or $opt{ref} eq "chrM") 
+	#	{
+	#		$diff{3107}=-1
+	#	}
+	#	elsif($opt{ref} eq "RSRS") 
+	#	{
+	#		$diff{523}=-1;
+	#		$diff{524}=-1;
+	#		$diff{3107}=-1;
+	#	}
+	#}
         my $MT="";
         open(IN,$opt{rfile}) or die "ERROR:$!";
         while(<IN>)
@@ -86,7 +89,11 @@ MAIN:
                         $MT.=$_;
                 }
         }
-
+	my @MT=split //,$MT;
+	foreach my $i (0..@MT-1)
+	{	
+		$diff{$i}=-1 if(uc($MT[$i]) eq "N")
+	}
 
 	####################################################################################
 	my %diff2;

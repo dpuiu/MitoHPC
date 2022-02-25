@@ -80,13 +80,13 @@ if  [ ! -s $O.bam ] ; then
     samtools view  -F 0x90C -h | \
     circSam.pl -ref_len $HP_RDIR/$HP_MT.fa.fai | tee $O.sam  | \
     samtools view -bu | \
-    bedtools bamtobed -i /dev/stdin -ed | bed2bed.pl -rmsuffix -ed | \
+    bedtools bamtobed -i /dev/stdin -tag AS | bed2bed.pl -rmsuffix | \
     count.pl -i 3 -j 4  | sort > $O.score
 
   cat $O.fq | \
     bwa mem $HP_RDIR/$HP_NUMT - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" | \
     samtools view -bu | \
-    bedtools bamtobed -i /dev/stdin -ed | bed2bed.pl -rmsuffix -ed | \
+    bedtools bamtobed -i /dev/stdin -tag AS | bed2bed.pl -rmsuffix  | \
     count.pl -i 3 -j 4  | sort > $ON.score
 
   join $O.score $ON.score -a 1 | perl -ane 'next if(@F==3 and $F[2]>$F[1]);print' | \
@@ -121,19 +121,21 @@ if [ ! -s $OM.vcf ] ; then
       exit 1
     fi
   elif [ "$HP_M" == "freebayes" ] ; then
-    freebayes -p 1 --pooled-continuous --min-alternate-fraction 0.01 $O.bam -f $HP_RDIR/$HP_MT.fa | bcftools norm -f $HP_RDIR/$HP_MT.fa  > $OM.vcf
+    freebayes -p 1 --pooled-continuous --min-alternate-fraction 0.01 $O.bam -f $HP_RDIR/$HP_MT.fa  > $OM.vcf
   else
     echo "Unsuported SNV caller"
     exit 1
   fi
 fi
-##rm $O.bam*
+rm $O.bam* $OM.*idx $OM.*tsv $OM.*stats
 
 if [ ! -s $OM.00.vcf ] ; then
   # filter SNPs
+
+  bcftools norm -m - $OM.vcf | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa | bedtools sort -header> $OM.fix.vcf
+
   cat $HP_SDIR/$HP_M.vcf > $OM.00.vcf ; echo "##sample=$S" >> $OM.00.vcf
   fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OM.00.vcf
-  bcftools norm -m - $OM.vcf | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa | bedtools sort -header> $OM.fix.vcf
   cat $OM.fix.vcf | filterVcf.pl -sample $S -source $HP_M | bedtools sort >> $OM.00.vcf
   cat $OM.00.vcf | maxVcf.pl | bedtools sort -header |tee $OM.max.vcf | bgzip -f -c > $OM.max.vcf.gz ; tabix -f $OM.max.vcf.gz
   annotateVcf.sh $OM.00.vcf
@@ -174,7 +176,7 @@ if  [ ! -s $OM.bam ] ; then
     samtools view  -F 0x90C -h | \
     circSam.pl -ref_len $OM.fa.fai | tee $OM.sam  | \
     samtools  view -bu | \
-    bedtools bamtobed -i /dev/stdin -ed | bed2bed.pl -rmsuffix -ed | \
+    bedtools bamtobed -i /dev/stdin -tag AS | bed2bed.pl -rmsuffix  | \
     count.pl -i 3 -j 4  | sort > $OM.score
   rm $OM+.*
 
@@ -187,13 +189,14 @@ if  [ ! -s $OM.bam ] ; then
   bedtools bamtobed -i $OM.bam -ed | perl -ane 'print if($F[-2]==0);' | bedtools merge -d -3 | bed2bed.pl -min 3 > $OM.merge.bed
 
   rm $OM.sam $OM.score 
-  ##rm $ON.score $O.fq
+  rm $ON.score $O.fq
 fi
+
 
 #exit if the number of iterations is set to 1
 if [ $HP_I -lt 2 ] || [ $HP_M == "mutserve" ] ; then
-  ##rm $OM.bam* 
-  ##rm $ON.score
+  rm $OM.bam* 
+  rm $ON.score
   exit 0
 fi
 
@@ -213,14 +216,13 @@ if [ ! -s $OMM.vcf ] ; then
     java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $OM.fa -I $OM.bam       -O $OMM.orig.vcf  $HP_GOPT --native-pair-hmm-threads $HP_P
     java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $OM.fa -V $OMM.orig.vcf -O $OMM.vcf  --min-reads-per-strand 2
   elif [ "$HP_M" == "freebayes" ] ; then
-    freebayes -p 1 --pooled-continuous --min-alternate-fraction 0.01 $OM.bam -f $OM.fa | bcftools norm -f $OM.fa  > $OMM.vcf
+    freebayes -p 1 --pooled-continuous --min-alternate-fraction 0.01 $OM.bam -f $OM.fa  > $OMM.vcf
   else
     echo "Unsuported SNV caller"
     exit 1
   fi
 fi
-
-##rm $OM.bam*
+rm -f $OM.bam* $OMM.*idx $OMM.*tsv $OMM.*stats
 
 if [ ! -s $OMM.00.vcf ] ; then
   # filter SNPs
@@ -228,7 +230,5 @@ if [ ! -s $OMM.00.vcf ] ; then
   fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OMM.00.vcf
   bcftools norm -m - $OMM.vcf | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa | bedtools sort -header> $OMM.fix.vcf 
   cat $OMM.fix.vcf | fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN -mfile $OM.max.vcf -ffile $OM.fix.vcf | filterVcf.pl -sample $S -source $HP_M | bedtools sort  >> $OMM.00.vcf
-
   annotateVcf.sh $OMM.00.vcf
 fi
-

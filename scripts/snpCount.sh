@@ -17,6 +17,33 @@ fi
 cat $HP_ODIR/$M.$T.concat.vcf | concat2merge.pl -in $HP_IN | bedtools sort -header | tee $HP_ODIR/$M.$T.merge.vcf | vcf2sitesOnly.pl >  $HP_ODIR/$M.$T.merge.sitesOnly.vcf
 cat $HP_ODIR/$M.$T.concat.vcf | snpCount.pl -in $HP_IN | tee $HP_ODIR/$M.$T.tab | getSummaryN.pl > $HP_ODIR/$M.$T.summary
 
+
+# get suspicious samples
+if [ -f $HP_ODIR/$M.merge.bed ] ; then
+  rm -f $HP_ODIR/$M.$T.suspicious.tab ; touch $HP_ODIR/$M.$T.suspicious.tab
+
+  # low mtDNA_CN
+  if [ -s $HP_ODIR/mtDNA_CN.tab  ]; then cat $HP_ODIR/mtDNA_CN.tab | perl -ane 'print "$F[0]\tlow_CN\t$F[-1]\n" if($F[1] and $F[1]=~/^\d+/ and $F[1]<300/($ENV{T}+1)) ;' >> $HP_ODIR/$M.$T.suspicious.tab ; fi
+
+  # mismatch haplogroup
+  if [ -s $HP_ODIR/$M.haplogroup1.tab ] ; then
+    sort $HP_ODIR/$M.haplogroup1.tab > $HP_ODIR/$M.haplogroup1.srt.tab
+    cat $HP_ODIR/$M.$T.vcf | grep "AF=0" | grep "HG=" | perl -ane 'print "$F[-1]\t$1\n" if(/HG=(.+?);/)' | sort | uniq -c  | \
+      perl -ane 'print "$F[1]\t$F[2]\t$F[0]\n" if($F[0]>1);'| sort  | join -  $HP_ODIR/$M.haplogroup1.srt.tab | \
+      perl -ane 'print "$F[0]\tmismatch_HG\t$F[-1]\t$F[1]\t$F[2]\n" if($F[1] ne $F[-1]);' >> $HP_ODIR/$M.$T.suspicious.tab
+    rm $HP_ODIR/$M.haplogroup1.srt.tab
+  fi
+  
+  # multiple NUMT's
+  cat $HP_ODIR/$M.$T.vcf | grep "AF=0" | grep "NUMT=" | perl -ane '/NUMT=(.+?);/ ; foreach(split /\|/,$1) { print "$F[-1]\t$_\n"}' | sort | uniq -c  | \
+    perl -ane 'print "$F[1]\tmultiple_NUMTs\t$F[2]\t$F[0]\n" if($F[0]>1);' >> $HP_ODIR/$M.$T.suspicious.tab
+
+  # haplockeck
+  cat $HP_ODIR/$M.haplocheck.tab  | perl -ane 'print "$F[0]\thaplocheck_fail\t$F[2]\n" if($F[1] eq "YES" and $F[2]>$ENV{T}/100)' >> $HP_ODIR/$M.$T.suspicious.tab
+
+  cut -f1 $HP_ODIR/$M.$T.suspicious.tab | sort -u > $HP_ODIR/$M.$T.suspicious.ids
+fi
+
 #######################################################
 if [[ -z "${FNAME}" ]]; then exit 0;  fi
 cat $HP_ODIR/$M.$T.concat.vcf | eval $FRULE > $HP_ODIR/$M.$T.$FNAME.concat.vcf

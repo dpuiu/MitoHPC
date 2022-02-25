@@ -9,9 +9,8 @@ set -ex
 ###########################################################
 #get count stats
 
-if [ $HP_CN ]  && [ $HP_CN -ne 0 ] ; then awk '{print $3}' $HP_IN | sed "s|$|.all.count|" | xargs cat | uniq.pl | getCN.pl > $HP_ODIR/all.count.tab 
-else                                      awk '{print $3}' $HP_IN | sed "s|$|.all.count|" | xargs cat | uniq.pl            > $HP_ODIR/all.count.tab
-fi
+awk '{print $3}' $HP_IN | sed "s|$|.all.count|" | xargs cat | uniq.pl > $HP_ODIR/all.count.tab 
+if [ $HP_CN ]  && [ $HP_CN -ne 0 ] ; then cat $HP_ODIR/all.count.tab | getCN.pl > $HP_ODIR/mtDNA_CN.tab ; fi
 if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 
 ###########################################################
@@ -25,21 +24,6 @@ awk '{print $3}' $HP_IN | sed "s|$|.cvg.stat|" | xargs cat | uniq.pl -i 0  > $HP
 awk '{print $3}' $HP_IN | sed "s|$|.$M.00.vcf|" | xargs cat | bedtools sort -header  > $HP_ODIR/$M.00.concat.vcf
 snpSort.sh $HP_ODIR/$M.00.concat
 cat $HP_ODIR/$M.00.concat.vcf | grep -v "^#" | sed 's|:|\t|g'  | count.pl -i -1 -round 100| sort -n > $HP_ODIR/$M.00.AF.histo
-
-#snv counts
-snpCount.sh $M $HP_T1
-snpCount.sh $M $HP_T2
-snpCount.sh $M $HP_T3
-
-if [[ ! -z "${HP_FNAME}" ]]; then
-  cat $HP_ODIR/$M.00.concat.vcf | eval $HP_FRULE > $HP_ODIR/$M.$HP_FNAME.00.concat.vcf
-  snpCount.sh $M.$HP_FNAME $HP_T1
-  snpCount.sh $M.$HP_FNAME $HP_T2
-  snpCount.sh $M.$HP_FNAME $HP_T3
-fi
-
-#cleanup
-rm -f fastp.html fastp.json
 
 #haplogroups
 if [ "$HP_O" == "Human" ] ; then
@@ -58,6 +42,21 @@ samtools faidx  $HP_ODIR/$M.fa
 
 #cvg
 awk '{print $3}' $HP_IN | sed "s|$|.$M.merge.bed|" | xargs cat > $HP_ODIR/$M.merge.bed
+
+#snv counts
+snpCount.sh $M $HP_T1
+snpCount.sh $M $HP_T2
+snpCount.sh $M $HP_T3
+
+if [[ ! -z "${HP_FNAME}" ]]; then
+  cat $HP_ODIR/$M.00.concat.vcf | eval $HP_FRULE > $HP_ODIR/$M.$HP_FNAME.00.concat.vcf
+  snpCount.sh $M.$HP_FNAME $HP_T1
+  snpCount.sh $M.$HP_FNAME $HP_T2
+  snpCount.sh $M.$HP_FNAME $HP_T3
+fi
+
+#cleanup
+rm -f fastp.html fastp.json
 
 ##########################################################
 # get 2nd iteration stats
