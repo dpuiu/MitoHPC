@@ -21,6 +21,5 @@
     gcloud config set project ...
     gcloud config list
 
-* Run the gsutil command , adding the -u option for billing project
-
+    # Run the gsutil command , adding the -u option for billing project
     gsutil -u $PROJECT -m cp  "gs://fc-secure-ff8156a3-ddf3-42e4-9211-0fd89da62108/file1.bam" "gs://fc-secure-ff8156a3-ddf3-42e4-9211-0fd89da62108/file2.bam.bai"   .
