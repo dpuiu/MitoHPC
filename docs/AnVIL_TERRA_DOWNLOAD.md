@@ -16,9 +16,10 @@
     cd ..
 
     # Login and Configure
+    PROJECT=gtex
     gcloud auth login
     gcloud auth list
-    gcloud config set project ...
+    gcloud config set project $PROJECT
     gcloud config list
 
     # Run the gsutil command , adding the -u option for billing project
