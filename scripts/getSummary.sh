@@ -1,16 +1,19 @@
 #!/usr/bin/env bash
 set -ex
 
-##########################################################
+##############################################################################################################
 
-#Program that summarizes aligned read counts
-#Input arguments
+# Program that summarizes aligned read and SNV counts
 
-###########################################################
-#get count stats
+##############################################################################################################
 
-awk '{print $3}' $HP_IN | sed "s|$|.all.count|" | xargs cat | uniq.pl > $HP_ODIR/all.count.tab 
-if [ $HP_CN ]  && [ $HP_CN -ne 0 ] ; then cat $HP_ODIR/all.count.tab | getCN.pl > $HP_ODIR/mtDNA_CN.tab ; fi
+#get read count and mtDN-CN stats
+
+cut -f2  $HP_IN  | perl -ane 'print "$1.count\n" if(/(.+)\./);' | xargs cat | uniq.pl > $HP_ODIR/count.tab
+if [ $HP_CN ]  && [ $HP_CN -ne 0 ] ; then 
+  cat $HP_ODIR/count.tab | getCN.pl > $HP_ODIR/count.tab.tmp
+  mv $HP_ODIR/count.tab.tmp $HP_ODIR/count.tab
+ fi
 if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 
 ###########################################################
@@ -19,7 +22,7 @@ if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 M=$HP_M
 
 #count,cvg
-awk '{print $3}' $HP_IN | sed "s|$|.count|" | xargs cat | uniq.pl > $HP_ODIR/count.tab
+awk '{print $3}' $HP_IN | sed "s|$|.count|" | xargs cat | uniq.pl > $HP_ODIR/subsample.tab
 awk '{print $3}' $HP_IN | sed "s|$|.cvg.stat|" | xargs cat | uniq.pl -i 0  > $HP_ODIR/cvg.tab
 awk '{print $3}' $HP_IN | sed "s|$|.$M.00.vcf|" | xargs cat | bedtools sort -header  > $HP_ODIR/$M.00.concat.vcf
 snpSort.sh $HP_ODIR/$M.00.concat
@@ -49,12 +52,10 @@ snpCount.sh $M $HP_T2
 snpCount.sh $M $HP_T3
 
 if [[ ! -z "${HP_FNAME}" ]]; then
-  cat $HP_ODIR/$M.00.concat.vcf | eval $HP_FRULE > $HP_ODIR/$M.$HP_FNAME.00.concat.vcf
-  snpCount.sh $M.$HP_FNAME $HP_T1
-  snpCount.sh $M.$HP_FNAME $HP_T2
-  snpCount.sh $M.$HP_FNAME $HP_T3
+  snpFilter.sh $M $HP_T1 ; snpCount.sh $M.$HP_FNAME $HP_T1
+  snpFilter.sh $M $HP_T2 ; snpCount.sh $M.$HP_FNAME $HP_T2
+  snpFilter.sh $M $HP_T3 ; snpCount.sh $M.$HP_FNAME $HP_T3
 fi
-
 #cleanup
 rm -f fastp.html fastp.json
 
@@ -65,6 +66,7 @@ if [ $HP_I -lt 2 ] ; then exit 0 ; fi
 if [ $HP_M == "mutserve" ] ; then exit 0 ; fi
 
 MM=$M.$M
+MMM=${M}_${MM}
 #count,cvg
 awk '{print $3}' $HP_IN | sed "s|$|.$M.count|" | xargs cat | uniq.pl > $HP_ODIR/$M.count.tab
 awk '{print $3}' $HP_IN | sed "s|$|.$M.cvg.stat|" | xargs cat | uniq.pl -i 0  > $HP_ODIR/$M.cvg.tab
@@ -73,13 +75,14 @@ snpSort.sh $HP_ODIR/$MM.00.concat
 cat $HP_ODIR/$MM.00.concat.vcf | grep -v "^#" | sed 's|:|\t|g'  | count.pl -i -1 -round 100| sort -n > $HP_ODIR/$MM.00.AF.histo
 
 #snv counts
-snpCount.sh $MM $HP_T1
-snpCount.sh $MM $HP_T2
-snpCount.sh $MM $HP_T3
+snpMerge.sh $M $MM $HP_T1 ; snpCount.sh $MMM $HP_T1
+snpMerge.sh $M $MM $HP_T2 ; snpCount.sh $MMM $HP_T2
+snpMerge.sh $M $MM $HP_T3 ; snpCount.sh $MMM $HP_T3
 
 if [[ ! -z "${HP_FNAME}" ]]; then
-  cat $HP_ODIR/$MM.00.concat.vcf | eval $HP_FRULE > $HP_ODIR/$MM.$HP_FNAME.00.concat.vcf
-  snpCount.sh $MM.$HP_FNAME $HP_T1
-  snpCount.sh $MM.$HP_FNAME $HP_T2
-  snpCount.sh $MM.$HP_FNAME $HP_T3
+  snpFilter.sh $MMM $HP_T1 ; snpCount.sh $MMM.$HP_FNAME $HP_T1
+  snpFilter.sh $MMM $HP_T2 ; snpCount.sh $MMM.$HP_FNAME $HP_T2
+  snpFilter.sh $MMM $HP_T3 ; snpCount.sh $MMM.$HP_FNAME $HP_T3
 fi
+
+

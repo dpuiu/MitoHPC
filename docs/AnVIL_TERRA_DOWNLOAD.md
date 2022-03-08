@@ -15,12 +15,15 @@
     ./install.sh 
     cd ..
 
+    #update gcloud CLI
+    gcloud components update
+
     # Login and Configure
+    PROJECT=gtexproject
     gcloud auth login  # a broser window will pop up; select the account you are planning to use
       
     gcloud auth list
 
-    PROJECT=gtexproject
     gcloud config set project $PROJECT
     gcloud config list
   

@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
-#check/install packages needed by bwa, samtools, bedtools ...
-#user needs sudo privileges
+##############################################################################################################
+
+# Program that checks/installs packages needed by bwa, samtools, bedtools ...
+
+# sudo privileges required !!!
+
+##############################################################################################################
 
 sudo -v
 if [ "$?" == 1 ] ; then

@@ -1,10 +1,16 @@
 #!/usr/bin/env bash
-set -ex
-#1: input prefix
-#2: output prefix
+set -e
+##############################################################################################################
 
-I=$1
-O=$2
+# Program that aligns Illumina pair-end reads to a genome refenece using bwa mem
+
+# Input: genome bwa index, read FASTQ/FASTA files
+# Output: alignment .bam, ,bai, .idxstats files
+
+###############################################################################################################
+
+I=$1  # input prefix
+O=$2  # output prefix
 
 test -s $HP_RDIR/$HP_RNAME.fa
 

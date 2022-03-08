@@ -1,12 +1,12 @@
-#!/usr/bin/env bash 
+#!/usr/bin/env bash
+set -ex
+
+##############################################################################################################
+
+# Program that downloads and installs software prerequisites and genome reference
 #  -f : opt; force reinstall
-set -x
+##############################################################################################################
 
-#######################################################################
-
-#Program that downloads and install software prerequisites and hs38DH.fa
-
-########################################################################
 
 #. $HP_SDIR/init.sh
 cd $HP_HDIR
@@ -68,17 +68,6 @@ if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
   fi
 fi
 
-#which vcftools
-#if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
-#  wget -N -c https://github.com/vcftools/vcftools/releases/download/v0.1.16/vcftools-0.1.16.tar.gz
-#  if [ ! -s $HP_BDIR/vcftools ] ; then
-#    tar -xzvf vcftools-0.1.16.tar.gz
-#    cd vcftools-0.1.16
-#    ./configure --prefix=$HP_HDIR/  ; make ; make install
-#    cd -
-#  fi
-#fi
-
 which bedtools
 if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
   wget -N -c https://github.com/arq5x/bedtools2/releases/download/v2.30.0/bedtools-2.30.0.tar.gz
@@ -89,17 +78,6 @@ if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
     cd -
   fi
 fi
-
-#which fastp
-#if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
-#  wget -N -c https://github.com/OpenGene/fastp/archive/v0.23.2.tar.gz #-O fastp-0.23.2.tar.gz
-#  if [ ! -s $HP_BDIR/fastp ] ; then
-#    tar -xzvf v0.23.2.tar.gz # fastp-0.20.1.tar.gz
-#    cd fastp-0.23.2/
-#    make ; cp fastp $HP_BDIR/
-#    cd -
-#  fi
-#fi
 
 which fastp
 if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then

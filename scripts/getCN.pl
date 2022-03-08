@@ -31,10 +31,10 @@ MAIN:
 
 	while(<>)
 	{
-		#0		  1	     2	        3	4	
-		#Run              all        mapped     chrM    filterChrM
-		#MH0162792.final  740589366  739237125  487382  205095
-		#MH0162809.final  763658318  762297733  495743  205156
+		#0		  1	     2	        3
+		#Run              all        mapped     chrM
+		#MH0162792.final  740589366  739237125  487382
+		#MH0162809.final  763658318  762297733  495743
 
 		my @F=split;
 		if(@F>=4)
@@ -48,10 +48,10 @@ MAIN:
 				my $M=($F[3]*2*$opt{ref})/($F[2]*$opt{chrM});
 				#$M=int($M*100+.5)/100;
 				$M=int($M+.5);
-				push @F,$M ;
+				$F[4]=$M ;
 			}
 		}
-		print join "\t",@F[0,-1];  
+		print join "\t",@F;  
 		print "\n";
 	}
 	exit 0;

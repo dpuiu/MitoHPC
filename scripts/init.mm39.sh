@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
-set -e
+#set -e
 
-###############################################################
+##############################################################################################################
 
-#Program that setups the environmnet
-#Variable HP_SDIR must be pre-set
+# Program that setups the environmnet for the Mouse mm39 reference
 
-###############################################################
+# Variable HP_SDIR must be pre-set !!!
+
+##############################################################################################################
 #DIRECTORY PATHS
 
 export HP_HDIR=`readlink -f $HP_SDIR/..`	#HP home directory
@@ -31,8 +32,8 @@ export HP_RURL="https://hgdownload.soe.ucsc.edu/goldenPath/mm39/bigZips/mm39.fa.
 ################################################################
 #GENOME REFERENCES
 
-export HP_O=Mouse                # organism: Human, Mouse... 
-export HP_MT=chrM                # chrM, rCRS or RSRS, FASTA file available under $HP_RDIR
+export HP_O=Mouse                # organism
+export HP_MT=chrM                # chrM, FASTA file available under $HP_RDIR
 export HP_MTLEN=16299
 export HP_NUMT=NUMT              # NUMT FASTA file under $HP_RDIR
 

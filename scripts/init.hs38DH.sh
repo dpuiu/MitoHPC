@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 #set -e
 
-###############################################################
+##############################################################################################################
 
-#Program that setups the environmnet
-#Variable HP_SDIR must be pre-set
+# Program that setups the environmnet for the Human hs38DH reference
 
-###############################################################
+# Variable HP_SDIR must be pre-set !!!
+
+##############################################################################################################
+
 #DIRECTORY PATHS
 
 export HP_HDIR=`readlink -f $HP_SDIR/..`	#HP home directory
@@ -22,17 +24,17 @@ export PATH=$HP_SDIR:$HP_BDIR:$PATH
 ################################################################
 #ALIGNMNET REFERENCE
 
-#GRCH38(default)
+#hs38DH/GRCH38(default)
 export HP_RNAME=hs38DH
 export HP_RMT=chrM
-export HP_RNUMT="chr1:629084-634672 chr17:22521208-22521639"    #NUMT
+export HP_RNUMT="chr1:629084-634672 chr17:22521208-22521639"
 export HP_RCOUNT=3366
 export HP_RURL=ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa
 
 ################################################################
 #GENOME REFERENCES
 
-export HP_O=Human		 # organism: Human, Mouse... 
+export HP_O=Human		 # organism
 export HP_MT=chrM                # chrM, rCRS or RSRS, FASTA file available under $HP_RDIR
 export HP_MTLEN=16569
 export HP_NUMT=NUMT              # NUMT FASTA file under $HP_RDIR
@@ -71,7 +73,7 @@ export HP_ODIR=$PWD/out/        # output dir
 export HP_IN=$PWD/in.txt        # input file to be generated
 
 if [ -d $HP_ADIR ] ; then
-  if [ ! -s $HP_IN ] ; then 
+  if [ ! -s $HP_IN ] ; then
     find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | ls2in.pl -out $HP_ODIR | sort -V > $HP_IN
   fi
 fi

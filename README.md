@@ -72,12 +72,17 @@
        export HP_L=222000                                        #  Use at most 222K reads
 
        export HP_DOPT="--removeDups"                             # samblaster deduplication option
-       export HP_GOPT="-max-reads-per-alignment-start 20 -mitochondria-mode"  # GATK mutect2 options
-       export HP_FOPT="-q 20 -e 20"                             # FASTP options
+       export HP_GOPT=                                           # GATK mutect2 options; Ex: "-max-reads-per-alignment-start 20 -mitochondria-mode"  
+       export HP_FOPT=                                           # FASTP read trimming options; Ex: "-q 20 -e 20"              
+
+       export HP_FRULE=                                          # VCF output filtering options; Ex: "bcftools view -f PASS,clustered_events,multiallelic"
 
        find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | \
-        $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN       # generate input file; 3 column
-      ...                                                        # tab delimited, can be edited
+        $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN       # generate input file; 3 column tsv file
+								 # prefix, input file(bam/cram), outpt prefix
+      ...                                                        # can be edited
+
+       export HP_SH=bash                                         # job scheduling: bash, qsub,sbatch, ..
 
     $ . ./init.sh                                                # source init file 
 
@@ -101,8 +106,8 @@
 
     # under $HP_ODIR: TAB/SUMMARY/VCF/FASTA Files: 
 
-    all.count.tab                                                # total reads & mtDNA-CN counts
-    count.tab                                                    # subsampled read counts
+    count.tab                                                    # total reads & mtDNA-CN counts
+    subsample.tab                                                # subsampled read counts
     cvg.tab                                                      # subsampled coverage stats
 
     # 1st ITERATION
@@ -115,12 +120,12 @@
     {mutect2,mutserve,freebayes}.haplocheck.tab                            # contamination screen   
 
     # 2nd ITERATION
-    {mutect2.mutect2,freebayes.freebayes}.{03,05,10}.{concat,merge[.sitesOnly]}.vcf	
-    {mutect2.mutect2,freebayes.freebayes}.{03,05,10}.tab
+    {mutect2_mutect2.mutect2,freebayes_freebayes.freebayes}.{03,05,10}.{concat,merge[.sitesOnly]}.vcf	
+    {mutect2_mutect2.mutect2,freebayes_freebayes.freebayes}.{03,05,10}.{tab,summary}
 
-## EXAMPLE ##
+## EXAMPLE 1 ##
 
-    3 simulated datasets
+    3 simulated samples, 100x chrM coverage 
 
 ### INPUT ###
 
@@ -152,11 +157,11 @@
 
 #### read counts and mtDNA-CN(M) ####
 
-     $ head $HP_ODIR/all.count.tab
+     $ head $HP_ODIR/count.tab
        Run       all        mapped     chrM    M
-       chrM.A    851537886  848029490  396766  181.7
-       chrM.B    884383716  882213718  506597  223.01
-       chrM.C    786560467  785208588  503241  248.9
+       chrM.A    851537886  848029490  396766  182
+       chrM.B    884383716  882213718  506597  223
+       chrM.C    786560467  785208588  503241  249
        ...
 
 #### vcf files : concat & merge ####
@@ -191,9 +196,9 @@
       chrM   1038  .  C   G    .     PASS                        RNR=RNR1;GT=0/1;DP=70;AF=0.165                                                     SM     chrM.A
       chrM   1042  .  T   A    .     PASS                        RNR=RNR1;GT=0/1;DP=60;AF=0.24                                                      SM     chrM.C
       ...
-      chrM   3988  .  T   G    .     PASS                        CDS=ND1;AP=Pathogenic;APS=0.52;GT=0/1;DP=60;AF=0.224                               SM     chrM.B 
-      chrM   3989  .  A   T    .     PASS                        CDS=ND1;AP=Pathogenic;APS=0.52;GT=0/1;DP=65;AF=0.237                               SM     chrM.A
-      chrM   5186  .  A   T    .     PASS                        CDS=ND2;HG=U;AP=Pathogenic;APS=0.51;GT=0|1;DP=97;AF=0.212                          SM     chrM.C
+      chrM   3988  .  T   G    .     PASS                        CDS=ND1;AP=Pathogenic;APS=0.52;GT=0/1;DP=60;AF=0.224;AP=Pathogenic;APS=0.52        SM     chrM.B 
+      chrM   3989  .  A   T    .     PASS                        CDS=ND1;AP=Pathogenic;APS=0.52;GT=0/1;DP=65;AF=0.237;AP=Pathogenic;APS=0.52        SM     chrM.A
+      chrM   5186  .  A   T    .     PASS                        CDS=ND2;HG=U;AP=Pathogenic;APS=0.51;GT=0|1;DP=97;AF=0.212;AP=Pathogenic;APS=0.51   SM     chrM.C
       ...
 
     $ cat mutect2.03.merge.vcf  
@@ -218,38 +223,38 @@
 
     # 1st iteration
     $ cat mutect2.03.tab            
-      Run     H   h   S   s   I  i  Hp  hp  Sp  sp  Ip  ip  A
-      chrM.A  31  43  28  35  3  8  28  43  28  35  0   8   74
-      chrM.B  27  43  25  35  2  8  22  41  22  33  0   8   70
-      chrM.C  40  42  36  34  4  8  38  41  36  33  2   8   82
+      Run     H   h   S   s   I  i  Hp  hp  Sp  sp  Ip ip  A
+      chrM.A  30  45  28  36  2  9  28  44  28  36  0  8   75
+      chrM.B  26  43  25  34  1  9  22  42  22  34  0  8   69
+      chrM.C  39  43  35  35  4  8  37  43  35  35  2  8   82
       ...
 
-    # 2nd iteration ; no homoplamies(H=S=I=0)
+    # 2nd iteration
     $ cat  mutect2.mutect2.03.tab 
-      Run     H  h   S  s   I  i  Hp  hp  Sp  sp  Ip  ip  A
-      chrM.A  0  43  0  35  0  8  0   43  0   35  0   8   43
-      chrM.B  0  43  0  35  0  8  0   41  0   33  0   8   43
-      chrM.C  0  42  0  34  0  8  0   41  0   33  0   8   42
+      Run     H   h   S   s   I  i  Hp  hp  Sp  sp  Ip  ip  A
+      chrM.A  30  44  28  36  2  8  28  44  28  36  0   8   74		# one less heteroplasmy (h) compared with the 1st iteration
+      chrM.B  26  42  25  34  1  8  22  42  22  34  0   8   68		# one less heteroplasmy	(h) compared with the 1st iteration
+      chrM.C  39  43  35  35  4  8  37  43  35  35  2   8   82
       ...
 
 #### SNV Summaries ####
 
     # 1st iteration
     $ cat mutect2.03.summary  | column -t
-      id   count  nonZero  min  max  median  mean   sum
-       H   3      3        27   39   31      32.33  97
-       h   3      3        42   44   43      43     129
-       S   3      3        25   35   28      29.33  88
-       s   3      3        34   36   35      35     105
-       I   3      3        2    4    3       3      9
-       i   3      3        8    8    8       8      24
-       Hp  3      3        22   37   28      29     87
-       hp  3      3        42   44   43      43     129
-       Sp  3      3        22   35   28      28.33  85
-       sp  3      3        34   36   35      35     105
-       Ip  3      1        0    2    0       0.67   2
-       ip  3      3        8    8    8       8      24
-       A   3      3        69   82   75      75.33  226
+      id  count  nonZero  min  max  median  mean   sum
+      H   3      3        26   39   30      31.67  95
+      h   3      3        43   45   43      43.67  131
+      S   3      3        25   35   28      29.33  88
+      s   3      3        34   36   35      35     105
+      I   3      3        1    4    2       2.33   7
+      i   3      3        8    9    9       8.67   26
+      Hp  3      3        22   37   28      29     87
+      hp  3      3        42   44   43      43     129
+      Sp  3      3        22   35   28      28.33  85
+      sp  3      3        34   36   35      35     105
+      Ip  3      1        0    2    0       0.67   2
+      ip  3      3        8    8    8       8      24
+      A   3      3        69   82   75      75.33  226
 
 #### Haplogroups ####
 
@@ -290,12 +295,8 @@
 
     all                           # number of reads in the sample reads
     mapped                        # number of aligned reads in the sample
-    chrM                          # number of reads aligned to chrM
-    filter                        # number of chrM used (subsample ~2000x cvg based on name)
-
-    Gcvg                          # recomputed genome coverage: Bases/3217346917
-    Mcvg                          # mitochondrion covearge: chrM*rdLen/16569
-    M                             # mtDNA copy number ; = 2*Mcvg/Gcvg
+    MT                            # number of reads aligned to chrM
+    M                             # mtDNA copy number
 
     haplogroup                    # sample haplogroup
 

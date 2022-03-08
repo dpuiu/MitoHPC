@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-set -ex
+set -e
 
 #######################################################################################################################################
 
-#Program that runs the heteroplasmy pipeline on a single sample
-#Input arguments
-#1: sample names
-#2: BAM/CRAM alignment file; full path
-#3: output prefix; full path
+# Program that runs the heteroplasmy pipeline on a single sample
+
+# Input arguments
+#  1: sample names
+#  2: BAM/CRAM alignment file; full path
+#  3: output prefix; full path
 
 ########################################################################################################################################
 
@@ -19,7 +20,7 @@ IDIR=`dirname $2`
 I=$IDIR/$N
 ODIR=`dirname $3`; mkdir -p $ODIR
 O=$3
-OA="$O.all"
+#OA="$O.all"
 ON="$O.$HP_NUMT"
 OM=$O.$HP_M
 OMM=$OM.$HP_M
@@ -27,8 +28,8 @@ OMM=$OM.$HP_M
 ########################################################################################################################################
 
 #test if count and VCF output files exist; exit if they do
-if [ $HP_I -eq 1 ] && [ -s $OA.count ] && [ -s $OM.00.vcf  ] ; then exit 0 ; fi
-if [ $HP_I -ge 2 ] && [ -s $OA.count ] && [ -s $OMM.00.vcf ] ; then exit 0 ; fi
+if [ $HP_I -eq 1 ] && [ -s $I.count ] && [ -s $OM.00.vcf  ] ; then exit 0 ; fi
+if [ $HP_I -ge 2 ] && [ -s $I.count ] && [ -s $OMM.00.vcf ] ; then exit 0 ; fi
 
 #########################################################################################################################################
 
@@ -45,7 +46,7 @@ if [ ! -s $2.bai ] && [ ! -s $2.crai ]; then samtools index $2 -@ $HP_P ; fi
 if [ ! -s $I.idxstats ] ; then               samtools idxstats $2 > $I.idxstats ; fi
 
 #get read counts
-if [ ! -s $OA.count ]; then cat $I.idxstats | idxstats2count.pl -sample $S -chrM $HP_RMT > $OA.count ; fi
+if [ ! -s $I.count ]; then cat $I.idxstats | idxstats2count.pl -sample $S -chrM $HP_RMT > $I.count ; fi
 
 #test if VCF output files exist; exit if they do
 if [ $HP_I -lt 1 ] ; then exit 0 ; fi
@@ -58,7 +59,7 @@ if [ $HP_I -ge 2 ] && [ -s $OMM.00.vcf ] ; then exit 0 ; fi
 if [ ! -s $O.fq ] ; then
   R=""
   if [ $HP_L ]; then
-    R=`tail -1 $OA.count  | perl -ane '$R=$ENV{HP_L}/$F[-1]; print $R if($R<1)'`
+    R=`tail -1 $I.count  | perl -ane '$R=$ENV{HP_L}/$F[-1]; print $R if($R<1)'`
     if [ $R ] ; then R="-s $R"  ; fi
   fi
 
@@ -94,7 +95,7 @@ if  [ ! -s $O.bam ] ; then
      samtools view -bu | \
      samtools sort -m $HP_MM -@ $HP_P  > $O.bam
 
-  rm $O.sam $O.score
+  rm -f $O.sam $O.score
   samtools index $O.bam -@ $HP_P
 fi
 
@@ -127,7 +128,7 @@ if [ ! -s $OM.vcf ] ; then
     exit 1
   fi
 fi
-rm $O.bam* $OM.*idx $OM.*tsv $OM.*stats
+rm -f $O.bam* $OM.*idx $OM.*tsv $OM.*stats
 
 if [ ! -s $OM.00.vcf ] ; then
   # filter SNPs
@@ -160,7 +161,7 @@ fi
 #get new consensus; format reference
 if  [ ! -s $OM.fa ]  ; then
   bcftools consensus -f $HP_RDIR/$HP_MT.fa $OM.max.vcf.gz | perl -ane 'chomp; if($.==1) { print ">$ENV{S}\n" } else { s/N//g; print } END {print "\n"}' > $OM.fa
-  rm $OM.max.vcf.gz $OM.max.vcf.gz.tbi
+  rm -f $OM.max.vcf.gz $OM.max.vcf.gz.tbi
   samtools faidx $OM.fa
   rm -f $OM.dict; java $HP_JOPT -jar $HP_JDIR/gatk.jar CreateSequenceDictionary --REFERENCE $OM.fa --OUTPUT $OM.dict
 fi
@@ -178,7 +179,7 @@ if  [ ! -s $OM.bam ] ; then
     samtools  view -bu | \
     bedtools bamtobed -i /dev/stdin -tag AS | bed2bed.pl -rmsuffix  | \
     count.pl -i 3 -j 4  | sort > $OM.score
-  rm $OM+.*
+  rm -f $OM+.*
 
   join $OM.score $ON.score -a 1 | perl -ane 'next if(@F==3 and $F[2]>$F[1]);print'  | \
      intersectSam.pl $OM.sam - | \
@@ -188,15 +189,13 @@ if  [ ! -s $OM.bam ] ; then
   samtools index $OM.bam -@ $HP_P
   bedtools bamtobed -i $OM.bam -ed | perl -ane 'print if($F[-2]==0);' | bedtools merge -d -3 | bed2bed.pl -min 3 > $OM.merge.bed
 
-  rm $OM.sam $OM.score 
-  rm $ON.score $O.fq
+  rm -f $OM.sam $OM.score $ON.score $O.fq
 fi
 
 
 #exit if the number of iterations is set to 1
 if [ $HP_I -lt 2 ] || [ $HP_M == "mutserve" ] ; then
-  rm $OM.bam* 
-  rm $ON.score
+  rm -f $OM.bam* $ON.score
   exit 0
 fi
 
