@@ -33,72 +33,71 @@
 ### SETUP ENVIRONMENT ###
 
     $ cd HP/scripts
-    $ export HP_SDIR=`pwd`                                       # set script directory variable 
-    $ . ./init.sh                                                # or init.hs38DH.sh or init.mm39.sh
+    $ export HP_SDIR=`pwd`                           # set script directory variable 
+    $ . ./init.sh                                    # or init.hs38DH.sh or init.mm39.sh
 
 ### INSTALL SYSTEM PREREQUISITES (optional) ###
 
-    $ sudo $HP_SDIR/install_sysprerequisites.sh                  # install perl,pthon,java,wget ...
+    $ sudo $HP_SDIR/install_sysprerequisites.sh      # install perl,pthon,java,wget ...
 
 ### INSTALL PREREQUISITES ; CHECK INSTALL ###
 
-    $ $HP_SDIR/install_prerequisites.sh                          # bwa,samtools,bedtools ...
+    $ $HP_SDIR/install_prerequisites.sh              # bwa,samtools,bedtools ...
       or
-    $ $HP_SDIR/install_prerequisites.sh -f                       # force install
+    $ $HP_SDIR/install_prerequisites.sh -f           # force install
 
     $ $HP_SDIR/checkInstall.sh
     # if successfull => "Success message!"
 
-    $ cat checkInstall.log                                       # records software version/path info
+    $ cat checkInstall.log                           # records software version/path info
 
 ## PIPELINE USAGE ##
 
 ### SETUP ENVIRONMENT ###
 
-    # go to your working directory ; copy over the init.sh file
-    $ cp -i $HP_SDIR/init.sh .                                   # copy init to working dir.
+    # go to your working directory 
+    # copy over the init.sh file
+
+    $ cp -i $HP_SDIR/init.sh .                   # copy init to working dir.
 
 
     # edit init.sh file
-    $ nano init.sh                                               # check/edit local init file
+    $ nano init.sh                               # check/edit local init file
         ...
-       export HP_ADIR=$PWD/bams/                                 # alignment dir; .bam, .bai, [.idxstats] files
+       export HP_IN=$PWD/in.txt                  # input TSV file
+       export HP_ADIR=$PWD/bams/                 # alignment dir; .bam, .bai, [.idxstats] files
        # or  
-       export HP_ADIR=$PWD/crams/                                # alignment dir; .cram, .crai, [.idxstats] files
+       export HP_ADIR=$PWD/crams/                # alignment dir; .cram, .crai, [.idxstats] files
       
-       export HP_ODIR=$PWD/out/                                  # output dir  
-       export HP_IN=$PWD/in.txt                                  # input file
+       export HP_ODIR=$PWD/out/                  # output dir  
 
-       export HP_L=222000                                        #  Use at most 222K reads
+       export HP_L=222000                        #  Use at most 222K reads
 
-       export HP_DOPT="--removeDups"                             # samblaster deduplication option
-       export HP_GOPT=                                           # GATK mutect2 options; Ex: "-max-reads-per-alignment-start 20 -mitochondria-mode"  
-       export HP_FOPT=                                           # FASTP read trimming options; Ex: "-q 20 -e 20"              
+       export HP_DOPT="--removeDups"             # samblaster deduplication option
+       export HP_GOPT=                           # GATK mutect2 options; 
+                                                 #  Ex: "-max-reads-per-alignment-start 20 -mitochondria-mode"  
+       export HP_FOPT=                           # FASTP read trimming options; Ex: "-q 20 -e 20"              
 
-       export HP_FRULE=                                          # VCF output filtering options; Ex: "bcftools view -f PASS,clustered_events,multiallelic"
+       export HP_FRULE=                          # optional: VCF output filtering options; 
+                                                 #  Ex: "bcftools view -f PASS,clustered_events,multiallelic"
 
-       find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | \
-        $HP_SDIR/ls2in.pl -out $HP_ODIR | sort -V > $HP_IN       # generate input file; 3 column tsv file
-								 # prefix, input file(bam/cram), outpt prefix
-      ...                                                        # can be edited
+       export HP_SH=bash                         # job scheduling: bash, qsub,sbatch, ..
 
-       export HP_SH=bash                                         # job scheduling: bash, qsub,sbatch, ..
+    $ . ./init.sh                                # source init file 
 
-    $ . ./init.sh                                                # source init file 
-
-    $ printenv | grep HP_ | sort                                 # optional ; check HP_ variables 
-    $ nano $HP_IN                                                # optional ; check input file
+    $ printenv | grep HP_ | sort                 # optional ; check HP_ variables 
+    $ nano $HP_IN                                # optional ; check input file
 
 ### RUN PIPELINE  ###
  
-    $ $HP_SDIR/run.sh > run.all.sh                               # create command file in working dir.
-    $ bash ./run.all.sh                                          # execute command file      
+    $ $HP_SDIR/run.sh > run.all.sh               # create command file in working dir.
+    $ bash ./run.all.sh                          # execute command file      
 
 ### RE-RUN PIPELINE (optional) ###
 
-    $ nano init.sh                                               # update parameters
-    $ . ./init.sh                                                # source init file
-    $ $HP_SDIR/run.sh > run.all.sh                               # recreate command file
+    $ nano init.sh                               # update parameters
+    $ . ./init.sh                                # source init file
+    $ $HP_SDIR/run.sh > run.all.sh               # recreate command file
 
     $ bash ./run.all.sh
      
@@ -106,22 +105,22 @@
 
     # under $HP_ODIR: TAB/SUMMARY/VCF/FASTA Files: 
 
-    count.tab                                                    # total reads & mtDNA-CN counts
-    subsample.tab                                                # subsampled read counts
-    cvg.tab                                                      # subsampled coverage stats
+    count.tab                                                      # total reads & mtDNA-CN counts
+    subsample.tab                                                  # subsampled read counts
+    cvg.tab                                                        # subsampled coverage stats
 
     # 1st ITERATION
-    {mutect2,mutserve,freebayes}.{03,05,10}.{concat,merge[.sitesOnly]}.vcf # SNVs; 3,5,10% heteroplasmy thold
-    {mutect2,mutserve,freebayes}.{03,05,10}.tab                            # SNV counts
-    {mutect2,mutserve,freebayes}.{03,05,10}.summary                        # SNV count summaries
+    {mutect2,mutserve,freebayes}.{03,05,10}[.concat].vcf           # SNVs; 3,5,10% heteroplasmy thold
+    {mutect2,mutserve,freebayes}.{03,05,10}.merge[.sitesOnly]}.vcf # SNVs; 3,5,10% heteroplasmy thold
+    {mutect2,mutserve,freebayes}.{03,05,10}.tab                    # SNV counts
+    {mutect2,mutserve,freebayes}.{03,05,10}.summary                # SNV count summaries
 
-    {mutect2,mutserve,freebayes}.fa                                        # consensus sequence
-    {mutect2,mutserve,freebayes}.haplogroup[1].tab                         # haplogroup
-    {mutect2,mutserve,freebayes}.haplocheck.tab                            # contamination screen   
+    {mutect2,mutserve,freebayes}.fa                                # consensus sequence
+    {mutect2,mutserve,freebayes}.haplogroup[1].tab                 # haplogroup
+    {mutect2,mutserve,freebayes}.haplocheck.tab                    # contamination screen   
 
     # 2nd ITERATION
-    {mutect2_mutect2.mutect2,freebayes_freebayes.freebayes}.{03,05,10}.{concat,merge[.sitesOnly]}.vcf	
-    {mutect2_mutect2.mutect2,freebayes_freebayes.freebayes}.{03,05,10}.{tab,summary}
+    {mutect2_mutect2.mutect2,freebayes_freebayes.freebayes}.*	
 
 ## EXAMPLE 1 ##
 
