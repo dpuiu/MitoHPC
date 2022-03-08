@@ -74,12 +74,16 @@
        export HP_L=222000                        #  Use at most 222K reads
 
        export HP_DOPT="--removeDups"             # samblaster deduplication option
+
        export HP_GOPT=                           # GATK mutect2 options; 
-                                                 #  Ex: "-max-reads-per-alignment-start 20 -mitochondria-mode"  
-       export HP_FOPT=                           # FASTP read trimming options; Ex: "-q 20 -e 20"              
+                                                 #  Ex: "-max-reads-per-alignment-start 20 \
+                                                 #         -mitochondria-mode"  
+
+       export HP_FOPT=                           # FASTP read trimming options
+                                                 #  Ex: "-q 20 -e 20"              
 
        export HP_FRULE=                          # optional: VCF output filtering options; 
-                                                 #  Ex: "bcftools view -f PASS,clustered_events,multiallelic"
+                                                 #  Ex: "bcftools view -f PASS,clustered_events"
 
        export HP_SH=bash                         # job scheduling: bash, qsub,sbatch, ..
 
