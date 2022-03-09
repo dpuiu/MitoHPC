@@ -96,7 +96,7 @@ fi
 if [ ! -s $HP_JDIR/gatk.jar ] ; then
   wget -N -c https://github.com/broadinstitute/gatk/releases/download/4.2.5.0/gatk-4.2.5.0.zip
   unzip -o gatk-4.2.5.0.zip
-  cp gatk-4.2.5.0/gatk-package-4.2.4.0-local.jar $HP_JDIR/gatk.jar
+  cp gatk-4.2.5.0/gatk-package-4.2.5.0-local.jar $HP_JDIR/gatk.jar
   cp gatk-4.2.5.0/gatk $HP_BDIR/
 fi
 
