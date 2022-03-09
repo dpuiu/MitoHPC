@@ -27,7 +27,7 @@ MAIN:
         {
 
 		##fileformat=VCFv4.2
-		##reference=file:///work-zfs/ssalzbe1/users/dpuiu/Homo_sapiens_mito/RefSeq/rCRS.fa
+		##reference=file:rCRS.fa
 		##contig=<ID=rCRS,length=16569>
 		##INFO=<ID=NUMT,Number=0,Type=Flag,Description="NUMT">
 		#0	1	2	3	4	5	6	7
