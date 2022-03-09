@@ -22,5 +22,5 @@ test -f $HP_ODIR/$MM.00.concat.vcf
 #cat $HP_ODIR/$MM.00.concat.vcf | filterVcf.pl -p 0.$T > $HP_ODIR/$MM.$T.concat.vcf
 
 
-cat $HP_ODIR/$M.$T.concat.vcf  | grep ":1$" | cat $HP_ODIR/$MM.$T.concat.vcf - | bedtools sort -header | uniqVcf.pl > $HP_ODIR/$MM.$T.concat.vcf.tmp
+cat $HP_ODIR/$M.$T.concat.vcf  | grep ":1$" | cat $HP_ODIR/$MM.$T.concat.vcf - |  uniqVcf.pl | bedtools sort -header  > $HP_ODIR/$MM.$T.concat.vcf.tmp
 mv $HP_ODIR/$MM.$T.concat.vcf.tmp $HP_ODIR/$MM.$T.concat.vcf
