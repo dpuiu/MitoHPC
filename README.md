@@ -126,7 +126,7 @@
     {mutect2,mutserve,freebayes}.haplocheck.tab                    # contamination screen   
 
     # 2nd ITERATION
-    {mutect2_mutect2.mutect2,freebayes_freebayes.freebayes}.*	
+    {mutect2.mutect2,freebayes.freebayes}.*	
 
 ## EXAMPLE 1 ##
 

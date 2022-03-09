@@ -47,9 +47,9 @@ samtools faidx  $HP_ODIR/$M.fa
 awk '{print $3}' $HP_IN | sed "s|$|.$M.merge.bed|" | xargs cat > $HP_ODIR/$M.merge.bed
 
 #snv counts
-snpCount.sh $M $HP_T1
-snpCount.sh $M $HP_T2
-snpCount.sh $M $HP_T3
+snpFilterThold.sh $M $HP_T1 ; snpCount.sh $M $HP_T1
+snpFilterThold.sh $M $HP_T2 ; snpCount.sh $M $HP_T2
+snpFilterThold.sh $M $HP_T3 ; snpCount.sh $M $HP_T3
 
 if [[ ! -z "${HP_FNAME}" ]]; then
   snpFilter.sh $M $HP_T1 ; snpCount.sh $M.$HP_FNAME $HP_T1
@@ -66,7 +66,6 @@ if [ $HP_I -lt 2 ] ; then exit 0 ; fi
 if [ $HP_M == "mutserve" ] ; then exit 0 ; fi
 
 MM=$M.$M
-MMM=${M}_${MM}
 #count,cvg
 awk '{print $3}' $HP_IN | sed "s|$|.$M.count|" | xargs cat | uniq.pl > $HP_ODIR/$M.count.tab
 awk '{print $3}' $HP_IN | sed "s|$|.$M.cvg.stat|" | xargs cat | uniq.pl -i 0  > $HP_ODIR/$M.cvg.tab
@@ -75,14 +74,14 @@ snpSort.sh $HP_ODIR/$MM.00.concat
 cat $HP_ODIR/$MM.00.concat.vcf | grep -v "^#" | sed 's|:|\t|g'  | count.pl -i -1 -round 100| sort -n > $HP_ODIR/$MM.00.AF.histo
 
 #snv counts
-snpMerge.sh $M $MM $HP_T1 ; snpCount.sh $MMM $HP_T1
-snpMerge.sh $M $MM $HP_T2 ; snpCount.sh $MMM $HP_T2
-snpMerge.sh $M $MM $HP_T3 ; snpCount.sh $MMM $HP_T3
+snpFilterThold.sh $MM $HP_T1 ; snpMerge.sh $M $MM $HP_T1 ; snpCount.sh $MM $HP_T1
+snpFilterThold.sh $MM $HP_T2 ; snpMerge.sh $M $MM $HP_T2 ; snpCount.sh $MM $HP_T2
+snpFilterThold.sh $MM $HP_T3 ; snpMerge.sh $M $MM $HP_T3 ; snpCount.sh $MM $HP_T3
 
 if [[ ! -z "${HP_FNAME}" ]]; then
-  snpFilter.sh $MMM $HP_T1 ; snpCount.sh $MMM.$HP_FNAME $HP_T1
-  snpFilter.sh $MMM $HP_T2 ; snpCount.sh $MMM.$HP_FNAME $HP_T2
-  snpFilter.sh $MMM $HP_T3 ; snpCount.sh $MMM.$HP_FNAME $HP_T3
+  snpFilter.sh $MM $HP_T1 ; snpCount.sh $MM.$HP_FNAME $HP_T1
+  snpFilter.sh $MM $HP_T2 ; snpCount.sh $MM.$HP_FNAME $HP_T2
+  snpFilter.sh $MM $HP_T3 ; snpCount.sh $MM.$HP_FNAME $HP_T3
 fi
 
 

@@ -15,19 +15,18 @@ export T=$2 # thold
 #######################################################
 
 if [ "$#" -lt 2 ]; then exit 0 ; fi
-if [ -s $HP_ODIR/$M.00.concat.vcf ] ; then  cat $HP_ODIR/$M.00.concat.vcf | filterVcf.pl -p 0.$T > $HP_ODIR/$M.$T.concat.vcf ; fi
+#if [ -s $HP_ODIR/$M.00.concat.vcf ] ; then  cat $HP_ODIR/$M.00.concat.vcf | filterVcf.pl -p 0.$T > $HP_ODIR/$M.$T.concat.vcf ; fi
 
 cat $HP_ODIR/$M.$T.concat.vcf | concat2cat.pl > $HP_ODIR/$M.$T.vcf
 cat $HP_ODIR/$M.$T.concat.vcf | concat2merge.pl -in $HP_IN | bedtools sort -header | tee $HP_ODIR/$M.$T.merge.vcf | vcf2sitesOnly.pl >  $HP_ODIR/$M.$T.merge.sitesOnly.vcf
 cat $HP_ODIR/$M.$T.concat.vcf | snpCount.pl -in $HP_IN | tee $HP_ODIR/$M.$T.tab | getSummaryN.pl > $HP_ODIR/$M.$T.summary
-
 
 # get suspicious samples
 if [ -f $HP_ODIR/$M.merge.bed ] ; then
   rm -f $HP_ODIR/$M.$T.suspicious.tab ; touch $HP_ODIR/$M.$T.suspicious.tab
 
   # low mtDNA_CN
-  if [ -s $HP_ODIR/mtDNA_CN.tab  ]; then cat $HP_ODIR/mtDNA_CN.tab | perl -ane 'print "$F[0]\tlow_CN\t$F[-1]\n" if($F[1] and $F[1]=~/^\d+/ and $F[1]<300/($ENV{T}+1)) ;' >> $HP_ODIR/$M.$T.suspicious.tab ; fi
+  cat $HP_ODIR/count.tab | perl -ane 'print "$F[0]\tlow_CN\t$F[-1]\n" if($F[4] and $F[4]=~/^\d+/ and $F[4]<300/($ENV{T}+1)) ;' >> $HP_ODIR/$M.$T.suspicious.tab
 
   # mismatch haplogroup
   if [ -s $HP_ODIR/$M.haplogroup1.tab ] ; then
