@@ -28,8 +28,8 @@ which samtools
 if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
   wget -N -c https://github.com/samtools/samtools/releases/download/1.15/samtools-1.15.tar.bz2
   if [ ! -s $HP_BDIR/samtools ] ; then
-    tar -xjvf samtools-1.14.tar.bz2
-    cd samtools-1.14
+    tar -xjvf samtools-1.15.tar.bz2
+    cd samtools-1.15
     ./configure --prefix=$HP_HDIR/ ; make ;  make install
     cd -
   fi
@@ -39,8 +39,8 @@ which bcftools
 if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
   wget -N -c https://github.com/samtools/bcftools/releases/download/1.15/bcftools-1.15.tar.bz2
   if [ ! -s $HP_BDIR/bcftools ] ; then
-    tar -xjvf  bcftools-1.14.tar.bz2
-    cd bcftools-1.14
+    tar -xjvf  bcftools-1.15.tar.bz2
+    cd bcftools-1.15
     ./configure --prefix=$HP_HDIR/ ; make ; make install
     cd -
   fi
@@ -50,8 +50,8 @@ which htsfile
 if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
   wget -N -c https://github.com/samtools/htslib/releases/download/1.15/htslib-1.15.tar.bz2
   if [ ! -s $HP_BDIR/tabix ] ; then
-    tar -xjvf htslib-1.14.tar.bz2
-    cd htslib-1.14
+    tar -xjvf htslib-1.15.tar.bz2
+    cd htslib-1.15
     ./configure --prefix=$HP_HDIR/ ; make ; make install
     cd -
   fi
@@ -95,9 +95,9 @@ fi
 
 if [ ! -s $HP_JDIR/gatk.jar ] ; then
   wget -N -c https://github.com/broadinstitute/gatk/releases/download/4.2.5.0/gatk-4.2.5.0.zip
-  unzip -o gatk-4.2.4.0.zip
-  cp gatk-4.2.4.0/gatk-package-4.2.4.0-local.jar $HP_JDIR/gatk.jar
-  cp gatk-4.2.4.0/gatk $HP_BDIR/
+  unzip -o gatk-4.2.5.0.zip
+  cp gatk-4.2.5.0/gatk-package-4.2.4.0-local.jar $HP_JDIR/gatk.jar
+  cp gatk-4.2.5.0/gatk $HP_BDIR/
 fi
 
 if [ ! -s $HP_JDIR/haplogrep.jar ] ; then
