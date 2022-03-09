@@ -44,7 +44,7 @@
 
     $ $HP_SDIR/install_prerequisites.sh              # bwa,samtools,bedtools ...
       or
-    $ $HP_SDIR/install_prerequisites.sh -f           # force install
+    $ $HP_SDIR/install_prerequisites.sh -f           # force install 
 
     $ $HP_SDIR/checkInstall.sh
     # if successfull => "Success message!"
