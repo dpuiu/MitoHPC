@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 #######################################################################################################################################
 
@@ -232,6 +232,6 @@ if [ ! -s $OMM.00.vcf ] ; then
   annotateVcf.sh $OMM.00.vcf
 
   # new: 2022/03/09
-  intersectVcf.pl $OM.00.vcf $OM.max.vcf | cat - $OMM.00.vcf | uniqVcf.pl | bedtools sort -header > $OM.00.vcf.tmp
-  mv $OM.00.vcf.tmp $OM.00.vcf
+  intersectVcf.pl $OM.00.vcf $OM.max.vcf | cat - $OMM.00.vcf | uniqVcf.pl | bedtools sort -header > $OMM.00.vcf.tmp
+  mv $OMM.00.vcf.tmp $OMM.00.vcf
 fi
