@@ -26,7 +26,7 @@ fi
 
 which samtools
 if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
-  wget -N -c https://github.com/samtools/samtools/releases/download/1.14/samtools-1.14.tar.bz2
+  wget -N -c https://github.com/samtools/samtools/releases/download/1.15/samtools-1.15.tar.bz2
   if [ ! -s $HP_BDIR/samtools ] ; then
     tar -xjvf samtools-1.14.tar.bz2
     cd samtools-1.14
@@ -37,7 +37,7 @@ fi
 
 which bcftools
 if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
-  wget -N -c https://github.com/samtools/bcftools/releases/download/1.14/bcftools-1.14.tar.bz2
+  wget -N -c https://github.com/samtools/bcftools/releases/download/1.15/bcftools-1.15.tar.bz2
   if [ ! -s $HP_BDIR/bcftools ] ; then
     tar -xjvf  bcftools-1.14.tar.bz2
     cd bcftools-1.14
@@ -48,7 +48,7 @@ fi
 
 which htsfile
 if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
-  wget -N -c https://github.com/samtools/htslib/releases/download/1.14/htslib-1.14.tar.bz2
+  wget -N -c https://github.com/samtools/htslib/releases/download/1.15/htslib-1.15.tar.bz2
   if [ ! -s $HP_BDIR/tabix ] ; then
     tar -xjvf htslib-1.14.tar.bz2
     cd htslib-1.14
@@ -94,7 +94,7 @@ if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
 fi
 
 if [ ! -s $HP_JDIR/gatk.jar ] ; then
-  wget -N -c https://github.com/broadinstitute/gatk/releases/download/4.2.4.0/gatk-4.2.4.0.zip
+  wget -N -c https://github.com/broadinstitute/gatk/releases/download/4.2.5.0/gatk-4.2.5.0.zip
   unzip -o gatk-4.2.4.0.zip
   cp gatk-4.2.4.0/gatk-package-4.2.4.0-local.jar $HP_JDIR/gatk.jar
   cp gatk-4.2.4.0/gatk $HP_BDIR/
@@ -113,7 +113,7 @@ if [ ! -s $HP_JDIR/haplocheck.jar ] ; then
 fi
 
 if [ ! -s $HP_JDIR/mutserve.jar ] ; then
-  wget -N -c https://github.com/seppinho/mutserve/releases/download/v2.0.0-rc12/mutserve.zip
+  wget -N -c https://github.com/seppinho/mutserve/releases/download/v2.0.0-rc13/mutserve.zip
   unzip -o mutserve.zip
   cp mutserve.jar $HP_JDIR
 fi
