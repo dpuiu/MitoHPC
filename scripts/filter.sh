@@ -230,4 +230,8 @@ if [ ! -s $OMM.00.vcf ] ; then
   bcftools norm -m - $OMM.vcf | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa | bedtools sort -header> $OMM.fix.vcf 
   cat $OMM.fix.vcf | fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN -mfile $OM.max.vcf -ffile $OM.fix.vcf | filterVcf.pl -sample $S -source $HP_M | bedtools sort  >> $OMM.00.vcf
   annotateVcf.sh $OMM.00.vcf
+
+  # new: 2022/03/09
+  intersectVcf.pl $OM.00.vcf $OM.max.vcf | cat - $OMM.00.vcf | uniqVcf.pl | bedtools sort -header > $OM.00.vcf.tmp
+  mv $OM.00.vcf.tmp $OM.00.vcf
 fi

@@ -47,9 +47,9 @@ samtools faidx  $HP_ODIR/$M.fa
 awk '{print $3}' $HP_IN | sed "s|$|.$M.merge.bed|" | xargs cat > $HP_ODIR/$M.merge.bed
 
 #snv counts
-snpFilterThold.sh $M $HP_T1 ; snpCount.sh $M $HP_T1
-snpFilterThold.sh $M $HP_T2 ; snpCount.sh $M $HP_T2
-snpFilterThold.sh $M $HP_T3 ; snpCount.sh $M $HP_T3
+snpCount.sh $M $HP_T1
+snpCount.sh $M $HP_T2
+snpCount.sh $M $HP_T3
 
 if [[ ! -z "${HP_FNAME}" ]]; then
   snpFilter.sh $M $HP_T1 ; snpCount.sh $M.$HP_FNAME $HP_T1
@@ -74,9 +74,9 @@ snpSort.sh $HP_ODIR/$MM.00.concat
 cat $HP_ODIR/$MM.00.concat.vcf | grep -v "^#" | sed 's|:|\t|g'  | count.pl -i -1 -round 100| sort -n > $HP_ODIR/$MM.00.AF.histo
 
 #snv counts
-snpFilterThold.sh $MM $HP_T1 ; snpMerge.sh $M $MM $HP_T1 ; snpCount.sh $MM $HP_T1
-snpFilterThold.sh $MM $HP_T2 ; snpMerge.sh $M $MM $HP_T2 ; snpCount.sh $MM $HP_T2
-snpFilterThold.sh $MM $HP_T3 ; snpMerge.sh $M $MM $HP_T3 ; snpCount.sh $MM $HP_T3
+snpCount.sh $MM $HP_T1
+snpCount.sh $MM $HP_T2
+snpCount.sh $MM $HP_T3
 
 if [[ ! -z "${HP_FNAME}" ]]; then
   snpFilter.sh $MM $HP_T1 ; snpCount.sh $MM.$HP_FNAME $HP_T1
