@@ -1,4 +1,6 @@
-# HP : Mitochondrial Heteroplasmy Pipeline # 
+# MitoHPC : Mitochondrial High Performance Caller # 
+
+    Calls Mitochondrial SNV's : Homoplasmies and Heteroplasmies 
 
 ## INPUT ##
  
@@ -21,18 +23,18 @@
 
 ### DOWNLOAD PIPELINE ###
 
-    $ git clone https://github.com/dpuiu/HP.git
+    $ git clone https://github.com/dpuiu/MitoHPC.git
 
 ### UPDATE PIPELINE (optional) ###
 
-    $ cd HP/
+    $ cd MitoHPC/
     $ git pull
       or
     $ git checkout .
 
 ### SETUP ENVIRONMENT ###
 
-    $ cd HP/scripts
+    $ cd MitoHPC/scripts
     $ export HP_SDIR=`pwd`                           # set script directory variable 
     $ . ./init.sh                                    # or init.hs38DH.sh or init.mm39.sh
 
