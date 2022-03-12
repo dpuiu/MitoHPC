@@ -1,6 +1,6 @@
 # MitoHPC : Mitochondrial High Performance Caller # 
 
-    Calls Mitochondrial SNV's : Homoplasmies and Heteroplasmies 
+    For Calling Mitochondrial Homoplasmies and Heteroplasmies 
 
 ## INPUT ##
  
