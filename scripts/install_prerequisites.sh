@@ -93,6 +93,14 @@ if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
   chmod a+x $HP_BDIR//freebayes
 fi
 
+which gridss
+if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
+  wget https://github.com/PapenfussLab/gridss/releases/download/v2.13.2/gridss-2.13.2.tar.gz
+  tar -xzvf gridss-2.13.2.tar.gz
+  cp gridss $HP_BDIR/
+  cp gridss-2.13.2-gridss-jar-with-dependencies.jar $HP_JDIR/gridss.jar
+fi
+
 if [ ! -s $HP_JDIR/gatk.jar ] ; then
   wget -N -c https://github.com/broadinstitute/gatk/releases/download/4.2.5.0/gatk-4.2.5.0.zip
   unzip -o gatk-4.2.5.0.zip

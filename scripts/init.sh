@@ -1,5 +1,4 @@
-#!/usr/bin/env bash
-#set -e
+#!/usr/bin/env bash set -e
 
 ##############################################################################################################
 
@@ -80,17 +79,25 @@ export HP_E=300	                 # extension(circularization)
 export HP_FOPT="-q 15 -e 0"      # FASTP options: Ex: " -q 20 -e 30 "; -q: min base quality; -e: avg quality thold
 export HP_DOPT="--removeDups"    # samblaster option; leave empty if no deduplication should be done
 export HP_GOPT=                  # gatk mutect2 additional options : Ex "-max-reads-per-alignment-start 50" , "--mitochondria-mode"
+
 export HP_M=mutect2 	         # SNV caller: mutect2,mutserve or freebayes
 export HP_I=2		         # number of SNV iterations : 0,1,2
 				 #  0: compute read counts,mtDNA-CN
                                  #  1:1 iteration (mutect2,mutserve)
                                  #  2:2 iterations (mutect2)
+
+
 export HP_T1=03                  # heteroplasmy tholds
 export HP_T2=05
 export HP_T3=10
-export HP_FNAME=                 # FILTERING options: Ex: filter
-export HP_FRULE=                 # FILTERING options: Ex: 'bcftools view -f PASS,clustered_events,multiallelic | grep -v "HP;" '
 
+export HP_V=                     # SV caller: gridss
+export HP_DP=50                    # minimum coverage
+
+export HP_FNAME=                 # FILTERING options: Ex: filter
+export HP_FRULE=                 # FILTERING options: Ex:
+                                 #  "bcftools view -f PASS,clustered_events,multiallelic | grep -v 'HP;'"
+                                 #  "egrep -v 'base_qual|map_qual|slippage|strand|weak'"
 
 export HP_P=1						    # number of processors
 export HP_JOPT="-Xms2G -Xmx2G -XX:ParallelGCThreads=$HP_P"  # JAVA options

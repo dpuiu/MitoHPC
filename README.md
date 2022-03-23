@@ -1,6 +1,6 @@
-# MitoHPC : Mitochondrial High Performance Caller # 
+# MitoHPC : Mitochondrial High Performance Caller #
 
-    For Calling Mitochondrial Homoplasmies and Heteroplasmies 
+    For Calling Mitochondrial Homoplasmies and Heteroplasmies
 
 ## INPUT ##
  
@@ -64,35 +64,33 @@
 
 
     # edit init.sh file
-    $ nano init.sh                               # check/edit local init file
+    $ cat init.sh                                # check/edit local init file
         ...
        export HP_IN=$PWD/in.txt                  # input TSV file
+
        export HP_ADIR=$PWD/bams/                 # alignment dir; .bam, .bai, [.idxstats] files
        # or  
        export HP_ADIR=$PWD/crams/                # alignment dir; .cram, .crai, [.idxstats] files
       
        export HP_ODIR=$PWD/out/                  # output dir  
 
-       export HP_L=222000                        #  Use at most 222K reads
+       export HP_L=222000                        # Use at most 222K reads; if empty, use all the reads
 
-       export HP_DOPT="--removeDups"             # samblaster deduplication option
+       export HP_M=mutect2                       # SNV caller: mutect2, mutserve, or freebayes
+       export HP_I=2                             # number of SNV calling iterations
+                                                 #  1: one, uses rCRS or RSRS as reference 
+                                                 #  2: two, the 2nd one used the sample consensus 
+                                                 #     computed in the 1st iteration; higher accuracy 
 
-       export HP_GOPT=                           # GATK mutect2 options; 
-                                                 #  Ex: "-max-reads-per-alignment-start 20 \
-                                                 #         -mitochondria-mode"  
-
-       export HP_FOPT=                           # FASTP read trimming options
-                                                 #  Ex: "-q 20 -e 20"              
-
-       export HP_FRULE=                          # optional: VCF output filtering options; 
-                                                 #  Ex: "bcftools view -f PASS,clustered_events"
+       export HP_FNAME=filter                    # VCF filter name, optional
+       export HP_FRULE="bcftools view -f PASS"   # VCF filtering, optional
 
        export HP_SH=bash                         # job scheduling: bash, qsub,sbatch, ..
 
     $ . ./init.sh                                # source init file 
 
-    $ printenv | grep HP_ | sort                 # optional ; check HP_ variables 
-    $ nano $HP_IN                                # optional ; check input file
+    $ printenv | grep HP_ | sort                 # check HP_ variables 
+    $ nano $HP_IN                                # check input file
 
 ### RUN PIPELINE  ###
  

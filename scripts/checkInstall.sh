@@ -47,6 +47,7 @@ samblaster --version 2>&1 | head -1 >> checkInstall.log
 echo -n "tabix " >> checkInstall.log ; tabix 2>&1 |  grep -v ^$ | head -1 >> checkInstall.log
 perl --version | grep -v ^$ | head -1  >> checkInstall.log
 java -version | head -1               >> checkInstall.log
+#gridss
 
 echo "########################"  >> checkInstall.log
 echo "JAVA:"  >> checkInstall.log
@@ -56,6 +57,7 @@ ls -l $HP_JDIR/gatk.jar       | perl -ane 'print "$F[-1]\n";' >> checkInstall.lo
 ls -l $HP_JDIR/mutserve.jar   | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
 ls -l $HP_JDIR/haplogrep.jar  | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
 ls -l $HP_JDIR/haplocheck.jar | perl -ane 'print "$F[-1]\n";' >> checkInstall.log
+#ls -l $HP_JDIR/gridss.jar
 
 echo "########################"  >> checkInstall.log
 echo "VARS:"  >> checkInstall.log

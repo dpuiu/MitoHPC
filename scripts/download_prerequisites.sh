@@ -25,4 +25,4 @@ wget -N -c https://github.com/broadinstitute/gatk/releases/download/4.2.5.0/gatk
 wget -N -c https://github.com/seppinho/haplogrep-cmd/releases/download/v2.4.0/haplogrep.zip
 wget -N -c https://github.com/genepi/haplocheck/releases/download/v1.3.3/haplocheck.zip
 wget -N -c https://github.com/seppinho/mutserve/releases/download/v2.0.0-rc13/mutserve.zip
-
+wget -N -c https://github.com/PapenfussLab/gridss/releases/download/v2.13.2/gridss-2.13.2.tar.gz

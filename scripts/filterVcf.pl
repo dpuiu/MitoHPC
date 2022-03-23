@@ -16,9 +16,11 @@ MAIN:
 	# define variables
 	my %opt;
 	$opt{percent}="0.0";
+	$opt{depth}=0;
 
 	my $result = GetOptions(
                 "percent=s" 	=> \$opt{percent},
+		"depth=i"	=> \$opt{depth},
 		"sample|Run=s"	=> \$opt{sample},
 		"source=s"	=> \$opt{source},
 		"header=s"	=> \$opt{header}
@@ -63,6 +65,7 @@ MAIN:
 
 				$F[7]="$1AF=$AF$3";
 			}
+			if($F[7]=~/DP=(\d+)/ and $1<$opt{depth}) { next }
 
 			print join "\t",@F[0..9];
 			print "\n";
@@ -87,6 +90,8 @@ MAIN:
 
 			if(!$h{AF} or $h{AF}>1-$opt{percent}) 	{ $h{AF}=1; }
 			elsif($h{AF}<$opt{percent})		{ next;     }
+
+			if($h{DP}<$opt{depth}) { next }
 
 			$F[8]="GT:DP:AF";
 			$F[9]="$h{GT}:$h{DP}:$h{AF}";

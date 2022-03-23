@@ -39,7 +39,7 @@ MAIN:
 		my @F=split;
 		if(@F>=4)
 		{
-			if(/^Run/ or /^sample/)
+			if($.==1 and (/^Run/ or /^sample/))
 			{
 				push @F,"M";
 			}

@@ -46,6 +46,7 @@ export HP_E=300	                 # extension(circularization)
 export HP_FOPT="-q 20 -e 20"     # FASTP options: Ex: " -q 20 -e 30 "; -q: min base quality; -e: avg quality thold
 export HP_DOPT="--removeDups"    # samblaster option; leave empty if no deduplication should be done
 export HP_GOPT=                  # gatk mutect2 additional options : Ex "-max-reads-per-alignment-start 50" , "-mitochondria-mode"
+
 export HP_M=mutect2 	         # SNV caller: mutect2 or mutserve
 export HP_I=2		         # number of SNV iterations : 0,1,2
 				 #  0: compute read counts,mtDNA-CN
@@ -54,6 +55,10 @@ export HP_I=2		         # number of SNV iterations : 0,1,2
 export HP_T1=03                  # heteroplasmy tholds
 export HP_T2=05
 export HP_T3=10
+
+export HP_V=gridss               # SV caller: gridss
+export HP_DP=50                 # minimum coverage
+
 export HP_FNAME=                 # FILTERING options: Ex: noMultiallelic
 export HP_FRULE=                 # FILTERING options: Ex: "grep -v multiallelic"
 
