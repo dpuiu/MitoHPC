@@ -201,7 +201,6 @@
       sample_A          bams/sample_A.bam    out/sample_A/sample_A
       sample_B          bams/sample_B.bam    out/sample_B/sample_B
       sample_C          bams/sample_C.bam    out/sample_C/sample_C
-      ...
 
 ### OUTPUT ###
 
@@ -211,7 +210,6 @@
       sample_A/
       sample_B/
       sample_C/
-      ...
 
 #### directory structure ####
 
@@ -220,7 +218,6 @@
       bams/sample_A.bam.bai
       bams/sample_A.idxstats
       bams/sample_A.count
-     ...
 
 #### read counts and mtDNA-CN(M) ####
 
