@@ -14,7 +14,7 @@ test -s $HP_IN
 
 if [ $HP_I != "0" ]       && [ $HP_I != "1" ]        && [ $HP_I != "2" ] ;         then  echo "Incorrect HP_I parameter" > /dev/stderr ; exit 1 ; fi
 if [ $HP_M != "mutect2" ] && [ $HP_M != "mutserve" ] && [ $HP_M != "freebayes" ] ; then  echo "Incorrect HP_M parameter" > /dev/stderr ; exit 1 ; fi
-if [ $HP_V ] && $HP_V != "gridss" ] ;                                              then  echo "Incorrect HP_V parameter" > /dev/stderr ; exit 1 ; fi
+if [ $HP_V ] && [ $HP_V != "gridss" ] ;                                            then  echo "Incorrect HP_V parameter" > /dev/stderr ; exit 1 ; fi
 
 mkdir -p $HP_ODIR
 test -w $HP_ODIR
