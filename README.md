@@ -32,7 +32,7 @@
       or
     $ git checkout .
 
-### SETUP ENVIRONMENT ###
+### SETUP ENVIRONMENT (very inportant) ###
 
     $ cd MitoHPC/scripts
     $ export HP_SDIR=`pwd`                           # set script directory variable 
@@ -41,12 +41,15 @@
 ### INSTALL SYSTEM PREREQUISITES (optional) ###
 
     $ sudo $HP_SDIR/install_sysprerequisites.sh      # install perl,pthon,java,wget ...
+                                                     #  (unless already installed)
 
-### INSTALL PREREQUISITES ; CHECK INSTALL ###
+### INSTALL PREREQUISITES & CHECK INSTALL ###
 
-    $ $HP_SDIR/install_prerequisites.sh              # bwa,samtools,bedtools ...
+    $ $HP_SDIR/install_prerequisites.sh              # install bwa,samtools,bedtools ...
+                                                     #  (unless already	installed)
       or
-    $ $HP_SDIR/install_prerequisites.sh -f           # force install 
+    $ $HP_SDIR/install_prerequisites.sh -f           # force install  bwa,samtools,bedtools ...
+                                                     #  (latest versions) 
 
     $ $HP_SDIR/checkInstall.sh
     # if successfull => "Success message!"
@@ -96,6 +99,9 @@
  
     $ $HP_SDIR/run.sh > run.all.sh               # create command file in working dir.
     $ bash ./run.all.sh                          # execute command file      
+
+    # or run in parallel
+    $ grep filter.sh ./run.all.sh | parallel ; getSummary.sh
 
 ### RE-RUN PIPELINE (optional) ###
 
