@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -x
 
+if [ -z $HP_SDIR ] ; then echo "Variable HP_SDIR not defined. Make sure you followed the SETUP ENVIRONMENT instructions" ;  exit 0 ; fi
+if [ -z $HP_HDIR ] ; then echo "Variable HP_HDIR not defined. Make sure you followed the SETUP ENVIRONMENT instructions" ;  exit 0 ; fi
+
 ##############################################################################################################
 
 # Program that downloads and installs software prerequisites and genome reference

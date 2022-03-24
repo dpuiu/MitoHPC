@@ -1,4 +1,7 @@
-#!/usr/bin/env bash set -e
+#!/usr/bin/env bash 
+set -e
+
+if [ -z $HP_SDIR ] ; then echo "Variable HP_SDIR not defined. Make sure you followed the SETUP ENVIRONMENT instructions" ;  exit 0 ; fi
 
 ##############################################################################################################
 

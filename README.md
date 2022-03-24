@@ -32,7 +32,7 @@
       or
     $ git checkout .
 
-### SETUP ENVIRONMENT (very inportant) ###
+### SETUP ENVIRONMENT (important) ###
 
     $ cd MitoHPC/scripts
     $ export HP_SDIR=`pwd`                           # set script directory variable 
