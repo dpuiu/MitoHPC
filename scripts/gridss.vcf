@@ -1,0 +1,11 @@
+##fileformat=VCFv4.2
+##source=gridss
+##FILTER=<ID=PASS,Description="All filters passed">
+##INFO=<ID=SM,Number=1,Type=String,Description="Sample">
+##INFO=<ID=SNP,Number=0,Type=Flag,Description="SNP">
+##INFO=<ID=INDEL,Number=0,Type=Flag,Description="INDEL">
+##FORMAT=<ID=SM,Number=1,Type=String,Description="Sample">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
+##FORMAT=<ID=AF,Number=A,Type=Float,Description="Allele Frequency">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	SAMPLE
