@@ -33,8 +33,9 @@ export PATH=$HP_SDIR:$HP_BDIR:$PATH
 #hs38DH(default)
 export HP_RNAME=hs38DH
 export HP_RMT=chrM
-export HP_RNUMT="chr1:629084-634672 chr17:22521208-22521639"
-export HP_RCOUNT=3366
+export HP_RNUMT="chr1:629084-634672 chr17:22521208-22521639"										                          # 150bp reads
+#export HP_RNUMT="chr1:629080-634925 chr2:148881723-148881858 chr5:80651184-80651597 chr11:10508892-10509738 chr13:109424123-109424381 chr17:22521208-22521639"   # 100bp reads
+export HP_RCOUNT=3366																		  # 195(hs38DH-no_alt); 194 (hs38DH-no_alt_EBV)
 export HP_RURL=ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa
 
 #hg19
@@ -95,7 +96,7 @@ export HP_T2=05
 export HP_T3=10
 
 export HP_V=                     # SV caller: gridss
-export HP_DP=50                    # minimum coverage
+export HP_DP=                    # minimum coverage: Ex 100
 
 export HP_FNAME=                 # FILTERING options: Ex: filter
 export HP_FRULE=                 # FILTERING options: Ex:

@@ -7,27 +7,28 @@ use Getopt::Long;
 MAIN:
 {
 	# define variables
-	my %opt;
-	$opt{ref}=   3217346917;	#hs38DH size (3355 sequences) 
-	#$opt{ref}=  3099922541;	#hs38DH size (195 sequences)
-	#$opt{female}=3160119502;	#hs38DH  based estimates
-	#$opt{male}=  3110712762;	#hs38DH  based estimates
+	my (%opt,%len);
+	#$len{ref}=   3217346917;	#hs38DH size (3355 sequences) 
+	#$len{ref}=  3099922541;	#hs38DH size (195 sequences)
+	#$len{female}=3160119502;	#hs38DH  based estimates
+	#$len{male}=  3110712762;	#hs38DH  based estimates
 
-	$opt{ref}=3031865587;		#CHM13 v1.1.	94.23% of prev estimate 
-	$opt{female}=3054815472;	#CHM13 v1.1     96.66% of prev estimate 
-	$opt{male}=3008915703;		#CHM13 v1.1;  	96.72% of prev estimate 
+	$len{ref}=3031865587;		#CHM13 v1.1.	94.23% of prev estimate 
+	$len{female}=3054815472;	#CHM13 v1.1     96.66% of prev estimate 
+	$len{male}=3008915703;		#CHM13 v1.1;  	96.72% of prev estimate 
 
 	$opt{chrM}=  16569;
 
 	my $result = GetOptions(
 		"ref=i"	=>	\$opt{ref},
-		"female=i" =>   \$opt{female},
-		"male=i" =>     \$opt{male},
+		"female" =>   \$opt{female},
+		"male" =>     \$opt{male},
         );
         die "ERROR: $! " if (!$result);
 
-	if($opt{female})  { $opt{ref}=$opt{female} }
-	elsif($opt{male}) { $opt{ref}=$opt{male}   }
+	if($opt{female})   { $opt{ref}=$len{female} }
+	elsif($opt{male})  { $opt{ref}=$len{male}   }
+	elsif(!$opt{ref})  { $opt{ref}=$len{ref}    }
 
 	while(<>)
 	{

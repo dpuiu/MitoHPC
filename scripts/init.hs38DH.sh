@@ -60,8 +60,8 @@ export HP_T1=03                  # heteroplasmy tholds
 export HP_T2=05
 export HP_T3=10
 
-export HP_V=gridss               # SV caller: gridss
-export HP_DP=50                 # minimum coverage
+export HP_V=                     # SV caller: gridss
+export HP_DP=                    # minimum coverage
 
 export HP_FNAME=                 # FILTERING options: Ex: noMultiallelic
 export HP_FRULE=                 # FILTERING options: Ex: "grep -v multiallelic"

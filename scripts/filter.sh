@@ -89,14 +89,22 @@ if  [ ! -s $O.bam ] ; then
     count.pl -i 3 -j 4  | sort > $ON.score
 
   join $O.score $ON.score -a 1 | perl -ane 'next if(@F==3 and $F[2]>$F[1]);print' | \
+     tee $O.score1 |\
      intersectSam.pl $O.sam - | \
      samtools view -bu | \
      samtools sort -m $HP_MM -@ $HP_P  > $O.bam
 
-  rm -f $O.sam $O.score
-  samtools index $O.bam -@ $HP_P
-fi
+  # new April 2022
+  #join $O.score $ON.score -a 1 | perl -ane 'print if(@F==3 and $F[2]>$F[1])' | \
+  #   tee $ON.score1 | \
+  #   intersectSam.pl $O.sam - | \
+  #   samtools view -bu | \
+  #   samtools sort -m $HP_MM -@ $HP_P  > $ON.bam
 
+  #rm -f $O.sam $O.score
+  samtools index $O.bam  -@ $HP_P
+  #samtools index $ON.bam -@ $HP_P
+fi
 #########################################################################################################################################
 # count aligned reads; compute cvg; get coverage stats; get split alignments
 
@@ -112,6 +120,11 @@ if [ ! -s $OS.vcf ] ; then
   if [ "$HP_M" == "mutect2" ] ; then
     java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_MT.fa -I $O.bam       -O $OS.orig.vcf $HP_GOPT --native-pair-hmm-threads $HP_P
     java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $HP_RDIR/$HP_MT.fa -V $OS.orig.vcf -O $OS.vcf --min-reads-per-strand 2
+
+    #new april 2022
+    #java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_NUMT.fa -I $ON.bam      -O $ON.orig.vcf $HP_GOPT --native-pair-hmm-threads $HP_P
+    #java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $HP_RDIR/$HP_NUMT.fa -V $ON.orig.vcf -O $ON.vcf --min-reads-per-strand 2
+
   elif [ "$HP_M" == "mutserve" ] ; then
     if [ "$HP_MT" == "chrM" ] ||  [ "$HP_MT" == "rCRS" ] ||  [ "$HP_MT" == "RSRS" ] ; then
       java $HP_JOPT -jar $HP_JDIR/mutserve.jar call --deletions --insertions --level 0.01 --output $OS.vcf --reference $HP_RDIR/$HP_MT.fa $O.bam
@@ -130,10 +143,9 @@ fi
 if [ ! -s $OS.00.vcf ] ; then
   # filter SNVs
   bcftools norm -m - $OS.vcf | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa | bedtools sort -header> $OS.fix.vcf
-
   cat $HP_SDIR/$HP_M.vcf > $OS.00.vcf ; echo "##sample=$S" >> $OS.00.vcf
   fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OS.00.vcf
-  cat $OS.fix.vcf | filterVcf.pl -sample $S -source $HP_M -depth $HP_DP | bedtools sort >> $OS.00.vcf
+  cat $OS.fix.vcf | filterVcf.pl -sample $S -source $HP_M | bedtools sort >> $OS.00.vcf  # to add -depth $HP_DP
   cat $OS.00.vcf | maxVcf.pl | bedtools sort -header |tee $OS.max.vcf | bgzip -f -c > $OS.max.vcf.gz ; tabix -f $OS.max.vcf.gz
   annotateVcf.sh $OS.00.vcf
 fi
@@ -148,7 +160,7 @@ if [ $HP_V ] && [ "$HP_V" == "gridss" ] ; then
     gridss --jar $HP_JDIR/gridss.jar -r $HP_RDIR/$HP_MT.fa -o $OV.vcf.gz $O.bam  -t 1 -w $OV
     cat $HP_SDIR/gridss.vcf > $OV.fix.vcf
     bcftools view -i 'FILTER="PASS"' $OV.vcf.gz | bcftools query  -f "%CHROM\t%POS\t.\t%REF\t%ALT\t%QUAL\t%FILTER\t.\tGT:DP:AF\t[%GT:%REF:%AF]\n" | grep -v -P 'h\t'  >> $OV.fix.vcf
-    cat $OV.fix.vcf | filterVcf.pl -sample $S -source $HP_V -depth $HP_DP > $OV.00.vcf
+    cat $OV.fix.vcf | filterVcf.pl -sample $S -source $HP_V  > $OV.00.vcf #  to add -depth $HP_DP
     rm -rf $OV $OV.vcf.gz.* $OV.fix.vcf
   fi
 fi
@@ -203,8 +215,7 @@ if  [ ! -s $OS.bam ] ; then
   rm -f $OS.sam $OS.score $ON.score $O.fq
 fi
 
-
-rm -f $O.bam* 
+rm -f $O.bam*
 rm -f $OS.*idx $OS.*tsv $OS.*stats
 
 # exit if the number of iterations is set to 1
@@ -241,7 +252,8 @@ if [ ! -s $OSS.00.vcf ] ; then
   cat $HP_SDIR/$HP_M.vcf > $OSS.00.vcf ; echo "##sample=$S" >> $OSS.00.vcf
   fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OSS.00.vcf
   bcftools norm -m - $OSS.vcf | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa | bedtools sort -header> $OSS.fix.vcf 
-  cat $OSS.fix.vcf | fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN -mfile $OS.max.vcf -ffile $OS.fix.vcf | filterVcf.pl -sample $S -source $HP_M -depth $HP_DP | bedtools sort  >> $OSS.00.vcf
+  cat $OSS.fix.vcf | fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN -mfile $OS.max.vcf -ffile $OS.fix.vcf | \
+    filterVcf.pl -sample $S -source $HP_M | bedtools sort  >> $OSS.00.vcf   #  to add -depth $HP_DP
   annotateVcf.sh $OSS.00.vcf
 
   intersectVcf.pl $OS.00.vcf $OS.max.vcf | cat - $OSS.00.vcf |  uniqVcf.pl | bedtools sort -header > $OSS.00.vcf.tmp

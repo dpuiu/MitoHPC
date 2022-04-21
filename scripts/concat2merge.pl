@@ -116,7 +116,8 @@ MAIN:
 
 		if($F[0]=~/(.+)\t\.$/)       { $F[0]="$1\tAC=$AC;AN=$AN"    }
 		elsif($F[0]=~/(.+)\t(\S+)$/) { $F[0]="$1\tAC=$AC;AN=$AN;$2" }
-		print join "\t",@F; print "\n";
+		print join "\t",@F; 
+		print "\n";
 	}
 	exit 0;
 }
