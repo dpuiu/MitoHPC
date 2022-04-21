@@ -69,8 +69,8 @@
     # edit init.sh file
     $ cat init.sh                                # check/edit local init file
         ...
-       export HP_RNAME=hs38DH			 # human reference used for alignment (Ex: hs38DH, hg19)
-       export HP_RCOUNT=3366			 # number of sequences in the human reference (Ex hs38DH: 3366, 195, 194, 25)
+       export HP_RNAME=hs38DH                    # human reference used for alignment (Ex: hs38DH, hg19)
+       export HP_RCOUNT=3366                     # number of sequences in the human reference (Ex hs38DH: 3366, 195, 194, 25)
 
        export HP_IN=$PWD/in.txt                  # input TSV file
 
