@@ -78,15 +78,15 @@
     ln -s UKB/UKB\ -mtDNA_2022/Bulk/Whole\ genome\ sequences/Whole\ genome\ CRAM\ files/ crams
     ln -s UKB/UKB\ -mtDNA_2022/dpuiu/bams  
 
-### Install HP pipeline  ###
+### Install MitoHPC pipeline  ###
 
 #### From Github ####
 
     # git clone
-    git clone https://github.com/dpuiu/HP.git
+    git clone https://github.com/dpuiu/MitoHPC.git
 
     # install
-    cd HP/scripts/
+    cd MitoHPC/scripts/
     export HP_SDIR=$PWD
     . ./init.sh
     sudo ./install_sysprerequisites.sh
@@ -105,11 +105,11 @@
     dx login
 
     # download precompiled version of HP; previously compiled on a DNAnexus ubuntu client
-    dx download dpuiu/HP.tgz			
-    tar -xzvf HP.tgz 
+    dx download dpuiu/MitoHPC.tgz			
+    tar -xzvf MitoHPC.tgz 
 
     # install sysprerequisites : java, perl, python ...
-    cd HP/scripts/
+    cd MitoHPC/scripts/
     export HP_SDIR=`pwd`
     . ./init.sh
     sudo ./install_sysprerequisites.sh 
