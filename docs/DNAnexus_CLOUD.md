@@ -77,6 +77,9 @@
     # create symlink to cram, bam file locations
     ln -s UKB/UKB\ -mtDNA_2022/Bulk/Whole\ genome\ sequences/Whole\ genome\ CRAM\ files/ crams
     ln -s UKB/UKB\ -mtDNA_2022/dpuiu/bams  
+ 
+    # create symlink to vcf file location(optional)
+    ln -s UKB/UKB\ -mtDNA_2022/Bulk/Whole\ genome\ sequences/Whole\ genome\ variant\ call\ files\ \(VCFs\)/ vcfs
 
 ### Install MitoHPC pipeline  ###
 

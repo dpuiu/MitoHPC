@@ -56,7 +56,7 @@ MAIN:
 		$h{"$F[0] $F[1] $F[4] $F[3] $SM"}=1 if($opt{alt});
         }
 	close(IN);
-        last unless(%h);
+        #last unless(%h);
 
         #########################################
 

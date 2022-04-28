@@ -69,7 +69,6 @@ if [ ! -s $O.fq ] ; then
     bedtools bamtofastq  -i /dev/stdin -fq /dev/stdout -fq2 /dev/stdout | \
     fastp --stdin --interleaved_in --stdout $HP_FOPT  > $O.fq
 fi
-
 #########################################################################################################################################
 # realign subsampled reads
 
@@ -89,7 +88,6 @@ if  [ ! -s $O.bam ] ; then
     count.pl -i 3 -j 4  | sort > $ON.score
 
   join $O.score $ON.score -a 1 | perl -ane 'next if(@F==3 and $F[2]>$F[1]);print' | \
-     tee $O.score1 |\
      intersectSam.pl $O.sam - | \
      samtools view -bu | \
      samtools sort -m $HP_MM -@ $HP_P  > $O.bam
@@ -251,12 +249,14 @@ if [ ! -s $OSS.00.vcf ] ; then
   # filter SNPs
   cat $HP_SDIR/$HP_M.vcf > $OSS.00.vcf ; echo "##sample=$S" >> $OSS.00.vcf
   fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OSS.00.vcf
-  bcftools norm -m - $OSS.vcf | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa | bedtools sort -header> $OSS.fix.vcf 
+  bcftools norm -m - $OSS.vcf | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa | bedtools sort -header> $OSS.fix.vcf
+ 
   cat $OSS.fix.vcf | fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN -mfile $OS.max.vcf -ffile $OS.fix.vcf | \
     filterVcf.pl -sample $S -source $HP_M | bedtools sort  >> $OSS.00.vcf   #  to add -depth $HP_DP
   annotateVcf.sh $OSS.00.vcf
-
-  intersectVcf.pl $OS.00.vcf $OS.max.vcf | cat - $OSS.00.vcf |  uniqVcf.pl | bedtools sort -header > $OSS.00.vcf.tmp
+ 
+  #intersectVcf.pl $OS.00.vcf $OS.max.vcf | cat - $OSS.00.vcf |  uniqVcf.pl | bedtools sort -header > $OSS.00.vcf.tmp
+  intersectVcf.pl $OS.00.vcf $OS.max.vcf | differenceVcf.pl - $OSS.00.vcf  | perl -ane 'if(/(.+):0\.\d+$/) { print "$1:1\n"} else { print }' | cat - $OSS.00.vcf | uniqVcf.pl | bedtools sort -header > $OSS.00.vcf.tmp
   mv $OSS.00.vcf.tmp $OSS.00.vcf
 fi
 
