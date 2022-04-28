@@ -66,7 +66,7 @@
     chmod u+x dxfuse-linux
 
     sudo apt-get update 
-    sudo apt-get install parallel samtools
+    sudo apt-get install -y parallel samtools bedtools bcftools
 
  ### Mount Project(s) Data ###
 
