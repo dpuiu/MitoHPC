@@ -67,6 +67,9 @@ MAIN:
 			defined($samples{$sample}) or die "ERROR3: $_";
 			my $key=join "\t",@F[0..7];
 
+			#april 28 2022
+			$F[-1]="1:$2:1" if($F[-1]=~/^(.+):(.+):(.+)$/ and $3==1);
+
 			$GT_DP_AF{$key}{$sample}=$F[-1];
 
 			if(!$keys{$key})
@@ -100,15 +103,20 @@ MAIN:
 				my $GT=$1;
 				my @GT=split /[|\/]/,$GT;
 
-				if($GT[0]==1 or @GT>1 and $GT[1]==1)
+				#orig
+				#if($GT[0]==1 or @GT>1 and $GT[1]==1) { $AC++; $AN+=2; }
+				#else                                 { $AN+=2;        }
+
+				#new; April 28 2022
+				$AC++; 
+				$AN++;
+				if($F[-1]=~/\|/ or $F[-1]=~/\//) 
 				{
-					$AC++;
-					$AN+=2;
+					$AN++;
 				}
 				else
 				{
-					#while(@GT and $GT[0] ne "1") { $AN++; shift @GT }
-					$AN+=2;
+					$AN+=0;
 				}
 			}
 			else { push @F,".:.:." }

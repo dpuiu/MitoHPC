@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 ##############################################################################################################
 
@@ -20,7 +20,7 @@ if [ -s $HP_ODIR/$S.00.concat.vcf ] ; then  cat $HP_ODIR/$S.00.concat.vcf | filt
 cat $HP_ODIR/$S.$T.concat.vcf | concat2cat.pl > $HP_ODIR/$S.$T.vcf
 cat $HP_ODIR/$S.$T.concat.vcf | concat2merge.pl -in $HP_IN | bedtools sort -header | tee $HP_ODIR/$S.$T.merge.vcf | vcf2sitesOnly.pl >  $HP_ODIR/$S.$T.merge.sitesOnly.vcf
 cat $HP_ODIR/$S.$T.concat.vcf | snpCount.pl -in $HP_IN | tee $HP_ODIR/$S.$T.tab | getSummaryN.pl > $HP_ODIR/$S.$T.summary
-cat $HP_ODIR/$S.$T.concat.vcf | concat2annotation.pl  -in $HP_IN | sort -k2,2n -k4,4 -k5,5  > $HP_ODIR/$S.$T.pos
+cat $HP_ODIR/$S.$T.concat.vcf | concat2pos.pl  -in $HP_IN | sort -k2,2n -k4,4 -k5,5  > $HP_ODIR/$S.$T.pos
 
 # get suspicious samples
 if [ -f $HP_ODIR/$S.merge.bed ] ; then
@@ -53,7 +53,7 @@ if [[ -z "${FNAME}" ]]; then exit 0;  fi
 cat $HP_ODIR/$S.$T.concat.vcf | eval $FRULE > $HP_ODIR/$S.$T.$FNAME.concat.vcf
 cat $HP_ODIR/$S.$T.$FNAME.concat.vcf | concat2merge.pl -in $HP_IN | bedtools sort -header | tee $HP_ODIR/$S.$T.$FNAME.merge.vcf | vcf2sitesOnly.pl >  $HP_ODIR/$S.$T.$FNAME.merge.sitesOnly.vcf
 cat $HP_ODIR/$S.$T.$FNAME.concat.vcf | snpCount.pl -in $HP_IN | tee $HP_ODIR/$S.$T.$FNAME.tab | getSummaryN.pl > $HP_ODIR/$S.$T.$FNAME.summary
-cat $HP_ODIR/$S.$T.$FNAME.concat.vcf | concat2annotation.pl  -in $HP_IN | sort -k2,2n -k4,4 -k5,5  > $HP_ODIR/$S.$T.$FNAME.pos
+cat $HP_ODIR/$S.$T.$FNAME.concat.vcf | concat2pos.pl  -in $HP_IN | sort -k2,2n -k4,4 -k5,5  > $HP_ODIR/$S.$T.$FNAME.pos
 
 #cat $HP_ODIR/$S.$T.concat.vcf | uniqVcf.pl | posCount.pl  | sort -k1,1 -k2,2n | tee $D/$S.$T.count | awk 'NR == 1; NR > 1 {print $0 | "sort -k4,4nr -k2,2n"}' > $HP_ODIR/$S.$T.hcount
 #cat $HP_ODIR/$S.$T.count |  awk 'NR == 1; NR > 1 {print $0 | "sort -k6,6nr -k2,2n"}'  > $HP_ODIR/$S.$T.hScount

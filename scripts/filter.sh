@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 #########################################################################################################################################
 # Program that runs the heteroplasmy pipeline on a single sample
@@ -21,6 +21,21 @@ O=$3
 ON=$O.$HP_NUMT
 OS=$O.$HP_M
 OSS=$OS.$HP_M
+
+
+#########################################
+#tmp
+#test -s $OSS.fix.vcf
+#test -s $OS.max.vcf 
+#test -s $OS.fix.vcf
+#test -s $OS.00.vcf
+#cat $HP_SDIR/$HP_M.vcf > $OSS.00.vcf ; echo "##sample=$S" >> $OSS.00.vcf
+#fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OSS.00.vcf
+#cat $OSS.fix.vcf | fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN -mfile $OS.max.vcf -ffile $OS.fix.vcf | filterVcf.pl -sample $S -source $HP_M | bedtools sort  >> $OSS.00.vcf   #  to add -depth $HP_DP
+#annotateVcf.sh $OSS.00.vcf
+#intersectVcf.pl $OS.00.vcf $OS.max.vcf | differenceVcf.pl - $OSS.00.vcf  | perl -ane 'if(/(.+):0\.\d+$/) { print "$1:1\n"} else { print }' | cat - $OSS.00.vcf | uniqVcf.pl | bedtools sort -header > $OSS.00.vcf.tmp
+#mv $OSS.00.vcf.tmp $OSS.00.vcf
+#exit 0
 
 #########################################################################################################################################
 # test if count and VCF output files exist; exit if they do
