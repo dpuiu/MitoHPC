@@ -81,13 +81,14 @@ export HP_IN=$PWD/in.txt        # input file to be generated
 
 if [ -d $HP_ADIR ] ; then
   if [ ! -s $HP_IN ] ; then
-    find $HP_ADIR/ -name "*.bam" -o -name "*.cram" | ls2in.pl -out $HP_ODIR | sort -V > $HP_IN
+    find $HP_ADIR/ -name "*.bam" -o -name "*.cram" -readable | ls2in.pl -out $HP_ODIR | sort -V > $HP_IN
   fi
 fi
 
 ###############################################################
 #JOB SCHEDULING
 
-export HP_SH="bash" ;                                                            export HP_SHS="$HP_SH"                     # bash
-#export HP_SH="sbatch -J HP_$$ --cpus-per-task=$HP_P --nodes=1 --mem=5G" ;       export HP_SHS="$HP_SH -d singleton"        # SLURM
-#export HP_SH="qsub -V -N HP_$$ -l mem_free=5G,h_vmem=5G -pe local $HP_P -cwd" ; export HP_SHS="$HP_SH -hold_jid HP_$$"     # SGE
+export HP_SH="bash" ;                                                                    export HP_SHS="$HP_SH"                     # bash
+#export HP_SH="sbatch -J HP_$$ --cpus-per-task=$HP_P --nodes=1 --mem=$HP_MM" ;           export HP_SHS="$HP_SH -d singleton"        # SLURM
+#export HP_SH="qsub -V -N HP_$$ -l mem_free=$HP_MM,h_vmem=$HP_MM -pe local $HP_P -cwd" ; export HP_SHS="$HP_SH -hold_jid HP_$$"     # SGE
+

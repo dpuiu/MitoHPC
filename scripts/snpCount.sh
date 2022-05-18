@@ -16,10 +16,9 @@ export T=$2 # thold
 
 if [ "$#" -lt 2 ]; then exit 0 ; fi
 if [ -s $HP_ODIR/$S.00.concat.vcf ] ; then  cat $HP_ODIR/$S.00.concat.vcf | filterVcf.pl -p 0.$T > $HP_ODIR/$S.$T.concat.vcf ; fi
-
 cat $HP_ODIR/$S.$T.concat.vcf | concat2cat.pl > $HP_ODIR/$S.$T.vcf
-cat $HP_ODIR/$S.$T.concat.vcf | concat2merge.pl -in $HP_IN | bedtools sort -header | tee $HP_ODIR/$S.$T.merge.vcf | vcf2sitesOnly.pl >  $HP_ODIR/$S.$T.merge.sitesOnly.vcf
-cat $HP_ODIR/$S.$T.concat.vcf | snpCount.pl -in $HP_IN | tee $HP_ODIR/$S.$T.tab | getSummaryN.pl > $HP_ODIR/$S.$T.summary
+cat $HP_ODIR/$S.$T.concat.vcf | concat2merge.pl -in $HP_IN | bedtools sort -header | tee $HP_ODIR/$S.$T.merge.vcf | vcf2sitesOnly.pl >  $HP_ODIR/$S.$T.merge.sitesOnly.vcf 
+cat $HP_ODIR/$S.$T.concat.vcf | snpCount.pl -in $HP_IN    | tee $HP_ODIR/$S.$T.tab | getSummaryN.pl > $HP_ODIR/$S.$T.summary
 cat $HP_ODIR/$S.$T.concat.vcf | concat2pos.pl  -in $HP_IN | sort -k2,2n -k4,4 -k5,5  > $HP_ODIR/$S.$T.pos
 
 # get suspicious samples

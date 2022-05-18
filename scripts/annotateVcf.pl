@@ -22,7 +22,7 @@ MAIN:
 
         #########################################
 
-        open(IN,$ARGV[1]) or die("ERROR: Cannot open input file".$!) ;
+        open(IN,"zcat -f $ARGV[1] |") or die("ERROR: Cannot open input file".$!) ;
         while(<IN>)
         {
 
@@ -74,11 +74,9 @@ MAIN:
 			if($h{$key} and $F[7]!~/$h{$key}/)
 			{
 				$F[7].=";$h{$key}";
-			
 			}
 			print join "\t",@F;
 			print "\n";
-
 		}
         }
 

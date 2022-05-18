@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -ex
+set -e
 
 #########################################################################################################################################
 # Program that runs the heteroplasmy pipeline on a single sample
@@ -21,21 +21,6 @@ O=$3
 ON=$O.$HP_NUMT
 OS=$O.$HP_M
 OSS=$OS.$HP_M
-
-
-#########################################
-#tmp
-#test -s $OSS.fix.vcf
-#test -s $OS.max.vcf 
-#test -s $OS.fix.vcf
-#test -s $OS.00.vcf
-#cat $HP_SDIR/$HP_M.vcf > $OSS.00.vcf ; echo "##sample=$S" >> $OSS.00.vcf
-#fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OSS.00.vcf
-#cat $OSS.fix.vcf | fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN -mfile $OS.max.vcf -ffile $OS.fix.vcf | filterVcf.pl -sample $S -source $HP_M | bedtools sort  >> $OSS.00.vcf   #  to add -depth $HP_DP
-#annotateVcf.sh $OSS.00.vcf
-#intersectVcf.pl $OS.00.vcf $OS.max.vcf | differenceVcf.pl - $OSS.00.vcf  | perl -ane 'if(/(.+):0\.\d+$/) { print "$1:1\n"} else { print }' | cat - $OSS.00.vcf | uniqVcf.pl | bedtools sort -header > $OSS.00.vcf.tmp
-#mv $OSS.00.vcf.tmp $OSS.00.vcf
-#exit 0
 
 #########################################################################################################################################
 # test if count and VCF output files exist; exit if they do
@@ -90,6 +75,7 @@ fi
 if  [ ! -s $O.bam ] ; then
   cat $O.fq | \
     bwa mem $HP_RDIR/$HP_MT+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" | \
+    tee $O.sam0 | \
     samtools view  -F 0x90C -h | \
     circSam.pl -ref_len $HP_RDIR/$HP_MT.fa.fai | tee $O.sam  | \
     samtools view -bu | \
@@ -107,17 +93,10 @@ if  [ ! -s $O.bam ] ; then
      samtools view -bu | \
      samtools sort -m $HP_MM -@ $HP_P  > $O.bam
 
-  # new April 2022
-  #join $O.score $ON.score -a 1 | perl -ane 'print if(@F==3 and $F[2]>$F[1])' | \
-  #   tee $ON.score1 | \
-  #   intersectSam.pl $O.sam - | \
-  #   samtools view -bu | \
-  #   samtools sort -m $HP_MM -@ $HP_P  > $ON.bam
-
-  #rm -f $O.sam $O.score
+  #rm -f $O.sam #$O.score
   samtools index $O.bam  -@ $HP_P
-  #samtools index $ON.bam -@ $HP_P
 fi
+
 #########################################################################################################################################
 # count aligned reads; compute cvg; get coverage stats; get split alignments
 
@@ -133,11 +112,7 @@ if [ ! -s $OS.vcf ] ; then
   if [ "$HP_M" == "mutect2" ] ; then
     java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_MT.fa -I $O.bam       -O $OS.orig.vcf $HP_GOPT --native-pair-hmm-threads $HP_P
     java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $HP_RDIR/$HP_MT.fa -V $OS.orig.vcf -O $OS.vcf --min-reads-per-strand 2
-
-    #new april 2022
-    #java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_NUMT.fa -I $ON.bam      -O $ON.orig.vcf $HP_GOPT --native-pair-hmm-threads $HP_P
-    #java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $HP_RDIR/$HP_NUMT.fa -V $ON.orig.vcf -O $ON.vcf --min-reads-per-strand 2
-
+    #java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $HP_RDIR/$HP_MT.fa -V $OS.orig.vcf -O /dev/stdout --min-reads-per-strand 2 | egrep -v 'weak|strict' > $OS.vcf
   elif [ "$HP_M" == "mutserve" ] ; then
     if [ "$HP_MT" == "chrM" ] ||  [ "$HP_MT" == "rCRS" ] ||  [ "$HP_MT" == "RSRS" ] ; then
       java $HP_JOPT -jar $HP_JDIR/mutserve.jar call --deletions --insertions --level 0.01 --output $OS.vcf --reference $HP_RDIR/$HP_MT.fa $O.bam
@@ -225,15 +200,15 @@ if  [ ! -s $OS.bam ] ; then
   samtools index $OS.bam -@ $HP_P
   bedtools bamtobed -i $OS.bam -ed | perl -ane 'print if($F[-2]==0);' | bedtools merge -d -3 | bed2bed.pl -min 3 > $OS.merge.bed
 
-  rm -f $OS.sam $OS.score $ON.score $O.fq
+  rm -f $OS.sam $OS.score # $O.fq # $ON.score
 fi
 
-rm -f $O.bam*
+#rm -f $O.bam*
 rm -f $OS.*idx $OS.*tsv $OS.*stats
 
 # exit if the number of iterations is set to 1
 if [ $HP_I -lt 2 ] || [ $HP_M == "mutserve" ] ; then
-  rm -f $OS.bam* $ON.score
+  #rm -f $OS.bam* $ON.score
   exit 0
 fi
 
@@ -270,10 +245,10 @@ if [ ! -s $OSS.00.vcf ] ; then
     filterVcf.pl -sample $S -source $HP_M | bedtools sort  >> $OSS.00.vcf   #  to add -depth $HP_DP
   annotateVcf.sh $OSS.00.vcf
  
-  #intersectVcf.pl $OS.00.vcf $OS.max.vcf | cat - $OSS.00.vcf |  uniqVcf.pl | bedtools sort -header > $OSS.00.vcf.tmp
-  intersectVcf.pl $OS.00.vcf $OS.max.vcf | differenceVcf.pl - $OSS.00.vcf  | perl -ane 'if(/(.+):0\.\d+$/) { print "$1:1\n"} else { print }' | cat - $OSS.00.vcf | uniqVcf.pl | bedtools sort -header > $OSS.00.vcf.tmp
+  intersectVcf.pl $OS.00.vcf $OS.max.vcf | cat - $OSS.00.vcf |  uniqVcf.pl | bedtools sort -header > $OSS.00.vcf.tmp
+  #intersectVcf.pl $OS.00.vcf $OS.max.vcf | differenceVcf.pl - $OSS.00.vcf  | perl -ane 'if(/(.+):0\.\d+$/) { print "$1:1\n"} else { print }' | cat - $OSS.00.vcf | uniqVcf.pl | bedtools sort -header > $OSS.00.vcf.tmp # new(rna-seq)
   mv $OSS.00.vcf.tmp $OSS.00.vcf
 fi
 
-rm -f $OS.bam*
+#rm -f $OS.bam*
 rm -f $OSS.*idx $OSS.*tsv $OSS.*stat
