@@ -342,6 +342,6 @@
       sample_B   NO                   ND                  14        79
       sample_C   NO                   ND                  14        78
 
-##### Rea-annotate #####
+##### Re-annotate #####
 
-     # reAnnotateVcf.sh old.vcf new.vcf
+     $ reAnnotateVcf.sh old.vcf new.vcf
