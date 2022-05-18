@@ -193,7 +193,7 @@
     .          #SNVs    #POSITIONS     
     NONSYN     25890    9314
     MITIMPACT  24190    9103                                     
-    STOP       1615    	1425
+    STOP       1615     1425
     HG         1098     1098
     dbSNP      388      359      
     NUMT       382      381
@@ -341,3 +341,7 @@
       sample_A   NO                   ND                  14        78
       sample_B   NO                   ND                  14        79
       sample_C   NO                   ND                  14        78
+
+##### Rea-annotate #####
+
+     # reAnnotateVcf.sh old.vcf new.vcf
