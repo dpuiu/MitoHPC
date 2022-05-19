@@ -33,7 +33,8 @@ if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
   if [ ! -s $HP_BDIR/samtools ] ; then
     tar -xjvf samtools-1.15.tar.bz2
     cd samtools-1.15
-    ./configure --prefix=$HP_HDIR/ ; make ;  make install
+    ./configure --prefix=$HP_HDIR/ # --without-curses --disable-bz2
+    make ;  make install
     cd -
   fi
 fi
@@ -44,7 +45,8 @@ if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
   if [ ! -s $HP_BDIR/bcftools ] ; then
     tar -xjvf  bcftools-1.15.tar.bz2
     cd bcftools-1.15
-    ./configure --prefix=$HP_HDIR/ ; make ; make install
+    ./configure --prefix=$HP_HDIR/ # --disable-bz2
+    make ; make install
     cd -
   fi
 fi
@@ -55,7 +57,8 @@ if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
   if [ ! -s $HP_BDIR/tabix ] ; then
     tar -xjvf htslib-1.15.tar.bz2
     cd htslib-1.15
-    ./configure --prefix=$HP_HDIR/ ; make ; make install
+    ./configure --prefix=$HP_HDIR/ # --disable-bz2
+    make ; make install
     cd -
   fi
 fi
@@ -80,6 +83,10 @@ if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
     make install prefix=$HP_HDIR/
     cd -
   fi
+
+  #wget -N -c https://github.com/arq5x/bedtools2/releases/download/v2.30.0/bedtools.static.binary
+  #cp bedtools.static.binary $HP_BDIR/bedtools
+  #chmod a+x $HP_BDIR/bedtools
 fi
 
 which fastp
