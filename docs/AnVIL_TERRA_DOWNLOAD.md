@@ -19,8 +19,8 @@
     gcloud components update
 
     # Login and Configure
-    PROJECT=gtexproject
-    gcloud auth login  # a broser window will pop up; select the account you are planning to use
+    PROJECT=topmed                          # gtexproject
+    gcloud auth login --no-launch-browser   # a broser window will pop up; select the account you are planning to use
       
     gcloud auth list
 
@@ -34,6 +34,7 @@
     gsutil -u $PROJECT ls gs://fc-secure-ff8156a3-ddf3-42e4-9211-0fd89da62108/ 
       gs://fc-secure-ff8156a3-ddf3-42e4-9211-0fd89da62108/GTEx_Analysis_2017-06-05_v8_WGS_CRAM_files/
       gs://fc-secure-ff8156a3-ddf3-42e4-9211-0fd89da62108/GTEx_Analysis_2017-06-05_v8_WES_BAM_files/
+      gs://fc-secure-ff8156a3-ddf3-42e4-9211-0fd89da62108/GTEx_Analysis_2017-06-05_v8_RNAseq_BAM_files/
       ...
 
     gsutil -u $PROJECT ls gs://fc-secure-ff8156a3-ddf3-42e4-9211-0fd89da62108/GTEx_Analysis_2017-06-05_v8_WGS_CRAM_files/ 
