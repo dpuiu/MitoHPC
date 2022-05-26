@@ -41,12 +41,17 @@ MAIN:
 	my %diff;
 	my %max;
 	my %fix;
+
 	open(IN,$opt{mfile}) or die "ERROR:$!";
         while(<IN>)
         {
 		if(!/^#/)
 		{
 			my @F=split;
+
+			# 2022/05/18; skip adjacent deletions
+			next if(length($F[4])-length($F[3])<0 and $diff{$F[1]-1} and $diff{$F[1]-1}<0);
+
 			$max{$F[1]}=$_;
 			$diff{$F[1]}=length($F[4])-length($F[3]);
 		}

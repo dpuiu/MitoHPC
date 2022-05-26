@@ -37,8 +37,8 @@ if [ -f $HP_ODIR/$S.merge.bed ] ; then
     rm $HP_ODIR/$S.haplogroup1.srt.tab
   fi
   
-  # multiple NUMT's
-  cat $HP_ODIR/$S.$T.vcf | grep "AF=0" | grep "NUMT=" | perl -ane '/NUMT=(.+?);/ ; foreach(split /\|/,$1) { print "$F[-1]\t$_\n"}' | sort | uniq -c  | \
+  # multiple low frequency NUMT's
+  cat $HP_ODIR/$S.$T.vcf | grep "AF=0.0" | grep "NUMT=" | perl -ane '/NUMT=(.+?);/ ; foreach(split /\|/,$1) { print "$F[-1]\t$_\n"}' | sort | uniq -c  | \
     perl -ane 'print "$F[1]\tmultiple_NUMTs\t$F[2]\t$F[0]\n" if($F[0]>1);' >> $HP_ODIR/$S.$T.suspicious.tab
 
   # haplockeck

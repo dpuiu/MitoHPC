@@ -17,9 +17,8 @@ test -s $I
 
 cat $I | deAnnotateVcf.pl > $O
 
-bgzip -f $O -k
+bgzip -f $O 
 tabix -f $O.gz
-
 
 bcftools annotate -a $HP_RDIR/dbSNP.vcf.gz   -c "ID" $O.gz |\
   bcftools annotate -a $HP_RDIR/HV.bed.gz      -c "CHROM,FROM,TO,HV"      -h <(echo '##INFO=<ID=HV,Number=1,Type=String,Description="Hypervariable">') |\

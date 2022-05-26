@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 #########################################################################################################################################
 # Program that runs the heteroplasmy pipeline on a single sample
