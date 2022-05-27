@@ -46,6 +46,33 @@
 
     dx cat dpuiu/out/mutect2.03.vcf
     
+### Run swiss-army-knife ###
+
+    # use samtools as part of swiss-army-knife
+    export project=...
+    export cram_path=...
+    export filter_bam_path=...
+    export region="chrM"
+
+    # single sample
+    export sample=...
+
+    dx cd "$project:$cram_path"
+    dx ls | head
+    dx run swiss-army-knife \
+      -iin='$sample.cram' \
+      -iin='$sample.cram.crai' \
+      -icmd='samtools view -b ${in_name[0]} $region -o ${in_prefix[0]}.bam' \
+      --destination='$project:$bam_path' \
+      -y
+
+    dx cd "$project:$bam_path"
+    dx ls | head
+    dx run swiss-army-knife \
+      -iin='$sample.bam' \
+      -icmd='samtools index $in_name' \
+      -y
+
 ### Create Temporary DNAnexus/AWS Client ###
 
     # create client : Ex: 4 hrs (default 1hr)
