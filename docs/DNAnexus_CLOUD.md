@@ -50,8 +50,8 @@
 
     # use samtools as part of swiss-army-knife
     export project=...
-    export cram_path=...
-    export filter_bam_path=...
+    export cram_path=...	# original CRAM files
+    export bam_path=...		# filtered BAM files
     export region="chrM"
 
     # single sample
