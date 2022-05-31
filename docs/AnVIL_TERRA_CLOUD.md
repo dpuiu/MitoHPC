@@ -1,10 +1,24 @@
-# DOWNLOADING GTEx DATA #
+# WEB BROWSER #
 
-## WEB BROWSER ##
+* Go to https://anvil.terra.bio/ and login using Google Account
 
-* Go to https://anvil.terra.bio/ and login
-* Go to Workspaces , and select AnVIL_GTEx_V8_hg38,GTEx_Analysis_2017-06-05_v8_RNAseq_BAM_files ... then Select a Billing Project
-* Select multiple files to download, copy the gsutil command
+# GTEx #
+
+## Cloud Workflows  ## 
+
+* Go to  Workspaces, select AnVIL_GTEx_V8_hg38 ; if "Access Level=Reader" , click on 3 dots on the right, select "Clone" => "AnVIL_GTEx_V8_hg38 copy"
+* Set "Billing project=gtexproject", click "CLONE WORKSPACE"
+* Check if the Workspace is "AnVIL_GTEx_V8_hg38 copy" ans "Access Level=Project Owner"
+* Go to Workflows, click on "Find a Workflow ","Find Additional Workflows","Broad Method Repository"
+* Choose "Create New Method"; fill in Namespace,Name("anvil_samtools_view"),WDL(upload from file)...; click "Upload" , "Export to Workspace", "Use Blank Configuration"
+* Choose "Root Entity Type=sample", "Destination Workspace=gtexproject/AnVIL_GTEx_V8_hg38 copy" , "Export to Workspace"
+* You are redirected to "Workflows"; Fill in Inputs ; Select Data ; Run Analysis
+
+## gsutil command  ## 
+
+* Go to Workspaces, select AnVIL_GTEx_V8_hg38,GTEx_Analysis_2017-06-05_v8_RNAseq_BAM_files 
+* Set "Billing Project=gtexproject"
+* Select multiple files to download, copy the "gsutil" command, paste in the local machine terminal, run downloads 
 
 ## LOCAL LINUX MACHINE ##
 
@@ -19,15 +33,13 @@
     gcloud components update
 
     # Login
-    PROJECT=topmed                          # gtexproject
+    PROJECT=gtexproject
     gcloud auth login --no-launch-browser   # a broser window will pop up; select the account you are planning to use
     gcloud auth list
 
     # Configure
     gcloud config set project $PROJECT
     gcloud config list
-
-### GTEx ###
 
     # Run the gsutil commands , adding the -u option for billing project
     gsutil -u $PROJECT ls gs://fc-secure-ff8156a3-ddf3-42e4-9211-0fd89da62108/
@@ -44,7 +56,11 @@
     gsutil -u $PROJECT -m cp "gs://fc-secure-ff8156a3-ddf3-42e4-9211-0fd89da62108/GTEx_Analysis_2017-06-05_v8_RNAseq_BAM_files/GTEX-1128S-0005-SM-5P9HI.Aligned.sortedByCoord.out.patched.md.bam" \
       "gs://fc-secure-ff8156a3-ddf3-42e4-9211-0fd89da62108/GTEx_Analysis_2017-06-05_v8_RNAseq_BAM_files/GTEX-1128S-0005-SM-5P9HI.Aligned.sortedByCoord.out.patched.md.bam.bai" .
 
-### CCDG_ARIC ###
+# CCDG_ARIC #
+
+## LOCAL LINUX MACHINE ##
+   
+    # Login & Configure
 
     # List files
     gsutil -u $PROJECT ls gs://fc-secure-f5d884c0-a24c-46e6-8c29-cad7f5b158c7

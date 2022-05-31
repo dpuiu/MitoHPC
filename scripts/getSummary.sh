@@ -10,13 +10,10 @@ if  [ "$#" -lt 1 ] ; then ODIR=$HP_ODIR ; else ODIR=$1 ; fi
 
 ##############################################################################################################
 
-#get read count and mtDN-CN stats
-
-cut -f2 $HP_IN | perl -ane 'print "$1.count\n" if(/(.+)\./);' | xargs cat | uniq.pl > $ODIR/count.tab
-if [ $HP_CN ]  && [ $HP_CN -ne 0 ] ; then 
-  cat $ODIR/count.tab | getCN.pl > $ODIR/count.tab.tmp
-  mv $ODIR/count.tab.tmp $ODIR/count.tab
- fi
+#get read count and mtDN-CN stats 
+if [ $HP_CN ]  && [ $HP_CN -ne 0 ] || [ ! -s $ODIR/count.tab ] ; then
+    cut -f2 $HP_IN | perl -ane 'print "$1.count\n" if(/(.+)\./);' | xargs cat | uniq.pl | getCN.pl > $ODIR/count.tab
+fi
 if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 
 ###########################################################
@@ -57,9 +54,10 @@ snpCount.sh $S $HP_T2
 snpCount.sh $S $HP_T3
 
 if [[ ! -z "${HP_FNAME}" ]]; then
-  snpFilter.sh $S $HP_T1 ; snpCount.sh $S.$HP_FNAME $HP_T1
-  snpFilter.sh $S $HP_T2 ; snpCount.sh $S.$HP_FNAME $HP_T2
-  snpFilter.sh $S $HP_T3 ; snpCount.sh $S.$HP_FNAME $HP_T3
+  snpFilter.sh $S 00
+  snpCount.sh $S.$HP_FNAME $HP_T1
+  snpCount.sh $S.$HP_FNAME $HP_T2
+  snpCount.sh $S.$HP_FNAME $HP_T3
 fi
 #cleanup
 rm -f fastp.html fastp.json
@@ -72,7 +70,6 @@ if [ $S == "mutserve" ] ; then exit 0 ; fi
 
 SS=$S.$S
 #count,cvg
-awk '{print $3}' $HP_IN | sed "s|$|.$S.count|"    | xargs cat | uniq.pl > $ODIR/$S.count.tab
 awk '{print $3}' $HP_IN | sed "s|$|.$S.cvg.stat|" | xargs cat | uniq.pl -i 0  > $ODIR/$S.cvg.tab
 awk '{print $3}' $HP_IN | sed "s|$|.$SS.00.vcf|"  | xargs cat | uniq.pl | bedtools sort -header  > $ODIR/$SS.00.concat.vcf
 snpSort.sh $ODIR/$SS.00.concat
@@ -84,9 +81,10 @@ snpCount.sh $SS $HP_T2
 snpCount.sh $SS $HP_T3
 
 if [[ ! -z "${HP_FNAME}" ]]; then
-  snpFilter.sh $SS $HP_T1 ; snpCount.sh $SS.$HP_FNAME $HP_T1
-  snpFilter.sh $SS $HP_T2 ; snpCount.sh $SS.$HP_FNAME $HP_T2
-  snpFilter.sh $SS $HP_T3 ; snpCount.sh $SS.$HP_FNAME $HP_T3
+  snpFilter.sh $SS 00
+  snpCount.sh $SS.$HP_FNAME $HP_T1
+  snpCount.sh $SS.$HP_FNAME $HP_T2
+  snpCount.sh $SS.$HP_FNAME $HP_T3
 fi
 
 

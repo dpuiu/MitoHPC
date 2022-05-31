@@ -57,7 +57,7 @@ if [ $MTCOUNT -lt 1 ]; then echo "ERROR: There are no MT reads in $2; plese remo
 if [ ! -s $O.fq ] ; then
   R=""
   if [ $HP_L ]; then
-    R=`tail -1 $I.count  | perl -ane '$R=$ENV{HP_L}/$F[-1]; print $R if($R<1)'`
+    R=`tail -1 $I.count  | perl -ane '$R=$ENV{HP_L}/($F[-1]+1); print $R if($R<1)'`
     if [ $R ] ; then R="-s $R"  ; fi
   fi
 
@@ -75,7 +75,6 @@ fi
 if  [ ! -s $O.bam ] ; then
   cat $O.fq | \
     bwa mem $HP_RDIR/$HP_MT+ - -p -v 1 -t $HP_P -Y -R "@RG\tID:$1\tSM:$1\tPL:ILLUMINA" | \
-    tee $O.sam0 | \
     samtools view  -F 0x90C -h | \
     circSam.pl -ref_len $HP_RDIR/$HP_MT.fa.fai | tee $O.sam  | \
     samtools view -bu | \
@@ -93,7 +92,7 @@ if  [ ! -s $O.bam ] ; then
      samtools view -bu | \
      samtools sort -m $HP_MM -@ $HP_P  > $O.bam
 
-  #rm -f $O.sam #$O.score
+  rm -f $O.sam #$O.score ###
   samtools index $O.bam  -@ $HP_P
 fi
 
@@ -200,15 +199,15 @@ if  [ ! -s $OS.bam ] ; then
   samtools index $OS.bam -@ $HP_P
   bedtools bamtobed -i $OS.bam -ed | perl -ane 'print if($F[-2]==0);' | bedtools merge -d -3 | bed2bed.pl -min 3 > $OS.merge.bed
 
-  rm -f $OS.sam $OS.score # $O.fq # $ON.score
+  rm -f $OS.sam $OS.score $O.fq # $ON.score
 fi
 
-#rm -f $O.bam*
+rm -f $O.bam*
 rm -f $OS.*idx $OS.*tsv $OS.*stats
 
 # exit if the number of iterations is set to 1
 if [ $HP_I -lt 2 ] || [ $HP_M == "mutserve" ] ; then
-  #rm -f $OS.bam* $ON.score
+  rm -f $OS.bam* $ON.score
   exit 0
 fi
 
@@ -250,5 +249,5 @@ if [ ! -s $OSS.00.vcf ] ; then
   mv $OSS.00.vcf.tmp $OSS.00.vcf
 fi
 
-#rm -f $OS.bam*
+rm -f $OS.bam*
 rm -f $OSS.*idx $OSS.*tsv $OSS.*stat

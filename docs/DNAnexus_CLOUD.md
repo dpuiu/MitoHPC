@@ -49,27 +49,27 @@
 ### Run swiss-army-knife ###
 
     # use samtools as part of swiss-army-knife
-    export project=...
-    export cram_path=...	# original CRAM files
-    export bam_path=...		# filtered BAM files
-    export region="chrM"
-
+    export project=project-G7KB5zQJz55qG0158ZXb2J5p                        # UKB project id
+    export cram_path=Bulk/Exome\ sequences/Exome OQFE CRAM files/10        # original CRAM files
+    export bam_path=...                                                    # filtered BAM files
+    export region="chrM"                                                   # or "chr1:629084-634672 chr17:22521208-22521639 chrM" 
+.
     # single sample
     export sample=...
 
     dx cd "$project:$cram_path"
     dx ls | head
     dx run swiss-army-knife \
-      -iin='$sample.cram' \
-      -iin='$sample.cram.crai' \
+      -iin=$sample.cram \
+      -iin=$sample.cram.crai \
       -icmd='samtools view -b ${in_name[0]} $region -o ${in_prefix[0]}.bam' \
-      --destination='$project:$bam_path' \
+      --destination=$project:$bam_path \
       -y
 
     dx cd "$project:$bam_path"
     dx ls | head
     dx run swiss-army-knife \
-      -iin='$sample.bam' \
+      -iin=$sample.bam \
       -icmd='samtools index $in_name' \
       -y
 

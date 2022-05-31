@@ -13,9 +13,13 @@ use Getopt::Long;
 MAIN:
 {
         my (%opt,%h);
+	my($i,$j)=(0,0);	#-1,0
 
         # validate input parameters
-        my $result = GetOptions();
+        my $result = GetOptions(
+		"i=i"	=>\$i,
+		"j=i"	=>\$j,
+	);
 
 	die "ERROR: $! " if (!$result);
 
@@ -27,7 +31,7 @@ MAIN:
                 next if(/^$/ or /^\@/ or /^#/);
 
                 my @F=split;
-                $h{"$F[0]"}=1;
+                $h{"$F[$j]"}=1;
         }
 	close(IN);
         last unless(%h);
@@ -41,7 +45,7 @@ MAIN:
                 if(/^\@/ or /^#/) { print; next}
 
                 my @F=split;
-		print if($h{$F[-1]});
+		print if($h{$F[$i]});
         }
 	close(IN);
 
