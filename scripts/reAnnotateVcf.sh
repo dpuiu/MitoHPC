@@ -33,7 +33,10 @@ bcftools annotate -a $HP_RDIR/dbSNP.vcf.gz   -c "ID" $O.gz |\
   annotateVcf.pl - $HP_RDIR/NUMT.vcf.gz      |\
   annotateVcf.pl - $HP_RDIR/MITIMPACT.vcf.gz |\
   annotateVcf.pl - $HP_RDIR/NONSYN.vcf.gz    |\
-  annotateVcf.pl - $HP_RDIR/STOP.vcf.gz > $O
+  annotateVcf.pl - $HP_RDIR/STOP.vcf.gz      |\
+  annotateVcf.pl - $HP_RDIR/MMC.vcf.gz       |\
+  annotateVcf.pl - $HP_RDIR/MLC.vcf.gz       |\
+  bcftools annotate -a $HP_RDIR/MCC.bed.gz -c "CHROM,FROM,TO,MCC"         -h <(echo '##INFO=<ID=MCC,Number=1,Type=String,Description="missense_OEUF">') > $O
 
 rm $O.gz*
 

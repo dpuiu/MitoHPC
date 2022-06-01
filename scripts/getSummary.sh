@@ -12,7 +12,7 @@ if  [ "$#" -lt 1 ] ; then ODIR=$HP_ODIR ; else ODIR=$1 ; fi
 
 #get read count and mtDN-CN stats 
 if [ $HP_CN ]  && [ $HP_CN -ne 0 ] || [ ! -s $ODIR/count.tab ] ; then
-    cut -f2 $HP_IN | perl -ane 'print "$1.count\n" if(/(.+)\./);' | xargs cat | uniq.pl | getCN.pl > $ODIR/count.tab
+    cut -f2 $HP_IN | perl -ane 'print "$1.count\n" if(/(.+)\./);' | xargs cat | cut -f1,2,3,4 | uniq.pl | getCN.pl > $ODIR/count.tab
 fi
 if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 
