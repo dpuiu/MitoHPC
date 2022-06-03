@@ -127,7 +127,7 @@
     {mutect2,mutserve,freebayes}.{03,05,10}.concat.vcf             # SNVs; 3,5,10% heteroplasmy thold; single SNV from single sample in	each line;               GT/AF/SF
     {mutect2,mutserve,freebayes}.{03,05,10}.merge.vcf              # SNVs; 3,5,10% heteroplasmy thold; single SNV from multiple samples in each line
     {mutect2,mutserve,freebayes}.{03,05,10}.merge.sitesOnly.vcf    
-   {mutect2,mutserve,freebayes}.{03,05,10}.$HP_FNAME.*             # SNVs filtered according to $HP_RULE
+    {mutect2,mutserve,freebayes}.{03,05,10}.$HP_FNAME.*            # SNVs filtered according to $HP_RULE
    
     {mutect2,mutserve,freebayes}.{03,05,10}.tab                    # SNV counts
     {mutect2,mutserve,freebayes}.{03,05,10}.summary                # SNV count summaries
