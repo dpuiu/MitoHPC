@@ -88,8 +88,8 @@
                                                  #  2: two, the 2nd one used the sample consensus 
                                                  #     computed in the 1st iteration; higher accuracy 
 
-       export HP_FNAME=filter                    # VCF filter name, optional
-       export HP_FRULE="bcftools view -f PASS"   # VCF filtering, optional
+       export HP_FNAME=filter                                                                                                  # VCF filter name
+       export HP_FRULE="egrep -v 'strict_strand|strand_bias|base_qual|map_qual|weak_evidence|slippage|position|germline|HP'"   # VCF filtering rule 
 
        export HP_SH=bash                         # job scheduling: bash, qsub,sbatch, ..
 
@@ -188,7 +188,7 @@
     TRN      22        59   68   69   70    75    68.54   1508
     DLOOP    2         576  576  746  746   746   661.00  1322
     HV       3         136  136  315  359   359   270.00  810
-    HP       9         5    9    11   15    22    12.33   111
+    HP       10        5    9    13   15    22    12.600  126
 
     .          #SNVs    #POSITIONS     
     NONSYN     25890    9314

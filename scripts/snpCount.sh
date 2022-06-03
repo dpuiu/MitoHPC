@@ -28,6 +28,9 @@ cat $HP_ODIR/$S.$T.concat.vcf | concat2pos.pl  -in $HP_IN | sort -k2,2n -k4,4 -k
 if [ -f $HP_ODIR/$S.merge.bed ] ; then
   rm -f $HP_ODIR/$S.$T.suspicious.tab ; touch $HP_ODIR/$S.$T.suspicious.tab
 
+  # low mean cvg (2022/06/01)
+  cat $HP_ODIR/cvg.tab | perl -ane 'print "$F[0]\tmean_cvg_less_500\n"  if($F[7] and $F[7]=~/^\d+/ and $F[7]<500);'  >> $HP_ODIR/$S.$T.suspicious.tab
+
   # low mtDNA_CN
   cat $HP_ODIR/count.tab | perl -ane 'print "$F[0]\tlow_CN\t$F[-1]\n" if($F[4] and $F[4]=~/^\d+/ and $F[4]<300/($ENV{T}+1)) ;' >> $HP_ODIR/$S.$T.suspicious.tab
 

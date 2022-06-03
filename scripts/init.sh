@@ -98,10 +98,8 @@ export HP_T3=10
 export HP_V=                     # SV caller: gridss
 export HP_DP=                    # minimum coverage: Ex 100
 
-export HP_FNAME=                 # FILTERING options: Ex: filter
-export HP_FRULE=                 # FILTERING options: Ex:
-                                 #  "bcftools view -f PASS,clustered_events,multiallelic | grep -v 'HP;'"
-                                 #  "egrep -v 'base_qual|map_qual|slippage|strand|weak'"
+export HP_FNAME=filter                                                                                                  # filter name
+export HP_FRULE="egrep -v 'strict_strand|strand_bias|base_qual|map_qual|weak_evidence|slippage|position|germline|HP'"   # filter rule
 
 export HP_P=1						    # number of processors
 export HP_JOPT="-Xms2G -Xmx2G -XX:ParallelGCThreads=$HP_P"  # JAVA options
