@@ -123,15 +123,19 @@
     cvg.tab                                                        # subsampled coverage stats
 
     # 1st ITERATION
-    {mutect2,mutserve,freebayes}.{03,05,10}[.concat].vcf           # SNVs; 3,5,10% heteroplasmy thold
-    {mutect2,mutserve,freebayes}.{03,05,10}.merge[.sitesOnly]}.vcf # SNVs; 3,5,10% heteroplasmy thold
+    {mutect2,mutserve,freebayes}.{03,05,10}.vcf                    # SNVs; 3,5,10% heteroplasmy thold; single SNV from single sample in each line; last column = sample name
+    {mutect2,mutserve,freebayes}.{03,05,10}.concat.vcf             # SNVs; 3,5,10% heteroplasmy thold; single SNV from single sample in	each line;               GT/AF/SF
+    {mutect2,mutserve,freebayes}.{03,05,10}.merge.vcf              # SNVs; 3,5,10% heteroplasmy thold; single SNV from multiple samples in each line
+    {mutect2,mutserve,freebayes}.{03,05,10}.merge.sitesOnly.vcf    
+   {mutect2,mutserve,freebayes}.{03,05,10}.$HP_FNAME.*             # SNVs filtered according to $HP_RULE
+   
     {mutect2,mutserve,freebayes}.{03,05,10}.tab                    # SNV counts
     {mutect2,mutserve,freebayes}.{03,05,10}.summary                # SNV count summaries
-    {mutect2,mutserve,freebayes}.{03,05,10}.suspicious.{tab,ids}   # samples which either have low mtDNA-CN,
-                                                                   #  failed haplockeck, of have more than 2 NUMT heteroplasmies 
+    {mutect2,mutserve,freebayes}.{03,05,10}.pos                    # position summaries; AC and AF values for both HOM and HET
+    {mutect2,mutserve,freebayes}.{03,05,10}.suspicious.{tab,ids}   # samples which either have low mtDNA-CN,low cvg, failed haplockeck, multiple NUMT/HG labels (AF<1)  
 
     {mutect2,mutserve,freebayes}.fa                                # consensus sequence
-    {mutect2,mutserve,freebayes}.haplogroup[1].tab                 # haplogroup
+    {mutect2,mutserve,freebayes}.haplogroup?.tab                   # haplogroup
     {mutect2,mutserve,freebayes}.haplocheck.tab                    # contamination screen   
 
     # 2nd ITERATION
