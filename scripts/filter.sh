@@ -69,6 +69,7 @@ if [ ! -s $O.fq ] ; then
     bedtools bamtofastq  -i /dev/stdin -fq /dev/stdout -fq2 /dev/stdout | \
     fastp --stdin --interleaved_in --stdout $HP_FOPT  > $O.fq
 fi
+
 #########################################################################################################################################
 # realign subsampled reads
 
@@ -92,7 +93,7 @@ if  [ ! -s $O.bam ] ; then
      samtools view -bu | \
      samtools sort -m $HP_MM -@ $HP_P  > $O.bam
 
-  rm -f $O.sam #$O.score ###
+  rm -f $O.sam $O.score 
   samtools index $O.bam  -@ $HP_P
 fi
 
@@ -199,7 +200,7 @@ if  [ ! -s $OS.bam ] ; then
   samtools index $OS.bam -@ $HP_P
   bedtools bamtobed -i $OS.bam -ed | perl -ane 'print if($F[-2]==0);' | bedtools merge -d -3 | bed2bed.pl -min 3 > $OS.merge.bed
 
-  rm -f $OS.sam $OS.score $O.fq # $ON.score
+  rm -f $OS.sam $OS.score $O.fq $ON.score
 fi
 
 rm -f $O.bam*
@@ -242,6 +243,7 @@ if [ ! -s $OSS.00.vcf ] ; then
  
   cat $OSS.fix.vcf | fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN -mfile $OS.max.vcf -ffile $OS.fix.vcf | \
     filterVcf.pl -sample $S -source $HP_M | bedtools sort  >> $OSS.00.vcf   #  to add -depth $HP_DP
+
   annotateVcf.sh $OSS.00.vcf
  
   intersectVcf.pl $OS.00.vcf $OS.max.vcf | cat - $OSS.00.vcf |  uniqVcf.pl | bedtools sort -header > $OSS.00.vcf.tmp

@@ -28,7 +28,8 @@ cat $HP_ODIR/$S.$T.concat.vcf | concat2pos.pl  -in $HP_IN | sort -k2,2n -k4,4 -k
 if [ -f $HP_ODIR/$S.merge.bed ] ; then
   rm -f $HP_ODIR/$S.$T.suspicious.tab ; touch $HP_ODIR/$S.$T.suspicious.tab
 
-  # low mean cvg (2022/06/01)
+  # low cvg (2022/06/01,10)
+  cat $HP_ODIR/cvg.tab | perl -ane 'print "$F[0]\tmin_cvg_less_100\n"  if($F[7] and $F[7]=~/^\d+/ and $F[2]<100);'  >> $HP_ODIR/$S.$T.suspicious.tab
   cat $HP_ODIR/cvg.tab | perl -ane 'print "$F[0]\tmean_cvg_less_500\n"  if($F[7] and $F[7]=~/^\d+/ and $F[7]<500);'  >> $HP_ODIR/$S.$T.suspicious.tab
 
   # low mtDNA_CN
@@ -37,7 +38,7 @@ if [ -f $HP_ODIR/$S.merge.bed ] ; then
   # mismatch haplogroup
   if [ -s $HP_ODIR/$S.haplogroup1.tab ] ; then
     sort $HP_ODIR/$S.haplogroup1.tab > $HP_ODIR/$S.haplogroup1.srt.tab
-    cat $HP_ODIR/$S.$T.vcf | grep "AF=0" | grep "HG=" | perl -ane 'print "$F[-1]\t$1\n" if(/HG=(.+?);/)' | sort | uniq -c  | \
+    cat $HP_ODIR/$S.$T.vcf | grep "AF=0.0" | grep "HG=" | perl -ane 'print "$F[-1]\t$1\n" if(/HG=(.+?);/)' | sort | uniq -c  | \
       perl -ane 'print "$F[1]\t$F[2]\t$F[0]\n" if($F[0]>1);'| sort  | join -  $HP_ODIR/$S.haplogroup1.srt.tab | \
       perl -ane 'print "$F[0]\tmismatch_HG\t$F[-1]\t$F[1]\t$F[2]\n" if($F[1] ne $F[-1]);' >> $HP_ODIR/$S.$T.suspicious.tab
     rm $HP_ODIR/$S.haplogroup1.srt.tab

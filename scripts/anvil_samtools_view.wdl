@@ -31,6 +31,7 @@ workflow CramToBamFlow {
     File ref_fasta_index
     File ref_dict
     File input_cram
+    String regions
     String sample_name
     String gotc_docker = "broadinstitute/genomes-in-the-cloud:2.3.1-1500064817"
     Int preemptible_tries = 3
@@ -43,6 +44,7 @@ workflow CramToBamFlow {
       ref_fasta_index = ref_fasta_index,
       ref_dict = ref_dict,
       input_cram = input_cram,
+      regions = regions,
       sample_name = sample_name,
       docker_image = gotc_docker,
       preemptible_tries = preemptible_tries
@@ -73,6 +75,7 @@ task CramToBamTask {
     File ref_fasta_index
     File ref_dict
     File input_cram
+    String regions
     String sample_name
 
     # Runtime parameters
@@ -90,7 +93,7 @@ task CramToBamTask {
   command {
     set -eo pipefail
 
-    samtools view -h -T ~{ref_fasta} ~{input_cram} chr1:629084-634672 chr17:22521208-22521639 chrM |
+    samtools view -h -T ~{ref_fasta} ~{input_cram} ~{regions} |
     samtools view -b -o ~{sample_name}.bam -
     samtools index -b ~{sample_name}.bam
     mv ~{sample_name}.bam.bai ~{sample_name}.bai
@@ -149,4 +152,3 @@ task ValidateSamFile {
     File report = "~{output_name}"
   }
 }
-

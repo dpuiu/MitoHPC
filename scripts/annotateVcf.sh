@@ -32,5 +32,9 @@ if [ -s $HP_RDIR/MITIMPACT.vcf.gz ]  ; then bcftools annotate -a $HP_RDIR/MITIMP
 if [ -s $HP_RDIR/NONSYN.vcf.gz ]  ; then bcftools annotate -a $HP_RDIR/NONSYN.vcf.gz   $O.gz -c "INFO"  > $O ; bgzip -f $O ; tabix -f $O.gz ; fi
 if [ -s $HP_RDIR/STOP.vcf.gz ]  ; then bcftools annotate -a $HP_RDIR/STOP.vcf.gz   $O.gz -c "INFO"  > $O ; bgzip -f $O ; tabix -f $O.gz ; fi
 
-zcat $O.gz > $O
+if [ -s $HP_RDIR/MMC.vcf.gz ]  ; then bcftools annotate -a $HP_RDIR/MMC.vcf.gz $O.gz -c "INFO"  > $O ; bgzip -f $O ; tabix -f $O.gz ; fi
+if [ -s $HP_RDIR/MLC.vcf.gz ]  ; then bcftools annotate -a $HP_RDIR/MLC.vcf.gz $O.gz -c "INFO"  > $O ; bgzip -f $O ; tabix -f $O.gz ; fi
+if [ -s $HP_RDIR/MCC.bed.gz ]  ; then bcftools annotate -a $HP_RDIR/MCC.bed.gz $O.gz -c "CHROM,FROM,TO,MCC"  -h <(echo '##INFO=<ID=MCC,Number=1,Type=String,Description="New YALE protein_gene_missense_constraint; missense_OEUF">') > $O ; fi
+
+if [ ! -s $O ] ; then zcat $O.gz > $O ; fi
 rm -f $O.gz $O.gz.tbi

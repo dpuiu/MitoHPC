@@ -98,8 +98,8 @@ export HP_T3=10
 export HP_V=                     # SV caller: gridss
 export HP_DP=                    # minimum coverage: Ex 100
 
-export HP_FNAME=filter                                                                                                  # filter name
-export HP_FRULE="egrep -v 'strict_strand|strand_bias|base_qual|map_qual|weak_evidence|slippage|position|germline|HP'"   # filter rule
+export HP_FNAME=filter                                                                                                                                          # filter name
+export HP_FRULE="perl -ane 'print unless(/strict_strand|strand_bias|base_qual|map_qual|weak_evidence|slippage|position|germline|HP/ and /:0\.[01234]\d+$/);'"   # filter rule
 
 export HP_P=1						    # number of processors
 export HP_JOPT="-Xms2G -Xmx2G -XX:ParallelGCThreads=$HP_P"  # JAVA options
