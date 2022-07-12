@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -ex
+set -e
 
 #########################################################################################################################################
 # Program that runs the heteroplasmy pipeline on a single sample
@@ -37,8 +37,8 @@ test -s $2
 samtools view -H $2 | grep -m 1 -P "^@HD.+coordinate$" > /dev/null
 
 # test references match
-RCOUNT=`samtools view -H $2 | grep -c "^@SQ"`
-if [ $HP_RCOUNT != $RCOUNT ] ; then echo "ERROR: HP_RCOUNT=$HP_RCOUNT does not match the number of \@SQ lines=$RCOUNT in $2"; exit 1 ; fi
+#RCOUNT=`samtools view -H $2 | grep -c "^@SQ"`
+#if [ $HP_RCOUNT != $RCOUNT ] ; then echo "ERROR: HP_RCOUNT=$HP_RCOUNT does not match the number of \@SQ lines=$RCOUNT in $2"; exit 1 ; fi
 
 # generate index and indexstats files
 if [ ! -s $2.bai ] && [ ! -s $2.crai ]; then samtools index $2 -@ $HP_P ; fi
@@ -88,7 +88,7 @@ if  [ ! -s $O.bam ] ; then
     bedtools bamtobed -i /dev/stdin -tag AS | bed2bed.pl -rmsuffix  | \
     count.pl -i 3 -j 4  | sort > $ON.score
 
-  join $O.score $ON.score -a 1 | perl -ane 'next if(@F==3 and $F[2]>$F[1]);print' | \
+  join $O.score $ON.score -a 1 --nocheck-order | perl -ane 'next if(@F==3 and $F[2]>$F[1]);print' | \
      intersectSam.pl $O.sam - | \
      samtools view -bu | \
      samtools sort -m $HP_MM -@ $HP_P  > $O.bam
@@ -192,7 +192,7 @@ if  [ ! -s $OS.bam ] ; then
     count.pl -i 3 -j 4  | sort > $OS.score
   rm -f $OS+.*
 
-  join $OS.score $ON.score -a 1 | perl -ane 'next if(@F==3 and $F[2]>$F[1]);print'  | \
+  join $OS.score $ON.score -a 1 --nocheck-order | perl -ane 'next if(@F==3 and $F[2]>$F[1]);print'  | \
      intersectSam.pl $OS.sam - | \
      samtools view -bu | \
      samtools sort -m $HP_MM -@ $HP_P  > $OS.bam

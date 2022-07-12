@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eux
+set -e
 
 ##############################################################################################################
 
@@ -13,7 +13,7 @@ cd $HP_HDIR/
 mkdir -p prerequisites/ $HP_BDIR/ $HP_JDIR/
 
 cd prerequisites/
-wget -N -c https://iweb.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2 --no-check-certificate
+wget -N -c https://github.com/lh3/bwa/releases/download/v0.7.17/bwa-0.7.17.tar.bz2 --no-check-certificate
 wget -N -c https://github.com/samtools/samtools/releases/download/1.15/samtools-1.15.tar.bz2
 wget -N -c https://github.com/samtools/bcftools/releases/download/1.15/bcftools-1.15.tar.bz2
 wget -N -c https://github.com/samtools/htslib/releases/download/1.15/htslib-1.15.tar.bz2

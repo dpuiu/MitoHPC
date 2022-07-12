@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eux
+set -e
 
 ##############################################################################################################
 
@@ -36,7 +36,7 @@ bcftools annotate -a $HP_RDIR/dbSNP.vcf.gz   -c "ID" $O.gz |\
   annotateVcf.pl - $HP_RDIR/STOP.vcf.gz      |\
   annotateVcf.pl - $HP_RDIR/MMC.vcf.gz       |\
   annotateVcf.pl - $HP_RDIR/MLC.vcf.gz       |\
-  bcftools annotate -a $HP_RDIR/MCC.bed.gz -c "CHROM,FROM,TO,MCC"         -h <(echo '##INFO=<ID=MCC,Number=1,Type=String,Description=""New YALE protein_gene_missense_constraint; missense_OEUF">') > $O
+  bcftools annotate -a $HP_RDIR/MCC.bed.gz -c "CHROM,FROM,TO,MCC"         -h <(echo '##INFO=<ID=MCC,Number=1,Type=String,Description="New YALE protein_gene_missense_constraint; missense_OEUF">') > $O
 
 rm -f $O.gz*
 

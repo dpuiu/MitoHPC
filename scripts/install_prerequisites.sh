@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -x
+set -e
 
 if [ -z $HP_SDIR ] ; then echo "Variable HP_SDIR not defined. Make sure you followed the SETUP ENVIRONMENT instructions" ;  exit 0 ; fi
 if [ -z $HP_HDIR ] ; then echo "Variable HP_HDIR not defined. Make sure you followed the SETUP ENVIRONMENT instructions" ;  exit 0 ; fi
@@ -18,7 +18,7 @@ cd prerequisites/
 
 which bwa
 if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
-  wget -N -c --no-check-certificate https://iweb.dl.sourceforge.net/project/bio-bwa/bwa-0.7.17.tar.bz2
+  wget -N -c --no-check-certificate https://github.com/lh3/bwa/releases/download/v0.7.17/bwa-0.7.17.tar.bz2
   if [ ! -s $HP_BDIR/bwa ] ; then
     tar -xjvf bwa-0.7.17.tar.bz2
     cd bwa-0.7.17
