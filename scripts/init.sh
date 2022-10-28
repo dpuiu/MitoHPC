@@ -59,11 +59,18 @@ export HP_RURL=ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh
 #export HP_RNUMT="chr1:24650615-24655265 chr2:22477298-22480547 chr10:95913385-95913756 chr12:97028201-97028567 chr13:85274752-85275567"
 #export HP_RURL="https://hgdownload.soe.ucsc.edu/goldenPath/mm39/bigZips/mm39.fa.gz"
 
+
+###############################################################
+
+export HP_E=300                  # extension(circularization)
+
 ################################################################
 #GENOME REFERENCES
 
 export HP_O=Human		 # organism: Human, Mouse...
 export HP_MT=chrM                # chrM, rCRS or RSRS, FASTA file available under $HP_RDIR
+#export HP_MTC=$HP_MT.c$HP_E 
+#export HP_MTR=$HP_MT.r$HP_E 
 export HP_MTLEN=16569
 export HP_NUMT=NUMT              # NUMT FASTA file under $HP_RDIR
 
@@ -79,7 +86,6 @@ export HP_NUMT=NUMT              # NUMT FASTA file under $HP_RDIR
 
 export HP_CN=1			 # do compute mtDNA copy number
 export HP_L=222000               # number of MT reads to subsample; empty: no subsampling; 222000 150bp reads => ~2000x MT coverage
-export HP_E=300	                 # extension(circularization)
 export HP_FOPT="-q 15 -e 0"      # FASTP options: Ex: " -q 20 -e 30 "; -q: min base quality; -e: avg quality thold
 export HP_DOPT="--removeDups"    # samblaster option; leave empty if no deduplication should be done
 export HP_GOPT=                  # gatk mutect2 additional options : Ex "-max-reads-per-alignment-start 50" , "--mitochondria-mode"
@@ -99,7 +105,7 @@ export HP_V=                     # SV caller: gridss
 export HP_DP=                    # minimum coverage: Ex 100
 
 export HP_FNAME=filter                                                                                                                                          # filter name
-export HP_FRULE="perl -ane 'print unless(/strict_strand|strand_bias|base_qual|map_qual|weak_evidence|slippage|position|germline|HP/ and /:0\.[01234]\d+$/);'"   # filter rule
+export HP_FRULE="perl -ane 'print unless(/strict_strand|strand_bias|base_qual|map_qual|weak_evidence|slippage|position|Homopolymer/ and /:0\.[01234]\d+$/);'"   # filter rule
 
 export HP_P=1						    # number of processors
 export HP_JOPT="-Xms2G -Xmx2G -XX:ParallelGCThreads=$HP_P"  # JAVA options
@@ -113,8 +119,10 @@ export HP_ADIR=$PWD/bams/	# bams or crams input file directory
 export HP_ODIR=$PWD/out/        # output dir
 export HP_IN=$PWD/in.txt        # input file to be generated
 
-#if [ ! -w $HP_ADIR ]; then echo "ERROR: $HP_ADIR NOT WRITABLE "; fi
-#if [ ! -w $HP_ODIR ]; then echo "ERROR: $HP_ADIR NOT WRITABLE "; fi
+mkdir -p $HP_ODIR
+
+if [ ! -w $HP_ADIR ]; then echo "ERROR: $HP_ADIR NOT WRITABLE "; fi
+if [ ! -w $HP_ODIR ]; then echo "ERROR: $HP_ODIR NOT WRITABLE "; fi
 
 if [ -d $HP_ADIR ] ; then
   if [ ! -s $HP_IN ] ; then
@@ -125,7 +133,7 @@ fi
 ###############################################################
 #JOB SCHEDULING
 
-export HP_SH="bash" ;                                                                    export HP_SHS="$HP_SH"                     # bash
-#export HP_SH="sbatch -J HP_$$ --cpus-per-task=$HP_P --nodes=1 --mem=$HP_MM" ;           export HP_SHS="$HP_SH -d singleton"        # SLURM
-#export HP_SH="qsub -V -N HP_$$ -l mem_free=$HP_MM,h_vmem=$HP_MM -pe local $HP_P -cwd" ; export HP_SHS="$HP_SH -hold_jid HP_$$"     # SGE
+export HP_SH="bash" ;                                                                        export HP_SHS="$HP_SH"                     # bash
+#export HP_SH="sbatch -J HP_$$ --cpus-per-task=$HP_P --nodes=1 --mem=$HP_MM --time=20:00" ;  export HP_SHS="$HP_SH -d singleton"        # SLURM
+#export HP_SH="qsub -V -N HP_$$ -l mem_free=$HP_MM,h_vmem=$HP_MM -pe local $HP_P -cwd" ;     export HP_SHS="$HP_SH -hold_jid HP_$$"     # SGE
 

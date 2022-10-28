@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 #initialize ODIR (output dir) variable
 if  [ "$#" -lt 1 ] ; then ODIR=$HP_ODIR ; else ODIR=$1 ; fi
@@ -12,7 +12,8 @@ if  [ "$#" -lt 1 ] ; then ODIR=$HP_ODIR ; else ODIR=$1 ; fi
 
 #get read count and mtDN-CN stats 
 if [ $HP_CN ]  && [ $HP_CN -ne 0 ] || [ ! -s $ODIR/count.tab ] ; then
-    cut -f2 $HP_IN | perl -ane 'print "$1.count\n" if(/(.+)\./);' | xargs cat | cut -f1,2,3,4 | uniq.pl | getCN.pl > $ODIR/count.tab
+    #cut -f2 $HP_IN | perl -ane 'print "$1.count\n" if(/(.+)\./);' | xargs cat | cut -f1,2,3,4 | uniq.pl | getCN.pl > $ODIR/count.tab
+    cut -f3 $HP_IN | perl -ane 'print "$F[0].count\n";' | xargs cat | cut -f1,2,3,4 | uniq.pl | getCN.pl > $ODIR/count.tab
 fi
 if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 
@@ -22,10 +23,16 @@ if [ $HP_I -lt 1 ] ; then exit 0 ; fi
 S=$HP_M
 V=$HP_V
 
+###########################################################
+
 #count,cvg
 awk '{print $3}' $HP_IN | sed "s|$|.count|"     | xargs cat | uniq.pl > $ODIR/subsample.tab
 awk '{print $3}' $HP_IN | sed "s|$|.cvg.stat|"  | xargs cat | uniq.pl -i 0  > $ODIR/cvg.tab
 awk '{print $3}' $HP_IN | sed "s|$|.$S.00.vcf|" | xargs cat | uniq.pl | bedtools sort -header  > $ODIR/$S.00.concat.vcf
+
+#Sept 1 ; ARIC CDG only
+#reAnnotateVcf.sh  $ODIR/$S.00.concat.vcf  $ODIR/$S.00.concat.vcf2 ; mv  $ODIR/$S.00.concat.vcf2  $ODIR/$S.00.concat.vcf
+
 snpSort.sh $ODIR/$S.00.concat
 cat $ODIR/$S.00.concat.vcf | grep -v "^#" | sed 's|:|\t|g'  | count.pl -i -1 -round 100| sort -n > $ODIR/$S.00.AF.histo
 if [ $V ] ; then awk '{print $3}' $HP_IN | sed "s|$|.$V.00.vcf|" | xargs cat | uniq.pl | bedtools sort -header  > $ODIR/$V.00.concat.vcf ; fi
@@ -71,7 +78,13 @@ if [ $S == "mutserve" ] ; then exit 0 ; fi
 SS=$S.$S
 #count,cvg
 awk '{print $3}' $HP_IN | sed "s|$|.$S.cvg.stat|" | xargs cat | uniq.pl -i 0  > $ODIR/$S.cvg.tab
-awk '{print $3}' $HP_IN | sed "s|$|.$SS.00.vcf|"  | xargs cat | uniq.pl | bedtools sort -header  > $ODIR/$SS.00.concat.vcf
+awk '{print $3}' $HP_IN | sed "s|$|.$SS.00.vcf|"  | xargs cat | uniq.pl | bedtools sort -header  > $ODIR/$SS.00.concat.vcf  
+
+#Sept 1 ; ARIC CDG only
+awk '{print $3}' $HP_IN | sed "s|$|.mutect2.max.vcf|" | xargs cat >  $ODIR/$S.max.vcf
+intersectVcf.pl $ODIR/$S.00.concat.vcf $ODIR/$S.max.vcf.pl -sm | cat $ODIR/$SS.00.concat.vcf  - | bedtools sort -header  > $ODIR/$SS.00.concat.vcf2; mv $ODIR/$SS.00.concat.vcf2 $ODIR/$SS.00.concat.vcf
+#reAnnotateVcf.sh  $ODIR/$SS.00.concat.vcf  $ODIR/$SS.00.concat.vcf2 ; mv  $ODIR/$SS.00.concat.vcf2  $ODIR/$SS.00.concat.vcf
+
 snpSort.sh $ODIR/$SS.00.concat
 cat $ODIR/$SS.00.concat.vcf | grep -v "^#" | sed 's|:|\t|g'  | count.pl -i -1 -round 100| sort -n > $ODIR/$SS.00.AF.histo
 

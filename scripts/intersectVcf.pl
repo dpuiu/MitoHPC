@@ -45,11 +45,14 @@ MAIN:
 			else						  { die "ERROR: $_" }
 		}
 
-		my $AF=1;
-		$AF=$1 if(/AF=(0\.\d+)/ or /.+:(1)$/ or /.+:(0\.\d+)/);
+		if($opt{m2} or $opt{M2})
+		{
+			my $AF=1;
+			$AF=$1 if(/AF=(0\.\d+)/ or /.+:(1)$/ or /.+:(0\.\d+)$/);
 
-		next if(defined($opt{m2}) and $AF<$opt{m2});
-		next if(defined($opt{M2}) and $AF>$opt{M2});
+			next if(defined($opt{m2}) and $AF<$opt{m2});
+			next if(defined($opt{M2}) and $AF>$opt{M2});
+		}
 
                 $h{"$F[0] $F[1] $F[3] $F[4] $SM"}=1;
         }
@@ -75,11 +78,16 @@ MAIN:
 
                	}
 
-		my $AF=1;
-                $AF=$1 if(/AF=(0\.\d+)/ or /.+:(1)$/ or /.+:(0\.\d+)/);
 
-               	next if(defined($opt{m1}) and $AF<$opt{m1});
-                next if(defined($opt{M1}) and $AF>$opt{M1});
+		if($opt{m1} or $opt{M1})
+                {
+
+			my $AF=1;
+        	        $AF=$1 if(/AF=(0\.\d+)/ or /.+:(1)$/ or /.+:(0\.\d+)$/);
+
+               		next if(defined($opt{m1}) and $AF<$opt{m1});
+	                next if(defined($opt{M1}) and $AF>$opt{M1});
+		}
 
                 print if $h{"$F[0] $F[1] $F[3] $F[4] $SM"};
         }

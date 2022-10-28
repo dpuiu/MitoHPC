@@ -158,7 +158,7 @@
        ...
 
      # generate in.txt
-     cat crams/newlistofallfiles.txt | sed 's|/home/dnanexus/wgs|crams|' | $HP_SDIR/ls2in.pl -out out > in.txt
+     cat ~/crams/newlistofallfiles.txt | sed 's|/home/dnanexus/wgs|crams|' | $HP_SDIR/ls2in.pl -out out > in.txt
 
      # re-init
      . ./init.sh

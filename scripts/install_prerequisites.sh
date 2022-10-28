@@ -152,10 +152,18 @@ if [ ! -s $HP_RDIR/$HP_NUMT.fa ] ; then
   bwa index $HP_RDIR/$HP_NUMT.fa -p $HP_RDIR/$HP_NUMT
 fi
 
-if [ ! -s $HP_RDIR/${HP_MT}+.fa ] ; then
-  cat $HP_RDIR/$HP_MT.fa > $HP_RDIR/${HP_MT}+.fa
-  samtools faidx $HP_RDIR/$HP_RNAME.fa $HP_RMT:1-$HP_E | grep -v ">" >> $HP_RDIR/${HP_MT}+.fa
-  #cat $HP_RDIR/$HP_NUMT.fa >> $HP_RDIR/${HP_MT}+.fa
-  bwa index $HP_RDIR/${HP_MT}+.fa -p $HP_RDIR/${HP_MT}+
+#if [ ! -s $HP_RDIR/${HP_MT}+.fa ] ; then
+#  cat $HP_RDIR/$HP_MT.fa > $HP_RDIR/${HP_MT}+.fa
+#  samtools faidx $HP_RDIR/$HP_RNAME.fa $HP_RMT:1-$HP_E | grep -v ">" >> $HP_RDIR/${HP_MT}+.fa
+#  #cat $HP_RDIR/$HP_NUMT.fa >> $HP_RDIR/${HP_MT}+.fa
+#  bwa index $HP_RDIR/${HP_MT}+.fa -p $HP_RDIR/${HP_MT}+
+#fi
+
+if [ ! -s $HP_RDIR/$HP_MTC.fa ] ; then
+  circFasta.sh $HP_MT $HP_E
+fi
+
+if [ ! -s $HP_RDIR/$HP_MTR.fa ] ; then
+  rotateFasta.sh $HP_MT $HP_E
 fi
 

@@ -89,7 +89,7 @@
                                                  #     computed in the 1st iteration; higher accuracy 
 
        export HP_FNAME=filter                                                                                                  # VCF filter name
-       export HP_FRULE="egrep -v 'strict_strand|strand_bias|base_qual|map_qual|weak_evidence|slippage|position|germline|HP'"   # VCF filtering rule 
+       export HP_FRULE="egrep -v 'strict_strand|strand_bias|base_qual|map_qual|weak_evidence|slippage|position|HP'"            # VCF filtering rule 
 
        export HP_SH=bash                         # job scheduling: bash, qsub,sbatch, ..
 

@@ -28,12 +28,10 @@ MAIN:
 		"ref=s"		=> \$opt{ref},		#chrM
 		"rlen=i"        => \$opt{rlen},		#16569
  	        "mfile=s" 	=> \$opt{mfile},	#.max.vcf
-		"ffile=s"	=> \$opt{ffile},        #.fix.vcf
 		"rfile=s"	=> \$opt{rfile},	#chrM.fa
  	);
 	die "ERROR: $! " if (!$result);
 	die "ERROR: $! " if (!defined($opt{mfile}));
-	die "ERROR: $! " if (!defined($opt{ffile}));
 	die "ERROR: $! " if (!defined($opt{rfile}));
 
 	#####################################################################################
@@ -49,25 +47,14 @@ MAIN:
 		{
 			my @F=split;
 
-			# 2022/05/18; skip adjacent deletions
-			next if(length($F[4])-length($F[3])<0 and $diff{$F[1]-1} and $diff{$F[1]-1}<0);
+			# 2022/05/18; skip adjacent deletions; removed sept 10
+			#next if(length($F[4])-length($F[3])<0 and $diff{$F[1]-1} and $diff{$F[1]-1}<0);
 
-			$max{$F[1]}=$_;
+			$max{$F[1]}=$F[3];
 			$diff{$F[1]}=length($F[4])-length($F[3]);
 		}
         }
-	close(IN);
-
-        open(IN,$opt{ffile}) or die "ERROR:$!";
-        while(<IN>)
-        {
-                if(!/^#/)
-                {
-                        my @F=split;
-			$fix{$F[1]}.=$_;
-                }
-        }
-        close(IN);
+ 	close(IN);
 
 	#human
 	#if($opt{rlen}==16569)
@@ -107,7 +94,7 @@ MAIN:
 	foreach my $pos (@pos)
 	{
 		$diff+=$diff{$pos};
-		$diff2{$pos+$diff}=$diff;
+		$diff2{$pos+$diff+1}=$diff;  # +1: Sept 11
 	}
 	my @pos2=(sort {$a<=>$b} keys %diff2);
 
@@ -146,17 +133,13 @@ MAIN:
 
 			if($max{$F[1]})
 			{
-				if($fix{$F[1]})
-				{
-					print $fix{$F[1]};
-					$fix{$F[1]}="";
-				}
+				#$F[3]=$max{$F[1]};			
+				$F[3]=substr($MT,$F[1]-1,length($F[3]));
 			}
-			else
-			{
-				print join "\t",@F;
-				print "\n";
-			}
+
+			print join "\t",@F;
+			print "\n";
+			
 		}
 	}
 }

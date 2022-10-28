@@ -64,6 +64,10 @@ MAIN:
 				my $AF=$1;
 				$h{$key}{max_observed_heteroplasmy}=$AF if(!$h{$key}{max_observed_heteroplasmy} or $AF>$h{$key}{max_observed_heteroplasmy});
 			}
+			elsif(/.+:0$/)
+			{
+				next
+			}
 			else
 			{
 				die "ERROR: $_"
@@ -88,8 +92,8 @@ MAIN:
 			$h{$key}{$_}=0 unless(defined($h{$key}{$_}));
 		}
 
-                $h{$key}{AF_hom}=int(1000*$h{$key}{AC_hom}/$AN+.5)/1000;
-		$h{$key}{AF_het}=int(1000*$h{$key}{AC_het}/$AN+.5)/1000;
+                $h{$key}{AF_hom}=int(200000*$h{$key}{AC_hom}/$AN+.5)/200000;
+		$h{$key}{AF_het}=int(200000*$h{$key}{AC_het}/$AN+.5)/200000;
 
 
 		push @F,($key,$h{$key}{filter},$h{$key}{AC_hom},$h{$key}{AC_het},$h{$key}{AF_hom},$h{$key}{AF_het},$AN,$h{$key}{max_observed_heteroplasmy});

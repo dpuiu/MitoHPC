@@ -21,13 +21,16 @@ MAIN:
 		#chrM	567	.	A	ACCC	.	multiallelic	INDEL;DP=190;AF=0.095;HP	SM	SRR0000000
 
 		my $SM="";
-		if($F[8] eq "SM") { $SM=$F[9]}
-		elsif($F[7]=~/SM=(.+?);/ or $F[7]=~/SM=(.+)$/) { $SM=$1}
+		my $AF=1;
+		if(@F>8)
+		{
+			if($F[8] eq "SM") { $SM=$F[9]}
+			elsif($F[7]=~/SM=(.+?);/ or $F[7]=~/SM=(.+)$/) { $SM=$1}
+
+			$AF=$1 if($F[7]=~/AF=(\S+?);/ or $F[7]=~/AF=(\S+)$/);
+		}
 	
 		my $key=join "\t",(@F[0..4],$SM);
-
-		my $AF=1;
-		$AF=$1 if($F[7]=~/AF=(\S+?);/ or $F[7]=~/AF=(\S+)$/);
 
 		if(!$max{$key} or $AF>$max{$key})
 		{

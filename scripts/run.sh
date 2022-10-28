@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -ex
+set -e
 
 ##############################################################################################################
 
@@ -22,7 +22,7 @@ perl -e '!$ENV{HP_T1} or $ENV{HP_T1}=~/^\d\d$/ or die "ERROR : HP_T1 between 00 
 perl -e '!$ENV{HP_T2} or $ENV{HP_T2}=~/^\d\d$/ or die "ERROR : HP_T2 between 00 and 99\n"'
 perl -e '!$ENV{HP_T3} or $ENV{HP_T3}=~/^\d\d$/ or die "ERROR : HP_T3 between 00 and 99\n"'
 
-test -w $HP_ADIR
+#test -w $HP_ADIR
 mkdir -p $HP_ODIR
 test -w $HP_ODIR
 
@@ -44,6 +44,8 @@ printf "export HP_RURL=\"$HP_RURL\"\n"
 
 printf "export HP_O=$HP_O\n"
 printf "export HP_MT=$HP_MT\n"
+printf "export HP_MTR=$HP_MT.r$HP_E\n"
+printf "export HP_MTC=$HP_MT.c$HP_E\n"
 printf "export HP_MTLEN=$HP_MTLEN\n"
 printf "export HP_NUMT=$HP_NUMT\n"
 

@@ -35,9 +35,9 @@ MAIN:
 		{
 		
 			my ($SM,$ANNOTATION);
-			if(/SM=(\S+?);(\S+)/) { ($SM,$ANNOTATION)=($1,"$2;") }
-			elsif(/SM=(\S+)\s+/)  { ($SM,$ANNOTATION)=($1,"") }
-			else                  { die "ERROR $_";           }
+			if($F[7]=~/(\S*)SM=(\S+?);(\S+)/) { ($SM,$ANNOTATION)=($2,"$1$3;") }
+			elsif($F[7]=~/(\S*)SM=(\S+)\s+/)  { ($SM,$ANNOTATION)=($2,"$1") }
+			else                              { die "ERROR $_";           }
 
 			my ($GT,$DP,$AF)=split /:/,$F[-1];
 

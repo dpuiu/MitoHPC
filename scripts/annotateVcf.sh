@@ -16,9 +16,9 @@ test  -s $O
 
 bgzip -f $O ;tabix -f $O.gz
 
-if [ -s $HP_RDIR/HV.bed.gz ]    ; then bcftools annotate -a $HP_RDIR/HV.bed.gz    $O.gz -c "CHROM,FROM,TO,HV"  -h <(echo '##INFO=<ID=HV,Number=1,Type=String,Description="Hypervariable">') > $O ; bgzip -f $O ; tabix -f $O.gz ; fi
-if [ -s $HP_RDIR/HP.bed.gz ]    ; then bcftools annotate -a $HP_RDIR/HP.bed.gz    $O.gz -c "CHROM,FROM,TO,HP"  -h <(echo '##INFO=<ID=HP,Number=0,Type=Flag,Description="Homoloplymer">')  > $O ; bgzip -f $O ; tabix -f $O.gz ; fi
-if [ -s $HP_RDIR/HS.bed.gz ]    ; then bcftools annotate -a $HP_RDIR/HS.bed.gz    $O.gz -c "CHROM,FROM,TO,HS"  -h <(echo '##INFO=<ID=HS,Number=0,Type=Flag,Description="Hot spot">')      > $O ; bgzip -f $O ; tabix -f $O.gz ; fi
+if [ -s $HP_RDIR/HV.bed.gz ]    ; then bcftools annotate -a $HP_RDIR/HV.bed.gz    $O.gz -c "CHROM,FROM,TO,Hypervariable"  -h <(echo '##INFO=<ID=Hypervariable,Number=1,Type=String,Description="Hypervariable">') > $O ; bgzip -f $O ; tabix -f $O.gz ; fi
+if [ -s $HP_RDIR/HP.bed.gz ]    ; then bcftools annotate -a $HP_RDIR/HP.bed.gz    $O.gz -c "CHROM,FROM,TO,Homopolymer"  -h <(echo '##INFO=<ID=Homopolymer,Number=0,Type=Flag,Description="Homoloplymer">')  > $O ; bgzip -f $O ; tabix -f $O.gz ; fi
+if [ -s $HP_RDIR/HS.bed.gz ]    ; then bcftools annotate -a $HP_RDIR/HS.bed.gz    $O.gz -c "CHROM,FROM,TO,Hotspot"  -h <(echo '##INFO=<ID=Hotspot,Number=0,Type=Flag,Description="Hotspot">')      > $O ; bgzip -f $O ; tabix -f $O.gz ; fi
 if [ -s $HP_RDIR/CDS.bed.gz ]   ; then bcftools annotate -a $HP_RDIR/CDS.bed.gz   $O.gz -c "CHROM,FROM,TO,CDS" -h <(echo '##INFO=<ID=CDS,Number=1,Type=String,Description="CDS">')   > $O ; bgzip -f $O ; tabix -f $O.gz ; fi
 if [ -s $HP_RDIR/COMPLEX.bed.gz ]   ; then bcftools annotate -a $HP_RDIR/COMPLEX.bed.gz   $O.gz -c "CHROM,FROM,TO,COMPLEX" -h <(echo '##INFO=<ID=COMPLEX,Number=1,Type=String,Description="COMPLEX">')   > $O ; bgzip -f $O ; tabix -f $O.gz ; fi
 if [ -s $HP_RDIR/RNR.bed.gz ]   ; then bcftools annotate -a $HP_RDIR/RNR.bed.gz   $O.gz -c "CHROM,FROM,TO,RNR"  -h <(echo '##INFO=<ID=RNR,Number=1,Type=String,Description="rRNA">') > $O ; bgzip -f $O ; tabix -f $O.gz ; fi

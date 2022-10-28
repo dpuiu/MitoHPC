@@ -22,10 +22,12 @@ MAIN:
 	# define variables
 	my %options;
 	my %len;
+	$options{offset}=0;
 
 	# validate input parameters
 	my $result = GetOptions(
-		"ref_len=s"	=>	\$options{ref_len}
+		"ref_len=s"	=>	\$options{ref_len},
+		"offset=i"	=>	\$options{offset}
 	);
 	die "ERROR: $! " 		       unless ($result);
 	die "ERROR: missing reference file"    unless($options{ref_len});
@@ -57,6 +59,9 @@ MAIN:
                 }
 		elsif($F[5]=~/M/)	# new
 		{
+			$F[3]+=$options{offset};
+			$F[7]+=$options{offset};
+
 			if($F[7])
 			{
 				if($F[6] eq "=" and $len{$F[2]} and $F[7]>$len{$F[2]})
@@ -131,14 +136,15 @@ MAIN:
 				if($cigar2=~/M/)
 				{
 
-					#print join "\t",($F[0],$F[1]+2048,$F[2],1,$F[4],$cigar2,@F[6..scalar(@F)-1]); # June 24 2020
-					print join "\t",($F[0],$F[1]+2048,$F[2],1,$F[4],$cigar2,@F[6..10],"NM:i:0",@F[12..scalar(@F)-1]);
+					print join "\t",($F[0],$F[1]+2048,$F[2],1,$F[4],$cigar2,@F[6..scalar(@F)-1]); # June 24 2020
+					#print join "\t",($F[0],$F[1]+2048,$F[2],1,$F[4],$cigar2,@F[6..10],"NM:i:0",@F[12..scalar(@F)-1]);  #aug 14, changed from 0 to 1; temp
 					print "\n";
 				}
 
 			        if($cigar1=~/M/)
                                	{
 					$F[5]=$cigar1;
+					#$F[11]="NM:i:0" ;  # temp; only on example3
                                	}
 				else
 				{
