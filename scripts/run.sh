@@ -44,8 +44,8 @@ printf "export HP_RURL=\"$HP_RURL\"\n"
 
 printf "export HP_O=$HP_O\n"
 printf "export HP_MT=$HP_MT\n"
-printf "export HP_MTR=$HP_MT.r$HP_E\n"
-printf "export HP_MTC=$HP_MT.c$HP_E\n"
+printf "export HP_MTR=${HP_MT}R\n"
+printf "export HP_MTC=${HP_MT}C\n"
 printf "export HP_MTLEN=$HP_MTLEN\n"
 printf "export HP_NUMT=$HP_NUMT\n"
 

@@ -18,16 +18,16 @@ IDIR=`dirname $2`
 I=$IDIR/$N
 ODIR=`dirname $3`; mkdir -p $ODIR 
 O=$3
-OR=$O.r$HP_E
+OR=${O}R
 
 ON=$O.$HP_NUMT
 OS=$O.$HP_M
 
-OSC=$OS.c$HP_E
-OSR=$OS.r$HP_E
+OSC=${OS}C
+OSR=${OS}R
 
 OSS=$OS.$HP_M
-OSSR=$OSS.r$HP_E
+OSSR=${OSS}R
 
 #########################################################################################################################################
 # test if count and VCF output files exist; exit if they do
@@ -198,8 +198,8 @@ if  [ ! -s $OS.fa ]  ; then
 
   export MTLEN=`cut -f2 $OS.fa.fai`
 
-  circFasta.sh   $S $OS $HP_E
-  rotateFasta.sh $S $OS $HP_E
+  circFasta.sh   $OS $HP_E ${OS}C
+  rotateFasta.sh $OS $HP_E ${OS}R
 fi
 ########################################################################################################################################
 # realign reads; check coverage
