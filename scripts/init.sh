@@ -69,11 +69,10 @@ export HP_E=300                  # extension(circularization)
 
 export HP_O=Human		 # organism: Human, Mouse...
 export HP_MT=chrM                # chrM, rCRS or RSRS, FASTA file available under $HP_RDIR
-#export HP_MTC=$HP_MT.c$HP_E 
-#export HP_MTR=$HP_MT.r$HP_E 
+export HP_MTC=chrMC
+export HP_MTR=chrMR
 export HP_MTLEN=16569
 export HP_NUMT=NUMT              # NUMT FASTA file under $HP_RDIR
-
 
 #Mouse
 #export HP_O=Mouse                # organism: Human, Mouse...
@@ -107,9 +106,9 @@ export HP_DP=                    # minimum coverage: Ex 100
 export HP_FNAME=filter                                                                                                                                          # filter name
 export HP_FRULE="perl -ane 'print unless(/strict_strand|strand_bias|base_qual|map_qual|weak_evidence|slippage|position|Homopolymer/ and /:0\.[01234]\d+$/);'"   # filter rule
 
-export HP_P=1						    # number of processors
-export HP_JOPT="-Xms2G -Xmx2G -XX:ParallelGCThreads=$HP_P"  # JAVA options
-export HP_MM="3G"					    # maximum memory; 4G before
+export HP_P=1				       		            # number of processors
+export HP_MM="3G"                                                   # maximum memory
+export HP_JOPT="-Xms$HP_MM -Xmx$HP_MM -XX:ParallelGCThreads=$HP_P"  # JAVA options
 ################################################################
 #INPUT/OUTPUT
 
@@ -118,11 +117,6 @@ export HP_FDIR=$PWD/fastq/      # fastq input file directory ; .fq or .fq.gz fil
 export HP_ADIR=$PWD/bams/	# bams or crams input file directory
 export HP_ODIR=$PWD/out/        # output dir
 export HP_IN=$PWD/in.txt        # input file to be generated
-
-mkdir -p $HP_ODIR
-
-if [ ! -w $HP_ADIR ]; then echo "ERROR: $HP_ADIR NOT WRITABLE "; fi
-if [ ! -w $HP_ODIR ]; then echo "ERROR: $HP_ODIR NOT WRITABLE "; fi
 
 if [ -d $HP_ADIR ] ; then
   if [ ! -s $HP_IN ] ; then
