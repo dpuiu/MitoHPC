@@ -41,7 +41,7 @@ fi
 
 which bcftools
 if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
-  wget -N -c https://github.com/samtools/bcftools/releases/download/1.15/bcftools-1.16.tar.bz2
+  wget -N -c https://github.com/samtools/bcftools/releases/download/1.16/bcftools-1.16.tar.bz2
   if [ ! -s $HP_BDIR/bcftools ] ; then
     tar -xjvf  bcftools-1.16.tar.bz2
     cd bcftools-1.16
