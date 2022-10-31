@@ -153,10 +153,10 @@ if [ ! -s $HP_RDIR/$HP_NUMT.fa ] ; then
 fi
 
 if [ ! -s $HP_RDIR/$HP_MTC.fa ] ; then
-  circFasta.sh $HP_MT $HP_E
+  circFasta.sh $HP_MT $HP_E $HP_MTC
 fi
 
 if [ ! -s $HP_RDIR/$HP_MTR.fa ] ; then
-  rotateFasta.sh $HP_MT $HP_E
+  rotateFasta.sh $HP_MT $HP_E $HP_MTR
 fi
 
