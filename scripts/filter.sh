@@ -57,7 +57,7 @@ fi
 if [ ! -s $O.count ]; then cat $O.idxstats | idxstats2count.pl -sample $S -chrM $HP_RMT > $O.count ; fi
 
 # test if there are any MT reads
-MTCOUNT=`tail -1 $I.count| cut -f4`
+MTCOUNT=`tail -1 $O.count| cut -f4`
 if [ $MTCOUNT -lt 1 ]; then echo "ERROR: There are no MT reads in $2; plese remove it from $HP_IN" ; exit 1 ; fi
 
 #########################################################################################################################################
