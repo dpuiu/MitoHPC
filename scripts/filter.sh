@@ -198,8 +198,8 @@ if  [ ! -s $OS.fa ]  ; then
 
   export MTLEN=`cut -f2 $OS.fa.fai`
 
-  circFasta.sh   $OS $HP_E ${OS}C
-  rotateFasta.sh $OS $HP_E ${OS}R
+  circFasta.sh   $N $OS $HP_E ${OS}C
+  rotateFasta.sh $N $OS $HP_E ${OS}R
 fi
 ########################################################################################################################################
 # realign reads; check coverage

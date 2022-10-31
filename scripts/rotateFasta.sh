@@ -1,8 +1,9 @@
 #!/usr/bin/bash -eux
 
-export S=$1
-export E=$2
-SE=$3
+export N=$1
+export S=$2
+export E=$3
+SE=$4
 
 test -s $S.fa
 test -s $S.fa.fai
