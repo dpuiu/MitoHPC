@@ -1,3 +1,13 @@
+# 2022/11/02 #
+
+* HP_ADIR will  store the bam/cram/bai/crai files and does not have to be writable.  Optionally, it can store .idxstats & .count files. 
+* If HP_ADIR/.idxstats & HP_ADIR/.count files exist, they will be copied to the sample output directoies;  otherwise they will be generated under the sample output directories;
+* SNV detection on the MT 5',3' 11bp ends ; (mutect2 "bug")
+* Prerequisite software updates; 
+* SNV label updates (HP replaced with Homopolymer; HV with Hypervariable; HS with Hotspot)
+* Removed HP_FNAME; HP_FRULE update; HP_FRULE is always applied
+* HP_DP (min DP) set by default to 100
+
 # 2022/07/27 #
 
 * scripts/install_sysprerequisites.sh : replaced "set -e" with "set -x"
