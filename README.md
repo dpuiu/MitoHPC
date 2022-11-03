@@ -36,7 +36,7 @@
 
     $ cd MitoHPC/scripts
     $ export HP_SDIR=`pwd`                           # set script directory variable 
-    $ . ./init.sh                                    # or init.hs38DH.sh or init.mm39.sh
+    $ . ./init.sh                                    # or one of init.{hs38DH,hg19,mm39}.sh  correponding to  a different reference
 
 ### INSTALL SYSTEM PREREQUISITES (optional) ###
 
@@ -349,3 +349,24 @@
 ##### Re-annotate #####
 
      $ reAnnotateVcf.sh old.vcf new.vcf
+
+## FAQ ## 
+
+### Use a Different Reference ###
+
+* Edit init.sh: variables HP_RNAME, HP_RMT, HP_RNUMT, HP_RCOUNT, HP_RURL,HP_MTLEN or
+
+* Use oan alternative init.*.sh
+
+    # Example: hg19
+
+      # INSTALL SETUP ENVIRONMENT; replace
+      . ./init.sh
+      # with
+      . ./init.hg19.sh
+    
+      # PIPELINE USAGE; replace
+      cp -i $HP_SDIR/init.sh .
+      # with
+      cp -i $HP_SDIR/init.hg19.sh init.sh
+

@@ -15,7 +15,7 @@ MAIN:
 {
 	# define variables
 	my %options;
-	my @keys;
+	my @keys=();
 	my %vals;
 
 	# validate input parameters
@@ -56,6 +56,8 @@ MAIN:
 		
 	foreach my $key (@keys)
 	{	
+		next unless($vals{$key});
+
 		my @vals=sort {$a<=>$b} @{$vals{$key}};		
 		my $count=scalar(@vals);
 		

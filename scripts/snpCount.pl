@@ -9,24 +9,38 @@ MAIN:
 	# define variables
 	my %opt;
 	$opt{i}=0;
+	my %suspicious;
 
 	my $result = GetOptions(
                 "in=s" 	=> \$opt{in},
-		"i=i"	=> \$opt{i}
+		"suspicious=s"  => \$opt{suspicious}
         );
         die "ERROR: $! " if (!$result);
 
 	#############################################
 
         my (@samples,%samples,%snp,%count);
+
+	if($opt{suspicious})
+        {
+                open(IN,$opt{suspicious}) or die "ERROR: $!";
+                while(<IN>)
+                {
+                        my @F=split;
+                        $suspicious{$F[0]}=1 if(@F);
+                }
+                close(IN)
+        }
+
         open(IN,$opt{in}) or die "ERROR1: $!";
         while(<IN>)
         {
                 chomp;
                 next if(/^#/ or /^$/);
                 my @F=split;
-                push @samples,$F[$opt{i}];
-                $samples{$F[$opt{i}]}=1;
+		next if($suspicious{$F[0]});
+                push @samples,$F[0];
+                $samples{$F[0]}=1;
         }
 	close(IN);
 

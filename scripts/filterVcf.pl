@@ -17,13 +17,15 @@ MAIN:
 	my %opt;
 	$opt{percent}="0.0";
 	$opt{depth}=0;
+	my %suspicious;
 
 	my $result = GetOptions(
                 "percent=s" 	=> \$opt{percent},
 		"depth=i"	=> \$opt{depth},
 		"sample|Run=s"	=> \$opt{sample},
 		"source=s"	=> \$opt{source},
-		"header=s"	=> \$opt{header}
+		"header=s"	=> \$opt{header},
+		"suspicious=s"	=> \$opt{suspicious}
         );
         die "ERROR: $! " if (!$result);
 	$opt{percent}=~/^0.[01234]\d*$/ or die "ERROR:percent must be >0 and <0.5";
@@ -37,6 +39,17 @@ MAIN:
 		}
 		close(IN)
 	}
+	
+	if($opt{suspicious})
+	{
+                open(IN,$opt{suspicious}) or die "ERROR: $!";
+                while(<IN>)
+                {
+                        my @F=split;
+			$suspicious{$F[0]}=1 if(@F);
+                }
+                close(IN)
+        }
 
 	while(<>)
 	{
@@ -67,6 +80,7 @@ MAIN:
 			}
 			if($F[7]=~/DP=(\d+)/ and $1<$opt{depth}) { next }
 
+			next if($suspicious{$F[9]});
 			print join "\t",@F[0..9];
 			print "\n";
 		}
@@ -96,6 +110,8 @@ MAIN:
 			$F[8]="GT:DP:AF";
 			$F[9]="$h{GT}:$h{DP}:$h{AF}";
 
+
+			next if($F[7]=~/SM=([^;\s]+)/ and $suspicious{$1});
 			print join "\t",@F[0..9];
 			print "\n";
 		}

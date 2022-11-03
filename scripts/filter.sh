@@ -66,7 +66,7 @@ if [ $MTCOUNT -lt 1 ]; then echo "ERROR: There are no MT reads in $2; plese remo
 if [ ! -s $O.fq ] ; then
   R=""
   if [ $HP_L ]; then
-    R=`tail -1 $I.count  | perl -ane '$R=$ENV{HP_L}/($F[-1]+1); print $R if($R<1)'`
+    R=`tail -1 $O.count  | perl -ane '$R=$ENV{HP_L}/($F[-1]+1); print $R if($R<1)'`
     if [ $R ] ; then R="-s $R"  ; fi
   fi
 
@@ -152,7 +152,7 @@ if [ ! -s $OS.00.vcf ] ; then
 
   cat $HP_SDIR/$HP_M.vcf > $OS.00.vcf ; echo "##sample=$S" >> $OS.00.vcf
   fa2Vcf.pl $HP_RDIR/$HP_MT.fa >> $OS.00.vcf
-  cat $OS.fix.vcf ${OSR}.fix.vcf  | filterVcf.pl -sample $S -source $HP_M | uniqVcf.pl | bedtools sort >> $OS.00.vcf  # to add -depth $HP_DP
+  cat $OS.fix.vcf ${OSR}.fix.vcf  | filterVcf.pl -sample $S -source $HP_M  -depth $HP_DP | uniqVcf.pl | bedtools sort >> $OS.00.vcf  
   cat $OS.fix.vcf | maxVcf.pl | bedtools sort -header |tee $OS.max.vcf | bgzip -f -c > $OS.max.vcf.gz ; tabix -f $OS.max.vcf.gz
   annotateVcf.sh $OS.00.vcf
 fi
@@ -166,7 +166,7 @@ if [ $HP_V ] && [ "$HP_V" == "gridss" ] ; then
     gridss --jar $HP_JDIR/gridss.jar -r $HP_RDIR/$HP_MT.fa -o $OV.vcf.gz $O.bam  -t 1 -w $OV
     cat $HP_SDIR/gridss.vcf > $OV.fix.vcf
     bcftools view -i 'FILTER="PASS"' $OV.vcf.gz | bcftools query  -f "%CHROM\t%POS\t.\t%REF\t%ALT\t%QUAL\t%FILTER\t.\tGT:DP:AF\t[%GT:%REF:%AF]\n" | grep -v -P 'h\t'  >> $OV.fix.vcf
-    cat $OV.fix.vcf | filterVcf.pl -sample $S -source $HP_V  > $OV.00.vcf #  to add -depth $HP_DP
+    cat $OV.fix.vcf | filterVcf.pl -sample $S -source $HP_V -depth $HP_DP  > $OV.00.vcf 
     rm -rf $OV $OV.vcf.gz.* $OV.fix.vcf
   fi
 fi
@@ -274,7 +274,7 @@ if [ ! -s $OSS.00.vcf ] ; then
 
   bcftools norm -m-any -f $OS.fa $OSS.vcf     | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa | bedtools sort -header> $OSS.fix.vcf
   bcftools norm -m-any -f $OSR.fa ${OSSR}.vcf | fix${HP_M}Vcf.pl -file $HP_RDIR/$HP_MT.fa | perl -ane 'if(/^#/) { print} else { $F[1]=($F[1]-$ENV{HP_E})%$ENV{MTLEN} ; print join "\t",@F; print "\n" }'  | bedtools sort -header> ${OSSR}.fix.vcf
-  cat $OSS.fix.vcf ${OSSR}.fix.vcf | fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN -mfile $OS.max.vcf  | filterVcf.pl -sample $S -source $HP_M | bedtools sort  >> $OSS.00.vcf   #  to add -depth $HP_DP
+  cat $OSS.fix.vcf ${OSSR}.fix.vcf | fixsnpPos.pl -ref $HP_MT -rfile $HP_RDIR/$HP_MT.fa -rlen $HP_MTLEN -mfile $OS.max.vcf  | filterVcf.pl -sample $S -source $HP_M  -depth $HP_DP | bedtools sort  >> $OSS.00.vcf   #  to add -depth $HP_DP
   annotateVcf.sh  $OSS.00.vcf
   intersectVcf.pl $OS.00.vcf $OS.max.vcf | cat - $OSS.00.vcf |  uniqVcf.pl | bedtools sort -header > $OSS.00.vcf.tmp
   #intersectVcf.pl $OS.00.vcf $OS.max.vcf | differenceVcf.pl - $OSS.00.vcf  | perl -ane 'if(/(.+):0\.\d+$/) { print "$1:1\n"} else { print }' | cat - $OSS.00.vcf | uniqVcf.pl | bedtools sort -header > $OSS.00.vcf.tmp # new(rna-seq)

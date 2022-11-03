@@ -66,7 +66,6 @@ printf "export HP_T3=$HP_T3\n"
 printf "export HP_V=$HP_V\n"
 printf "export HP_DP=$HP_DP\n"
 
-printf "export HP_FNAME=\"$HP_FNAME\"\n"
 printf "export HP_FRULE=\"$HP_FRULE\"\n"
 
 printf "export HP_FOPT=\"$HP_FOPT\"\n"

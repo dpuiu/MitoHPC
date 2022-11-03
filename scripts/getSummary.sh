@@ -12,7 +12,6 @@ if  [ "$#" -lt 1 ] ; then ODIR=$HP_ODIR ; else ODIR=$1 ; fi
 
 #get read count and mtDN-CN stats 
 if [ $HP_CN ]  && [ $HP_CN -ne 0 ] || [ ! -s $ODIR/count.tab ] ; then
-    #cut -f2 $HP_IN | perl -ane 'print "$1.count\n" if(/(.+)\./);' | xargs cat | cut -f1,2,3,4 | uniq.pl | getCN.pl > $ODIR/count.tab
     cut -f3 $HP_IN | perl -ane 'print "$F[0].count\n";' | xargs cat | cut -f1,2,3,4 | uniq.pl | getCN.pl > $ODIR/count.tab
 fi
 if [ $HP_I -lt 1 ] ; then exit 0 ; fi
@@ -26,16 +25,15 @@ V=$HP_V
 ###########################################################
 
 #count,cvg
-awk '{print $3}' $HP_IN | sed "s|$|.count|"     | xargs cat | uniq.pl > $ODIR/subsample.tab
 awk '{print $3}' $HP_IN | sed "s|$|.cvg.stat|"  | xargs cat | uniq.pl -i 0  > $ODIR/cvg.tab
-awk '{print $3}' $HP_IN | sed "s|$|.$S.00.vcf|" | xargs cat | uniq.pl | bedtools sort -header  > $ODIR/$S.00.concat.vcf
+awk '{print $3}' $HP_IN | sed "s|$|.$S.00.vcf|" | xargs cat | uniq.pl | bedtools sort -header | eval $HP_FRULE   > $ODIR/$S.00.concat.vcf
 
 #Sept 1 ; ARIC CDG only
 #reAnnotateVcf.sh  $ODIR/$S.00.concat.vcf  $ODIR/$S.00.concat.vcf2 ; mv  $ODIR/$S.00.concat.vcf2  $ODIR/$S.00.concat.vcf
 
 snpSort.sh $ODIR/$S.00.concat
 cat $ODIR/$S.00.concat.vcf | grep -v "^#" | sed 's|:|\t|g'  | count.pl -i -1 -round 100| sort -n > $ODIR/$S.00.AF.histo
-if [ $V ] ; then awk '{print $3}' $HP_IN | sed "s|$|.$V.00.vcf|" | xargs cat | uniq.pl | bedtools sort -header  > $ODIR/$V.00.concat.vcf ; fi
+if [ $V ] ; then awk '{print $3}' $HP_IN | sed "s|$|.$V.00.vcf|" | xargs cat | uniq.pl | bedtools sort -header  | eval $HP_FRULE > $ODIR/$V.00.concat.vcf ; fi
 
 #haplogroups
 if [ "$HP_O" == "Human" ] ; then
@@ -60,12 +58,6 @@ snpCount.sh $S $HP_T1
 snpCount.sh $S $HP_T2
 snpCount.sh $S $HP_T3
 
-if [[ ! -z "${HP_FNAME}" ]]; then
-  snpFilter.sh $S 00
-  snpCount.sh $S.$HP_FNAME $HP_T1
-  snpCount.sh $S.$HP_FNAME $HP_T2
-  snpCount.sh $S.$HP_FNAME $HP_T3
-fi
 #cleanup
 rm -f fastp.html fastp.json
 
@@ -76,7 +68,6 @@ if [ $HP_I -lt 2 ] ; then exit 0 ; fi
 if [ $S == "mutserve" ] ; then exit 0 ; fi
 
 SS=$S.$S
-#count,cvg
 awk '{print $3}' $HP_IN | sed "s|$|.$S.cvg.stat|" | xargs cat | uniq.pl -i 0  > $ODIR/$S.cvg.tab
 awk '{print $3}' $HP_IN | sed "s|$|.$SS.00.vcf|"  | xargs cat | uniq.pl | bedtools sort -header  > $ODIR/$SS.00.concat.vcf  
 
@@ -92,12 +83,3 @@ cat $ODIR/$SS.00.concat.vcf | grep -v "^#" | sed 's|:|\t|g'  | count.pl -i -1 -r
 snpCount.sh $SS $HP_T1
 snpCount.sh $SS $HP_T2
 snpCount.sh $SS $HP_T3
-
-if [[ ! -z "${HP_FNAME}" ]]; then
-  snpFilter.sh $SS 00
-  snpCount.sh $SS.$HP_FNAME $HP_T1
-  snpCount.sh $SS.$HP_FNAME $HP_T2
-  snpCount.sh $SS.$HP_FNAME $HP_T3
-fi
-
-

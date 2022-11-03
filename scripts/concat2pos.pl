@@ -9,14 +9,27 @@ MAIN:
 	# define variables
 	my %opt;
 	my %h;
-
+	my %suspicious;
 
 	my $result = GetOptions(
 		"in=s"	=>	\$opt{in},
+		"suspicious=s"  => \$opt{suspicious}		
 	);
         die "ERROR: $! " if (!$result);
 
 	#######################################################
+
+        if($opt{suspicious})
+        {
+                open(IN,$opt{suspicious}) or die "ERROR: $!";
+                while(<IN>)
+                {
+                        my @F=split;
+                        $suspicious{$F[0]}=1 if(@F);
+                }
+                close(IN)
+        }
+
 
         my $AN=0;
 	open(IN,$opt{in}) or die "ERROR1: $!";
@@ -24,6 +37,8 @@ MAIN:
         {
 		chomp;
 		next if(/^#/ or /^$/);
+		my @F=split;
+		next if($suspicious{$F[0]});
 		$AN++;
         }
 	close(IN);

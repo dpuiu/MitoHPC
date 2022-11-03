@@ -77,6 +77,8 @@ export HP_NUMT=NUMT              # NUMT FASTA file under $HP_RDIR
 #Mouse
 #export HP_O=Mouse                # organism: Human, Mouse...
 #export HP_MT=chrM                # chrM, rCRS or RSRS, FASTA file available under $HP_RDIR
+#export HP_MTC=chrMC
+#export HP_MTR=chrMR
 #export HP_MTLEN=16299
 #export HP_NUMT=NUMT              # NUMT FASTA file under $HP_RDIR
 
@@ -100,11 +102,10 @@ export HP_T1=03                  # heteroplasmy tholds
 export HP_T2=05
 export HP_T3=10
 
-export HP_V=                     # SV caller: gridss
-export HP_DP=                    # minimum coverage: Ex 100
+export HP_DP=100
+export HP_V=                     # SV caller: gridssexport HP_DP=100                 # minimum coverage: Ex 100
 
-export HP_FNAME=filter                                                                                                                                          # filter name
-export HP_FRULE="perl -ane 'print unless(/strict_strand|strand_bias|base_qual|map_qual|weak_evidence|slippage|position|Homopolymer/ and /:0\.[01234]\d+$/);'"   # filter rule
+export HP_FRULE="perl -ane 'print unless(/strict_strand|strand_bias|base_qual|map_qual|weak_evidence|slippage|position|Homopolymer/ and /:0\.[01234]\d+$/);' |  bcftools filter -e 'DP<100'"   # filter rule (or just "tee")
 
 export HP_P=1				       		            # number of processors
 export HP_MM="3G"                                                   # maximum memory
@@ -130,4 +131,3 @@ fi
 export HP_SH="bash" ;                                                                        export HP_SHS="$HP_SH"                     # bash
 #export HP_SH="sbatch -J HP_$$ --cpus-per-task=$HP_P --nodes=1 --mem=$HP_MM --time=20:00" ;  export HP_SHS="$HP_SH -d singleton"        # SLURM
 #export HP_SH="qsub -V -N HP_$$ -l mem_free=$HP_MM,h_vmem=$HP_MM -pe local $HP_P -cwd" ;     export HP_SHS="$HP_SH -hold_jid HP_$$"     # SGE
-
