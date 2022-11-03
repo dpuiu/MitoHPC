@@ -352,20 +352,19 @@
 
 ## FAQ ## 
 
-### Use a Different Reference ###
+### How to Use a Different Reference ###
 
-* Edit init.sh: variables HP_RNAME, HP_RMT, HP_RNUMT, HP_RCOUNT, HP_RURL,HP_MTLEN or
+* Edit init.sh: variables HP_RNAME, HP_RMT, HP_RNUMT, HP_RCOUNT, HP_RURL, HP_MTLEN
 
-* Use oan alternative init.*.sh
+* Or use an alternative init.*.sh
 
-    # Example: hg19
-
-      # INSTALL SETUP ENVIRONMENT; replace
+      # Example: hg19
+      # INSTALL section: replace
       . ./init.sh
       # with
       . ./init.hg19.sh
     
-      # PIPELINE USAGE; replace
+      # PIPELINE USAGE section: replace
       cp -i $HP_SDIR/init.sh .
       # with
       cp -i $HP_SDIR/init.hg19.sh init.sh
