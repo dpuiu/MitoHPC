@@ -5,24 +5,23 @@ use Getopt::Long;
 
 ###############################################################################
 #
-# Main program
-#
-# Programs which reduces 
+# Program which downsamples a SAM file based on read alignment start positions
+#   max (default 1) alignments are allowed to start at a certain position;
+#    exceptions allowed for the mates of the reads already included
 ###############################################################################
 
 MAIN:
 {
-	my ($max,$and,$or)=(1,0,0);
-	
+	my $max=1;
 
-        my $result = GetOptions(
+	my $result = GetOptions(
 		"max=i"	=> \$max,	# max start position count (Ex:10)
-		"and" 	=> \$and,	# if both   mates alignment start position count is > $max, the mates are  filtered out
-		"or" 	=> \$or,	# if either mates alignment start position cvg is > $max, the mates are filtered out
         );
 	die "ERROR: $? " if (!$result);
 
 	my (%h,%k);
+
+	# read SAM file
 	while(<>)
 	{
 		if(/^#/ or /^$/ or /^\@/) { print }
@@ -31,18 +30,23 @@ MAIN:
 			my @F=split;
 
 			die if(@F<8);
-			$F[3]-=$1 if($F[5]=~/^(\d+)S/); 
+			$F[3]-=$1 if($F[5]=~/^(\d+)S/);
 
-			if($k{$F[0]}) { print }
+			if($k{$F[0]}) { print }						# keep mate
 			elsif($F[6] eq "=" and $F[3] and $F[7] and $F[3]<=$F[7])
 			{
-				next if($h{"$F[2] $F[3] $F[7]"} and $h{"$F[2] $F[3] $F[7]"}>=1) ; 
+				#remove duplicates
+				next if($h{"$F[2] $F[3] $F[7]"} and $h{"$F[2] $F[3] $F[7]"}>=1) ;
 				$h{"$F[2] $F[3] $F[7]"}++;
 
-				next if($and and ($h{"$F[2] $F[3]"} and $h{"$F[2] $F[3]"}>=$max and $h{"$F[2] $F[7]"} and $h{"$F[2] $F[7]"}>=$max));
-				next if($or  and ($h{"$F[2] $F[3]"} and $h{"$F[2] $F[3]"}>=$max or $h{"$F[2] $F[7]"} and $h{"$F[2] $F[7]"}>=$max ));
+				#check read count
+				next if($h{"$F[2] $F[3]"} and $h{"$F[2] $F[3]"}>=$max);
+
+				#increment counts
 				$h{"$F[2] $F[3]"}++;
 				$h{"$F[2] $F[7]"}++;
+
+				#save read name
 				$k{$F[0]}=1;
 				print;
 			}
