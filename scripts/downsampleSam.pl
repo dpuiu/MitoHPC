@@ -8,6 +8,12 @@ use Getopt::Long;
 # Program which downsamples a SAM file based on read alignment start positions
 #   max (default 1) alignments are allowed to start at a certain position;
 #    exceptions allowed for the mates of the reads already included
+#
+# Example:
+#
+#   samtools view -h run.bam chrM | perl downsampleSam.pl -m 10 | satools view -b > run.downsample.bam
+#   samtools index run.downsample.bam
+
 ###############################################################################
 
 MAIN:
