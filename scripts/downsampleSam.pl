@@ -42,7 +42,7 @@ MAIN:
 			elsif($F[6] eq "=" and $F[3] and $F[7] and $F[3]<=$F[7])
 			{
 				#remove duplicates
-				next if($h{"$F[2] $F[3] $F[7]"} and $h{"$F[2] $F[3] $F[7]"}>=1) ;
+				#next if($h{"$F[2] $F[3] $F[7]"} and $h{"$F[2] $F[3] $F[7]"}>=1) ;  # commnted Dec 12 2022
 				$h{"$F[2] $F[3] $F[7]"}++;
 
 				#check read count
