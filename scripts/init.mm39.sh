@@ -16,11 +16,8 @@ export HP_HDIR=`readlink -f $HP_SDIR/..`	#HP home directory
 export HP_BDIR=$HP_HDIR/bin/			#bin directory
 export HP_JDIR=$HP_HDIR/java/			#java directory
 
-#Human
-export HP_RDIR=$HP_HDIR/RefSeq/			#reference directory
-
 #Mouse
-#export HP_RDIR=$HP_HDIR/RefSeqMouse/           #Mouse reference directory
+export HP_RDIR=$HP_HDIR/RefSeqMouse/           #Mouse reference directory
 
 ###############################################################
 #SOFTWARE PATH
@@ -100,4 +97,3 @@ fi
 export HP_SH="bash" ;                                                                        export HP_SHS="$HP_SH"                     # bash
 #export HP_SH="sbatch -J HP_$$ --cpus-per-task=$HP_P --nodes=1 --mem=$HP_MM --time=20:00" ;  export HP_SHS="$HP_SH -d singleton"        # SLURM
 #export HP_SH="qsub -V -N HP_$$ -l mem_free=$HP_MM,h_vmem=$HP_MM -pe local $HP_P -cwd" ;     export HP_SHS="$HP_SH -hold_jid HP_$$"     # SGE
-
