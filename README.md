@@ -358,14 +358,13 @@
 
 * Or use an alternative init.*.sh
 
-      # Example: hg19
-      # INSTALL section: replace
-      . ./init.sh
-      # with
-      . ./init.hg19.sh
-    
-      # PIPELINE USAGE section: replace
-      cp -i $HP_SDIR/init.sh .
-      # with
-      cp -i $HP_SDIR/init.hg19.sh init.sh
-
+      # Example: mm39
+      # INSTALL section: replace ./init.sh with ./init.mm39.sh
+      cd $HP_SDIR/
+      mv ./init.sh ./init.default.sh
+      cp ./init.mm39.sh ./init.sh
+      
+  * Rerun init scripts  (!!! important)
+      cd $HP_SDIR/
+      . ./init.sh                    # init nvironmental variables
+      ./install_prerequisites.sh     # downloads new reference from $HP_RURL, extracts the $HP_MT sequnce,creates new reference .fasta, .fai, .dict, .bwt files
