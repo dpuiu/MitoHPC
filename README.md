@@ -364,7 +364,7 @@
       mv ./init.sh ./init.default.sh
       cp ./init.mm39.sh ./init.sh
       
-  * Rerun init scripts  (!!! important)
+* Rerun "init" scripts  (!!! important)
   
       cd $HP_SDIR/
       . ./init.sh                    # init nvironmental variables
