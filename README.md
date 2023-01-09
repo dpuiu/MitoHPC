@@ -365,6 +365,7 @@
       cp ./init.mm39.sh ./init.sh
       
   * Rerun init scripts  (!!! important)
+  
       cd $HP_SDIR/
       . ./init.sh                    # init nvironmental variables
       ./install_prerequisites.sh     # downloads new reference from $HP_RURL, extracts the $HP_MT sequnce,creates new reference .fasta, .fai, .dict, .bwt files
