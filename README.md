@@ -358,7 +358,7 @@
 
 * Or use an alternative init.*.sh
 
-      # Example: mm39
+      # Example: mm39 mouse reference
       # INSTALL section: replace ./init.sh with ./init.mm39.sh
       cd $HP_SDIR/
       mv ./init.sh ./init.default.sh
@@ -369,3 +369,27 @@
       cd $HP_SDIR/
       . ./init.sh                    # init nvironmental variables
       ./install_prerequisites.sh     # downloads new reference from $HP_RURL, extracts the $HP_MT sequnce,creates new reference .fasta, .fai, .dict, .bwt files
+
+### How to Use Unaligned FASTQ Files ###
+
+* One has to pre-aligned the FASTQ reads to the whole genome reference
+    
+      # Example: hs38DH human reference
+      # cd to the work directory  ; run "init.sh"
+      cp -i $HP_SDIR/init.sh .
+      . ./init.sh
+      
+      # create hs38DH bwa index (only run once)
+      bwa_index.sh
+      
+      # create directory paths(symlinks)
+      ln -s path_to_fastq_directory fastq
+      mkdir bams
+      
+      # for each sample: test fwd/rev FASTQ files exist
+      ls -l fastq/sample_[12].f*q*
+      
+      # for each sample: run bwa mem
+      bwa_mem.sh fastq/sample bams/sample
+    
+      ls bams/
