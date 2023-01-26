@@ -1,25 +1,99 @@
-#!/bin/bash -eux
+#!/usr/bin/perl -w
 
-IN=$1                                                                                   # input bam prefix(including path)
-OUT=$2                                                                                  # output bam prefix(including path)
-MCOUNT=${3:-10}                                                                         # max number of reads starting at a certain pos
-R=${4:-"chrM chr1:629084-634672 chr1:76971223-76971280 chr17:22521208-22521639"}        # MT+NUMT regions (MT 1st) 
-                                                                                        # chr1:76971223-76971280 & chr17:22521208-22521639 align to chrM 5'/3'
-                                                                                        # chr1:629084-634672 : 5Kb NUMT
+use strict;
+use Getopt::Long;
 
-#Examples: 
-#      downsampleSam.sh in out 
-#      downsampleSam.sh in out 10
-#      downsampleSam.sh in out 10 "chrM chr1:629084-634672 chr1:76971223-76971280 chr17:22521208-22521639"
+###############################################################################
+#
+# Program which downsamples a SAM file based on read alignment start positions
+#   max (default 1) alignments are allowed to start at a certain position;
+#    exceptions allowed for the mates of the reads already included
+#
+# Example:
+#
+#   samtools view -h run.bam chrM | perl downsampleSam.pl -m 10 | satools view -b > run.downsample.bam
+#   samtools index run.downsample.bam
 
-test -s $IN.bam
-test -s $IN.bam.bai
+###############################################################################
 
-################################
+MAIN:
+{
+	my $max=10;
+	my $hg38=1;
 
-#downsample and index
-if [ ! -f  $OUT.bam ] ; then
-  samtools view -h $IN.bam $R -F 0x90C | filterSam.pl $R | downsampleSam.pl -max $MCOUNT | grep -v "^\@" | cut -f1 | sort | uniq -d   | samtools view -N /dev/stdin  $IN.bam -b > $OUT.bam
-  samtools index    $OUT.bam
-  samtools idxstats $OUT.bam > $OUT.idxstats
-fi
+	my $result = GetOptions(
+		"max=i"	=> 	\$max,	
+		"hg38"	=>	\$hg38
+        );
+	die "ERROR: $? " if (!$result);
+
+	my (%h,%k,%l);
+
+	# read SAM file
+	while(<>)
+	{
+		if(/^#/ or /^$/) {}
+		elsif(/^\@/) 
+		{ 
+			if(/^\@SQ\tSN:(\S+)\s+LN:(\d+)/)
+			{
+				$l{$1}=$2;
+			}
+			print ;
+		}
+		else
+		{
+			my @F=split;
+
+			die if(@F<8);
+			$F[6]=$F[2] if($F[6] eq "=");
+			
+			my $k=($F[3]<=$F[7])?1:0;
+
+                        if($hg38)
+                        {                                        
+				if($F[2] eq "chrM"  and $F[3]==1 and $F[5]=~/^(\d+)[SH]/)        {               $F[3]=$l{$F[2]}-$1 }
+				elsif($F[2] ne "chrM"            and $F[5]=~/^(\d+)[SH]/)        {               $F[3]-=$1 }
+
+				if($F[2] eq "chr1"  and $F[3]>=629084       and $F[3]<=634672)   { $F[2]="chrM"; $F[3]-=629084-3914-1 }
+				if($F[2] eq "chr17" and $F[3]>=22521208     and $F[3]<=22521400) { $F[2]="chrM"; $F[3]-=22521208-16377-1 }
+                                if($F[2] eq "chr17" and $F[3]>=22521401     and $F[3]<=22521639) { $F[2]="chrM"; $F[3]-=22521401-1-1  }			 
+
+
+
+				if($F[6] eq "chrM"  and $F[7]==1 and /\tMC:Z:(\d+)[SH]/)	 {               $F[7]=$l{$F[6]}-$1 }
+				elsif($F[6] ne "chrM"            and /\tMC:Z:(\d+)[SH]/)         {               $F[7]-=$1 }
+
+                                if($F[6] eq "chr1"  and $F[7]>=629084       and $F[7]<=634672)   { $F[6]="chrM"; $F[7]-=629084-3914-1 }
+				if($F[6] eq "chr17" and $F[7]>=22521208     and $F[7]<=22521400) { $F[6]="chrM"; $F[7]-=22521208-16377-1 }
+                                if($F[6] eq "chr17" and $F[7]>=22521401     and $F[7]<=22521639) { $F[6]="chrM"; $F[7]-=22521401-1-1 }			
+                        }
+
+			if($k{$F[0]}) 
+			{ 
+				print ;
+			}							   
+			elsif($k)
+			{
+				next if($hg38 and !($F[2] eq "chrM" and $F[6] eq "chrM"));
+
+				$F[3]=$l{$F[2]}-$1 if($F[3]==1 and $F[5]=~/^(\d+)[SH]/);
+
+				#check read count
+				next if($h{"$F[2] $F[3]"} and $h{"$F[2] $F[3]"}>=$max);
+                                next if($h{"$F[6] $F[7]"} and $h{"$F[6] $F[7]"}>=$max);
+
+				#increment counts
+				$h{"$F[2] $F[3]"}++;
+				$h{"$F[6] $F[7]"}++;
+
+				#save read name
+				$k{$F[0]}=1;
+
+				print;
+			}
+		}
+	}
+
+	exit 0;
+}
