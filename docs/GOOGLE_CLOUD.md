@@ -14,6 +14,8 @@
 
 ### Connect using ssh ###
 
+### Setup the machine (once) ### 
+
     $ ls
  
     # create software directories; set PATH
@@ -50,15 +52,17 @@
     ls ~/genomics-public-data/references/hg38/v0/Homo_sapiens_assembly38.fasta*
 
     # create project directory
-    mkdir TOPMED
-    cd TOPMED
+    mkdir ~/TOPMED
+    cd ~/TOPMED
     scp user@localhost:localpath/prj_17293_D27121.ngc .    
-
-### Filter chrM/NUMT alignments ###
 
     # create mounting and output directories
     mkdir -p runs/ runs.filter/
 
+### Filter chrM/NUMT alignments ###
+
+    cd ~/TOPMED
+    
     # create input file: 1 column containing the TOPMed Run names; should contain up to ~100 lines 
     nano runs.txt 
     head runs.txt 
@@ -78,4 +82,3 @@
     
     # unmount mounting directory
     fusera unmount runs/
-
