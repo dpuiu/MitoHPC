@@ -71,7 +71,7 @@
     wc -l runs.txt 
 
     # mount runs
-    fusera  mount --verbose --ngc  ~/TOPMed/prj_17293_D27121.ngc --accession runs.txt runs/ & 
+    fusera  mount --verbose --ngc  ~/TOPMED/prj_17293_D27121.ngc --accession runs.txt runs/ & 
 
     # find alignment files (.cram & .cram.crai)  & run "samtools view" 
     find runs/ -name "*crai" | perl -ane '/(runs\/(\w+).*).crai/; print "samtools view $1 -T ~/genomics-public-data/references/hg38/v0/Homo_sapiens_assembly38.fasta chrM -b > runs.filter/$2.bam\n";'  | tee | sh
