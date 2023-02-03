@@ -25,7 +25,7 @@
  
     # install packages : wget & samtools
     sudo apt-get update -y
-    sudo apt-get install wget samtools 
+    sudo apt-get install wget samtools bcftools
  
     # download fusera
     cd bin/
@@ -82,3 +82,6 @@
     
     # unmount mounting directory
     fusera unmount runs/
+   
+    # filter vcf calls 
+    bcftools view runs/SRR/file.vcf.gz --regions chrM
