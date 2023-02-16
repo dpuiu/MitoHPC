@@ -1,3 +1,7 @@
+# 2023/02/6 #
+
+* updated circFasta.sh & rotateFasta.sh 
+
 # 2022/11/02 #
 
 * HP_ADIR will  store the bam/cram/bai/crai files and does not have to be writable.  Optionally, it can store .idxstats & .count files. 
