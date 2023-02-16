@@ -1,4 +1,4 @@
-#!/usr/bin/bash -eux
+#!/usr/bin/env bash
 
 export N=$1
 export S=$2
@@ -15,4 +15,3 @@ samtools faidx $SE.fa
 
 rm -f $SE.dict
 java -jar $HP_JDIR/gatk.jar CreateSequenceDictionary --REFERENCE $SE.fa --OUTPUT $SE.dict
-
