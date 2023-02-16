@@ -36,9 +36,10 @@
 
     $ cd MitoHPC/scripts
     $ export HP_SDIR=`pwd`                           # set script directory variable 
+    $ echo "export HP_SDIR=`pwd`" > ~/.bashrc        # add variable to your ~/.bashrc so it gets initialized automatically
     $ . ./init.sh                                    # or one of init.{hs38DH,hg19,mm39}.sh  correponding to  a different reference
 
-### INSTALL SYSTEM PREREQUISITES (optional) ###
+### INSTALL SYSTEM PREREQUISITES (optional, needs sudo permissions) ###
 
     $ sudo $HP_SDIR/install_sysprerequisites.sh      # install perl,pthon,java,wget ...
                                                      #  (unless already installed)
@@ -64,7 +65,6 @@
     # copy over the init.sh file
 
     $ cp -i $HP_SDIR/init.sh .                   # copy init to working dir.
-
 
     # edit init.sh file
     $ cat init.sh                                # check/edit local init file
