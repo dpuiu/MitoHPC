@@ -1,4 +1,4 @@
-#!/usr/bin/bash -eux
+#!/usr/bin/env bash
 
 export N=$1
 export S=$2
