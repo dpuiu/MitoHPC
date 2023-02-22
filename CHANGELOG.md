@@ -1,4 +1,8 @@
-# 2023/02/6 #
+# 2023/02/22 #
+
+* updated concat2cat.pl which failed if no annotation was present
+
+# 2023/02/06 #
 
 * updated circFasta.sh & rotateFasta.sh 
 
