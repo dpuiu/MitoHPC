@@ -73,7 +73,7 @@ awk '{print $3}' $HP_IN | sed "s|$|.$SS.00.vcf|"  | xargs cat | uniq.pl | bedtoo
 
 #Sept 1 ; ARIC CDG only
 awk '{print $3}' $HP_IN | sed "s|$|.mutect2.max.vcf|" | xargs cat >  $ODIR/$S.max.vcf
-intersectVcf.pl $ODIR/$S.00.concat.vcf $ODIR/$S.max.vcf.pl -sm | cat $ODIR/$SS.00.concat.vcf  - | bedtools sort -header  > $ODIR/$SS.00.concat.vcf2; mv $ODIR/$SS.00.concat.vcf2 $ODIR/$SS.00.concat.vcf
+intersectVcf.pl $ODIR/$S.00.concat.vcf $ODIR/$S.max.vcf -sm | cat $ODIR/$SS.00.concat.vcf  - | bedtools sort -header  > $ODIR/$SS.00.concat.vcf2; mv $ODIR/$SS.00.concat.vcf2 $ODIR/$SS.00.concat.vcf
 #reAnnotateVcf.sh  $ODIR/$SS.00.concat.vcf  $ODIR/$SS.00.concat.vcf2 ; mv  $ODIR/$SS.00.concat.vcf2  $ODIR/$SS.00.concat.vcf
 
 snpSort.sh $ODIR/$SS.00.concat
