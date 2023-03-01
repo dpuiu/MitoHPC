@@ -236,10 +236,10 @@
 #### read counts and mtDNA-CN(M) ####
 
      $ cat $HP_ODIR/count.tab
-       Run         all        mapped     chrM    M
-       sample_A    851537886  848029490  396766  182
-       sample_B    884383716  882213718  506597  223
-       sample_C    786560467  785208588  503241  249
+       Run         all_reads  mapped_reads  MT_reads	mtDNA-CN
+       sample_A    851537886  848029490     396766      182
+       sample_B    884383716  882213718     506597      223
+       sample_C    786560467  785208588     503241      249
 
 #### vcf files : concat & merge ####
 
