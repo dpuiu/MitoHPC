@@ -1,3 +1,9 @@
+# 2023/03/01 #
+
+* updated getCN.pl, idxstats2count.pl, reAnnotateVcf.sh (slight change in the output format)
+* updated the Yale MLC and MCC score to the latest ones ( received from Nicole Lake on Jan 30 2023)
+* fixed getSummary.sh bug (L76: replaced max.vcf.pl with max.vcf)
+
 # 2023/02/22 #
 
 * updated concat2cat.pl which failed if no annotation was present
