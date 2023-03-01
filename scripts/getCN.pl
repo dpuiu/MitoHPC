@@ -42,7 +42,7 @@ MAIN:
 		{
 			if($.==1 and (/^Run/ or /^sample/))
 			{
-				push @F,"M";
+				push @F,"mtDNA-CN";
 			}
 			else
 			{
