@@ -20,10 +20,10 @@ cat $I | deAnnotateVcf.pl > $O
 bgzip -f $O 
 tabix -f $O.gz
 
-bcftools annotate -a $HP_RDIR/dbSNP.vcf.gz   -c "ID" $O.gz |\
-  bcftools annotate -a $HP_RDIR/HV.bed.gz      -c "CHROM,FROM,TO,HV"      -h <(echo '##INFO=<ID=Hypervariable,Number=1,Type=String,Description="Hypervariable">') |\
-  bcftools annotate -a $HP_RDIR/HP.bed.gz      -c "CHROM,FROM,TO,HP"      -h <(echo '##INFO=<ID=Homopolymer,Number=0,Type=Flag,Description="Homopolymer">') |\
-  bcftools annotate -a $HP_RDIR/HS.bed.gz      -c "CHROM,FROM,TO,HS"      -h <(echo '##INFO=<ID=Hotspot,Number=0,Type=Flag,Description="Hotspot">') |\
+bcftools annotate -a $HP_RDIR/dbSNP.vcf.gz   -c "ID" $O.gz |\  
+  bcftools annotate -a $HP_RDIR/HV.bed.gz      -c "CHROM,FROM,TO,Hypervariable"      -h <(echo '##INFO=<ID=Hypervariable,Number=1,Type=String,Description="Hypervariable">') |\
+  bcftools annotate -a $HP_RDIR/HP.bed.gz      -c "CHROM,FROM,TO,Homopolymer"	   -h <(echo '##INFO=<ID=Homopolymer,Number=0,Type=Flag,Description="Homopolymer">') |\
+  bcftools annotate -a $HP_RDIR/HS.bed.gz      -c "CHROM,FROM,TO,Hotspot"      -h <(echo '##INFO=<ID=Hotspot,Number=0,Type=Flag,Description="Hotspot">') |\
   bcftools annotate -a $HP_RDIR/CDS.bed.gz     -c "CHROM,FROM,TO,CDS"     -h <(echo '##INFO=<ID=CDS,Number=1,Type=String,Description="CDS">') |\
   bcftools annotate -a $HP_RDIR/COMPLEX.bed.gz -c "CHROM,FROM,TO,COMPLEX" -h <(echo '##INFO=<ID=COMPLEX,Number=1,Type=String,Description="COMPLEX">') |\
   bcftools annotate -a $HP_RDIR/RNR.bed.gz     -c "CHROM,FROM,TO,RNR"     -h <(echo '##INFO=<ID=RNR,Number=1,Type=String,Description="rRNA">') |\
