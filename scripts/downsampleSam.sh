@@ -1,4 +1,6 @@
-#!/bin/bash -eux
+#!/usr/bin/env bash
+# wrapper around downsampleSam.pl, program wich downsamples a SAM file; ~ max MCOUNT alignments starting at each position
+
 
 IN=$1                                                                                   # input bam prefix(including path)
 OUT=$2                                                                                  # output bam prefix(including path)
