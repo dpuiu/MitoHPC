@@ -27,7 +27,7 @@ MAIN:
         );
 	die "ERROR: $? " if (!$result);
 
-	my (%h,%k,%l);
+	my (%count,%keep,%skip,%len);
 
 	# read SAM file
 	while(<>)
@@ -37,7 +37,7 @@ MAIN:
 		{ 
 			if(/^\@SQ\tSN:(\S+)\s+LN:(\d+)/)
 			{
-				$l{$1}=$2;
+				$len{$1}=$2;
 			}
 			print ;
 		}
@@ -48,49 +48,46 @@ MAIN:
 			die if(@F<8);
 			$F[6]=$F[2] if($F[6] eq "=");
 			
-			my $k=($F[3]<=$F[7])?1:0;
-
+			my ($F3,$F7)=@F[3,7];
+		
                         if($hg38)
                         {                                        
-				if($F[2] eq "chrM"  and $F[3]==1 and $F[5]=~/^(\d+)[SH]/)        {               $F[3]=$l{$F[2]}-$1 }
-				elsif($F[2] ne "chrM"            and $F[5]=~/^(\d+)[SH]/)        {               $F[3]-=$1 }
-
 				if($F[2] eq "chr1"  and $F[3]>=629084       and $F[3]<=634672)   { $F[2]="chrM"; $F[3]-=629084-3914-1 }
 				if($F[2] eq "chr17" and $F[3]>=22521208     and $F[3]<=22521400) { $F[2]="chrM"; $F[3]-=22521208-16377-1 }
                                 if($F[2] eq "chr17" and $F[3]>=22521401     and $F[3]<=22521639) { $F[2]="chrM"; $F[3]-=22521401-1-1  }			 
-
-
-
-				if($F[6] eq "chrM"  and $F[7]==1 and /\tMC:Z:(\d+)[SH]/)	 {               $F[7]=$l{$F[6]}-$1 }
-				elsif($F[6] ne "chrM"            and /\tMC:Z:(\d+)[SH]/)         {               $F[7]-=$1 }
+				if($F[5]=~/^(\d+)[SH]/)                                          {               $F[3]-=$1; $F[3]+=$len{$F[2]} if($F[3]<=0); }
 
                                 if($F[6] eq "chr1"  and $F[7]>=629084       and $F[7]<=634672)   { $F[6]="chrM"; $F[7]-=629084-3914-1 }
 				if($F[6] eq "chr17" and $F[7]>=22521208     and $F[7]<=22521400) { $F[6]="chrM"; $F[7]-=22521208-16377-1 }
                                 if($F[6] eq "chr17" and $F[7]>=22521401     and $F[7]<=22521639) { $F[6]="chrM"; $F[7]-=22521401-1-1 }			
+				if(/\tMC:Z:(\d+)[SH]/)                                           {               $F[7]-=$1; $F[7]+=$len{$F[2]} if($F[7]<=0); }
                         }
 
-			if($k{$F[0]}) 
+			next if($hg38 and !($F[2] eq "chrM" and $F[6] eq "chrM"));
+
+			if($keep{$F[0]}) 
 			{ 
-				print ;
+				print ; 
 			}							   
-			elsif($k)
+			elsif(!$skip{$F[0]})
 			{
-				next if($hg38 and !($F[2] eq "chrM" and $F[6] eq "chrM"));
-
-				$F[3]=$l{$F[2]}-$1 if($F[3]==1 and $F[5]=~/^(\d+)[SH]/);
-
 				#check read count
-				next if($h{"$F[2] $F[3]"} and $h{"$F[2] $F[3]"}>=$max);
-                                next if($h{"$F[6] $F[7]"} and $h{"$F[6] $F[7]"}>=$max);
+				#if($count{"$F[2] $F[3]"} and $count{"$F[2] $F[3]"}>=$max and $count{"$F[6] $F[7]"} and $count{"$F[6] $F[7]"}>=$max) 
+				if($count{"$F[2] $F[3]"} and $count{"$F[2] $F[3]"}>=$max or $count{"$F[6] $F[7]"} and $count{"$F[6] $F[7]"}>=$max)
+				{ 
+					$skip{$F[0]} = 1;
+				}
+				else
+				{
+					#increment counts
+					$count{"$F[2] $F[3]"}++;
+					$count{"$F[6] $F[7]"}++;
 
-				#increment counts
-				$h{"$F[2] $F[3]"}++;
-				$h{"$F[6] $F[7]"}++;
+					#save read name
+					$keep{$F[0]}=1;
 
-				#save read name
-				$k{$F[0]}=1;
-
-				print;
+					print;
+				}
 			}
 		}
 	}
