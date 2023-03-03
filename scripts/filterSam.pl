@@ -74,7 +74,11 @@ MAIN:
 				}
                         }
 
-			print if($keep==2);
+			if($keep==2)
+			{
+				$F[9]="*"; $F[10]="*";
+				print join "\t",@F; print "\n";
+			}
 		}
 	}
 	exit 0;
