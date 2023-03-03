@@ -1,3 +1,7 @@
+# 2023/03/03 #
+
+* updated downsampleSam.sh, downsampleSam.pl, filterSam.pl : alignments are sorted by the reads name before downsampling
+
 # 2023/03/01 #
 
 * updated getCN.pl, idxstats2count.pl, reAnnotateVcf.sh (slight change in the output format)
