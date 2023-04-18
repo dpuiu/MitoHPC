@@ -44,7 +44,10 @@ MAIN:
 	close(IN);
 
 	#######################################################
-	my ($key,$sample,@keys,%keys,%GT_DP_AF);
+
+	my ($pkey,$sample,@keys,%keys,%GT_DP_AF,$header);
+	my ($AC,$AN)=(0,0);
+
 	while(<>)
 	{
 		if(/^##/)
@@ -60,86 +63,66 @@ MAIN:
 		}
 		else
 		{
+			#0	1	2	3	4	
+			#chrM	42	.	T	TC		
+
+			if(!$header) { print join "\t",("#CHROM","POS","ID","REF","ALT","QUAL","FILTER","INFO","FORMAT",@samples); print "\n"; $header=1}
+
 			my @F=split;
-			$F[2]=".";
-			$F[5]=".";
-			$F[6]=".";
+			@F[2,5,6]=(".",".",".");
+	
+			if($F[-1]=~/^(.+):(.+):1$/)        { $F[-1]="1:$2:1"    }
+			elsif($F[-1]=~/^(.+):(.+):(.+)$/)  { $F[-1]="0/1:$2:$3" }
+	
 
-			my $sample;;
-			if($F[7]=~/SM=(.+?);(.+)/)
-			{
-				$sample=$1;
-				$F[7]=$2;
-			}
-			elsif($F[7]=~/SM=(.+)/)
-                        {
-                                $sample=$1;
-				$F[7]=".";
-			}
+			my $sample;
+			if($F[7]=~/SM=(.+?);(.+)/) { ($sample,$F[7])=($1,"$2;");}
+			elsif($F[7]=~/SM=(.+)/)    { ($sample,$F[7])=($1,"");}
 
-			defined($samples{$sample}) or die "ERROR3: $_";
+			defined($samples{$sample}) or die "ERROR: sample not defined in $_";
 			my $key=join "\t",@F[0..7];
-
-			#april 28 2022
-			$F[-1]="1:$2:1" if($F[-1]=~/^(.+):(.+):(.+)$/ and $3==1);
-
-			$GT_DP_AF{$key}{$sample}=$F[-1];
-
-			if(!$keys{$key})
+			
+			if($pkey and $key ne $pkey)
 			{
-				$keys{$key}=1;
-				push @keys,$key;
+ 				my @P=($pkey."AC=$AC;AN=$AN","GT:DP:AF");
+
+                		foreach my  $sample (@samples)
+		                {
+		                        if($GT_DP_AF{$sample}) { push @P,$GT_DP_AF{$sample} ; }
+                	       	 	else                   { push @P,".:.:." }
+	                	}
+
+	        	        print join "\t",@P;  print "\n";
+
+				%GT_DP_AF=();
+				($AC,$AN)=(0,0);
+				
 			}
+			
+			$pkey=$key;
+
+			$GT_DP_AF{$sample}=$F[-1];			
+			$AC++;
+                        $AN++;
+                        $AN++ if($GT_DP_AF{$sample}=~/\|/ or $GT_DP_AF{$sample}=~/\//)
+
 		}
 	}
 
-	print join "\t",("#CHROM","POS","ID","REF","ALT","QUAL","FILTER","INFO","FORMAT",@samples); print "\n";
-	foreach my $key (@keys)
-	{
-		my @F=();
-		my @SF;
-		push @F,($key,"GT:DP:AF");
+	#end
+	if($pkey)
+        {
+		my @P=($pkey."AC=$AC;AN=$AN","GT:DP:AF");
 
-		my $AC=0;
-		my $AN=0;
-		foreach my $i (1..@samples)
-		{
-			my $sample=$samples[$i-1];
+		foreach my  $sample (@samples)
+                {
+			if($GT_DP_AF{$sample}) { push @P,$GT_DP_AF{$sample} ; }
+                        else                   { push @P,".:.:." }
+                }
 
-			if($GT_DP_AF{$key}{$sample})
-			{
-				push @F,$GT_DP_AF{$key}{$sample} ;
-				push @SF,$i;
-
-				my $GT_DP_AF=$GT_DP_AF{$key}{$sample};
-				$GT_DP_AF=~/(.+?):/;
-				my $GT=$1;
-				my @GT=split /[|\/]/,$GT;
-
-				#orig
-				#if($GT[0]==1 or @GT>1 and $GT[1]==1) { $AC++; $AN+=2; }
-				#else                                 { $AN+=2;        }
-
-				#new; April 28 2022
-				$AC++; 
-				$AN++;
-				if($F[-1]=~/\|/ or $F[-1]=~/\//) 
-				{
-					$AN++;
-				}
-				else
-				{
-					$AN+=0;
-				}
-			}
-			else { push @F,".:.:." }
-		}
-
-		if($F[0]=~/(.+)\t\.$/)       { $F[0]="$1\tAC=$AC;AN=$AN"    }
-		elsif($F[0]=~/(.+)\t(\S+)$/) { $F[0]="$1\tAC=$AC;AN=$AN;$2" }
-		print join "\t",@F; 
-		print "\n";
+               print join "\t",@P;  print "\n";
 	}
+
 	exit 0;
 }
 

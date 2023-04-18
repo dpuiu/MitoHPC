@@ -26,13 +26,13 @@ V=$HP_V
 
 #count,cvg
 awk '{print $3}' $HP_IN | sed "s|$|.cvg.stat|"  | xargs cat | uniq.pl -i 0  > $ODIR/cvg.tab
-awk '{print $3}' $HP_IN | sed "s|$|.$S.00.vcf|" | xargs cat | uniq.pl | bedtools sort -header | eval $HP_FRULE   > $ODIR/$S.00.concat.vcf
 
-#Sept 1 ; ARIC CDG only
-#reAnnotateVcf.sh  $ODIR/$S.00.concat.vcf  $ODIR/$S.00.concat.vcf2 ; mv  $ODIR/$S.00.concat.vcf2  $ODIR/$S.00.concat.vcf
+#March 7th 2023
+awk '{print $3}' $HP_IN | sed "s|$|.$S.00.vcf|" | xargs cat | grep -v "^##sample="  |   uniq.pl | bedtools sort -header | eval $HP_FRULE   > $ODIR/$S.00.concat.vcf
 
 snpSort.sh $ODIR/$S.00.concat
 cat $ODIR/$S.00.concat.vcf | grep -v "^#" | sed 's|:|\t|g'  | count.pl -i -1 -round 100| sort -n > $ODIR/$S.00.AF.histo
+
 if [ $V ] ; then awk '{print $3}' $HP_IN | sed "s|$|.$V.00.vcf|" | xargs cat | uniq.pl | bedtools sort -header  | eval $HP_FRULE > $ODIR/$V.00.concat.vcf ; fi
 
 #haplogroups
@@ -69,12 +69,7 @@ if [ $S == "mutserve" ] ; then exit 0 ; fi
 
 SS=$S.$S
 awk '{print $3}' $HP_IN | sed "s|$|.$S.cvg.stat|" | xargs cat | uniq.pl -i 0  > $ODIR/$S.cvg.tab
-awk '{print $3}' $HP_IN | sed "s|$|.$SS.00.vcf|"  | xargs cat | uniq.pl | bedtools sort -header  > $ODIR/$SS.00.concat.vcf  
-
-#Sept 1 2022 ; ARIC CDG only; March 1 2023 edited/commented the following 3 lines (were meant for an older project)
-#awk '{print $3}' $HP_IN | sed "s|$|.mutect2.max.vcf|" | xargs cat >  $ODIR/$S.max.vcf
-#intersectVcf.pl $ODIR/$S.00.concat.vcf $ODIR/$S.max.vcf -sm | cat $ODIR/$SS.00.concat.vcf  - | bedtools sort -header  > $ODIR/$SS.00.concat.vcf2; mv $ODIR/$SS.00.concat.vcf2 $ODIR/$SS.00.concat.vcf
-#reAnnotateVcf.sh  $ODIR/$SS.00.concat.vcf  $ODIR/$SS.00.concat.vcf2 ; mv  $ODIR/$SS.00.concat.vcf2  $ODIR/$SS.00.concat.vcf
+awk '{print $3}' $HP_IN | sed "s|$|.$SS.00.vcf|"  | xargs cat |  grep -v "^##sample=" |   grep -v "^##bcftools_annotateCommand" | uniq.pl | bedtools sort -header  | eval $HP_FRULE  > $ODIR/$SS.00.concat.vcf  
 
 snpSort.sh $ODIR/$SS.00.concat
 cat $ODIR/$SS.00.concat.vcf | grep -v "^#" | sed 's|:|\t|g'  | count.pl -i -1 -round 100| sort -n > $ODIR/$SS.00.AF.histo

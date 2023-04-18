@@ -394,3 +394,22 @@
       bwa_mem.sh fastq/sample bams/sample
     
       ls bams/
+
+### How to update the SNV filtering criteria ###
+
+* By default, the SNV with DP<100 or labeled as "strict_strand|strand_bias|base_qual|map_qual|weak_evidence|slippage|position|HP" are filtered out
+
+* To change the criteria, update the following 2 variables in the "init.sh" file
+
+      export HP_FRULE="egrep -v 'strict_strand|strand_bias|base_qual|map_qual|weak_evidence|slippage|position|HP'"
+      export HP_DP=100
+
+* Samples with multiple problems (failing haplocheck, multiple NUMTs, multiple heteroplasmies belonging to a different haplogroup, average coverage < HP_DP ...) are saved in "*.suspicious.{id,tab}" files
+
+* By default, suspicious samples are not removed; The users should check these files and maually remove the samples
+
+      
+
+ 
+
+

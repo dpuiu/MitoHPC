@@ -117,7 +117,7 @@ fi
 
 #if [ ! -s $O.count ]  ; then samtools idxstats $O.bam  -@ $HP_P | idxstats2count.pl -sample $S -chrM $HP_MT > $O.count ; fi
 if [ ! -s $O.cvg ]    ; then cat $O.bam  | bedtools bamtobed -cigar | grep "^$HP_MT" | bedtools genomecov -i - -g $HP_RDIR/$HP_MT.fa.fai  -d | tee $O.cvg  | cut -f3 | st.pl | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{S}\t$_" }'  > $O.cvg.stat  ; fi
-if [ ! -s $OR.cvg ]   ; then cat $OR.bam | bedtools bamtobed -cigar | grep "^$HP_MT" | bedtools genomecov -i - -g $HP_RDIR/$HP_MTR.fa.fai -d | tee $OR.cvg | cut -f3 | st.pl | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{S}\t$_" }'  > $OR.cvg.stat ; fi
+#if [ ! -s $OR.cvg ]   ; then cat $OR.bam | bedtools bamtobed -cigar | grep "^$HP_MT" | bedtools genomecov -i - -g $HP_RDIR/$HP_MTR.fa.fai -d | tee $OR.cvg | cut -f3 | st.pl | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{S}\t$_" }'  > $OR.cvg.stat ; fi
 if [ ! -f $O.sa.bed ] ; then samtools view -h $O.bam  -@ $HP_P | sam2bedSA.pl | uniq.pl -i 3 | sort -k2,2n -k3,3n > $O.sa.bed ; fi
 
 #########################################################################################################################################
@@ -230,7 +230,7 @@ if  [ ! -s $OS.bam ] ; then
   rm -f $OS.*sam $OS.score $O.fq $ON.score
 fi
 
-rm -f $O.bam*
+rm -f $O.bam* $OR.bam*
 rm -f $OS.*idx $OS.*tsv $OS.*stats
 
 # exit if the number of iterations is set to 1
@@ -246,7 +246,7 @@ fi
 
 #if [ ! -s $OS.count ]  ; then samtools idxstats $OS.bam  -@ $HP_P | idxstats2count.pl -sample $S -chrM $S > $OS.count ; fi
 if [ ! -s $OS.cvg ]    ; then cat $OS.bam  | bedtools bamtobed -cigar | grep "^$S" | bedtools genomecov -i - -g $OS.fa.fai -d  | tee $OS.cvg  | cut -f3 | st.pl | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{S}\t$_" }'  > $OS.cvg.stat  ; fi
-if [ ! -s $OSR.cvg ]   ; then cat $OSR.bam | bedtools bamtobed -cigar | grep "^$S" | bedtools genomecov -i - -g $OSR.fa.fai -d | tee $OSR.cvg | cut -f3 | st.pl | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{S}\t$_" }'  > $OSR.cvg.stat ; fi
+#if [ ! -s $OSR.cvg ]   ; then cat $OSR.bam | bedtools bamtobed -cigar | grep "^$S" | bedtools genomecov -i - -g $OSR.fa.fai -d | tee $OSR.cvg | cut -f3 | st.pl | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{S}\t$_" }'  > $OSR.cvg.stat ; fi
 if [ ! -f $OS.sa.bed ] ; then samtools view -h $OS.bam | sam2bedSA.pl | uniq.pl -i 3 | sort -k2,2n -k3,3n > $OS.sa.bed ; fi
 
 #########################################################################################################################################

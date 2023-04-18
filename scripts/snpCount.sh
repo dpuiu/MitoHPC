@@ -51,9 +51,18 @@ fi
 if [ -s $HP_ODIR/$S.00.concat.vcf ] ; then cat $HP_ODIR/$S.00.concat.vcf | filterVcf.pl -p 0.$T -suspicious $HP_ODIR/$HP_M.$T.suspicious.ids > $HP_ODIR/$S.$T.concat.vcf ; fi
 test -s $HP_ODIR/$S.$T.concat.vcf
 
-cat $HP_ODIR/$S.$T.concat.vcf | concat2cat.pl > $HP_ODIR/$S.$T.vcf
-cat $HP_ODIR/$S.$T.concat.vcf | concat2merge.pl -in $HP_IN -suspicious $HP_ODIR/$HP_M.$T.suspicious.ids | bedtools sort -header | tee $HP_ODIR/$S.$T.merge.vcf | vcf2sitesOnly.pl >  $HP_ODIR/$S.$T.merge.sitesOnly.vcf 
-cat $HP_ODIR/$S.$T.concat.vcf | snpCount.pl     -in $HP_IN -suspicious $HP_ODIR/$HP_M.$T.suspicious.ids | tee $HP_ODIR/$S.$T.tab | getSummaryN.pl > $HP_ODIR/$S.$T.summary
-cat $HP_ODIR/$S.$T.concat.vcf | concat2pos.pl   -in $HP_IN -suspicious $HP_ODIR/$HP_M.$T.suspicious.ids | sort -k2,2n -k4,4 -k5,5  > $HP_ODIR/$S.$T.pos
+cat $HP_ODIR/$S.$T.concat.vcf | concat2cat.pl  > $HP_ODIR/$S.$T.vcf
+
+# Jan 25 2023
+#cat $HP_ODIR/$S.$T.concat.vcf | concat2merge.pl -in $HP_IN -suspicious $HP_ODIR/$HP_M.$T.suspicious.ids | bedtools sort -header | tee $HP_ODIR/$S.$T.merge.vcf | vcf2sitesOnly.pl >  $HP_ODIR/$S.$T.merge.sitesOnly.vcf 
+#cat $HP_ODIR/$S.$T.concat.vcf | snpCount.pl     -in $HP_IN -suspicious $HP_ODIR/$HP_M.$T.suspicious.ids | tee $HP_ODIR/$S.$T.tab | getSummaryN.pl > $HP_ODIR/$S.$T.summary
+#cat $HP_ODIR/$S.$T.concat.vcf | concat2pos.pl   -in $HP_IN -suspicious $HP_ODIR/$HP_M.$T.suspicious.ids | sort -k2,2n -k4,4 -k5,5  > $HP_ODIR/$S.$T.pos
+
+
+# March 7th 2023
+#cat $HP_ODIR/$S.$T.concat.vcf | concat2merge.pl -in $HP_IN  | bedtools sort -header | tee $HP_ODIR/$S.$T.merge.vcf | vcf2sitesOnly.pl >  $HP_ODIR/$S.$T.merge.sitesOnly.vcf 
+cat $HP_ODIR/$S.$T.concat.vcf | concat2merge.pl -in $HP_IN  | tee $HP_ODIR/$S.$T.merge.vcf | vcf2sitesOnly.pl >  $HP_ODIR/$S.$T.merge.sitesOnly.vcf
+cat $HP_ODIR/$S.$T.concat.vcf | snpCount.pl     -in $HP_IN  | tee $HP_ODIR/$S.$T.tab | getSummaryN.pl > $HP_ODIR/$S.$T.summary
+cat $HP_ODIR/$S.$T.concat.vcf | concat2pos.pl   -in $HP_IN  | sort -k2,2n -k4,4 -k5,5  > $HP_ODIR/$S.$T.pos
 
 

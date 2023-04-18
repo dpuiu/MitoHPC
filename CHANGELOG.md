@@ -1,3 +1,9 @@
+# 2023/04/18 #
+
+* updated snpSort.sh, concat2merge.pl : speed up vcf sort and merge
+* updated init.sh ; use HP_DP as minimum depth instead of 100
+* update README.md
+
 # 2023/03/03 #
 
 * updated downsampleSam.sh, downsampleSam.pl, filterSam.pl : alignments are sorted by the reads name before downsampling

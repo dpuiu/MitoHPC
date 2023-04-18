@@ -33,8 +33,8 @@ export PATH=$HP_SDIR:$HP_BDIR:$PATH
 #hs38DH(default)
 export HP_RNAME=hs38DH
 export HP_RMT=chrM
-export HP_RNUMT="chr1:629084-634672 chr17:22521208-22521639"										                          # 150bp reads
-#export HP_RNUMT="chr1:629080-634925 chr2:148881723-148881858 chr5:80651184-80651597 chr11:10508892-10509738 chr13:109424123-109424381 chr17:22521208-22521639"   # 100bp reads
+export HP_RNUMT="chr1:629084-634672 chr17:22521208-22521639"										                          # 150bp reads chr2:32916199-32916630
+#export HP_RNUMT="chr1:629080-634925 chr1:76971223-76971280  chr2:148881723-148881858 chr5:80651184-80651597 chr11:10508892-10509738 chr13:109424123-109424381 chr17:22521208-22521639"   # 100bp reads
 export HP_RCOUNT=3366																		  # 195(hs38DH-no_alt); 194 (hs38DH-no_alt_EBV)
 export HP_RURL=ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh38_reference_genome/GRCh38_full_analysis_set_plus_decoy_hla.fa
 
@@ -51,6 +51,9 @@ export HP_RURL=ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/GRCh
 #export HP_RNUMT="chr5:81136887-81137073 chr11:10594619-10594811 chr13:12167063-12168420 chr17:23209322-23209958"
 #export HP_RCOUNT=24
 #export HP_RURL=https://s3-us-west-2.amazonaws.com/human-pangenomics/T2T/CHM13/assemblies/chm13.draft_v1.1.fasta.gz
+
+#CHM13.v2; to compute NUMT regions
+#export HP_RURL=https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/009/914/755/GCF_009914755.1_T2T-CHM13v2.0/GCF_009914755.1_T2T-CHM13v2.0_genomic.fna.gz
 
 #Mouse
 #export HP_RNAME=mm39
@@ -105,7 +108,7 @@ export HP_T3=10
 export HP_DP=100
 export HP_V=                     # SV caller: gridssexport HP_DP=100                 # minimum coverage: Ex 100
 
-export HP_FRULE="perl -ane 'print unless(/strict_strand|strand_bias|base_qual|map_qual|weak_evidence|slippage|position|Homopolymer/ and /:0\.[01234]\d+$/);' |  bcftools filter -e 'DP<100'"   # filter rule (or just "tee")
+export HP_FRULE="perl -ane 'print unless(/strict_strand|strand_bias|base_qual|map_qual|weak_evidence|slippage|position|Homopolymer/ and /:0\.[01234]\d+$/);' |  bcftools filter -e 'DP<$HP_DP'"   # filter rule (or just "tee")
 
 export HP_P=1				       		            # number of processors
 export HP_MM="3G"                                                   # maximum memory
