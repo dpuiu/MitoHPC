@@ -111,52 +111,60 @@ if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
   cp gridss-2.13.2-gridss-jar-with-dependencies.jar $HP_JDIR/gridss.jar
 fi
 
-if [ ! -s $HP_JDIR/gatk.jar ] ; then
+#if [ ! -s $HP_JDIR/gatk.jar ] ; then # 2023/04/26
+if [[ ! -s $HP_JDIR/gatk.jar || $# == 1 && $1 == "-f" ]] ; then
   wget -N -c https://github.com/broadinstitute/gatk/releases/download/4.3.0.0/gatk-4.3.0.0.zip
   unzip -o gatk-4.3.0.0.zip
   cp gatk-4.3.0.0/gatk-package-4.3.0.0-local.jar $HP_JDIR/gatk.jar
   cp gatk-4.3.0.0/gatk $HP_BDIR/
 fi
 
-if [ ! -s $HP_JDIR/haplogrep.jar ] ; then
+#if [ ! -s $HP_JDIR/haplogrep.jar ] ; then # 2023/04/26
+if [[ ! -s $HP_JDIR/haplogrep.jar || $# == 1 && $1 == "-f" ]] ; then
   wget -N -c https://github.com/seppinho/haplogrep-cmd/releases/download/v2.4.0/haplogrep.zip
   unzip -o haplogrep.zip
   cp haplogrep.jar $HP_JDIR/
 fi
 
-if [ ! -s $HP_JDIR/haplocheck.jar ] ; then
+#if [ ! -s $HP_JDIR/haplocheck.jar ] ; then # 2023/04/26
+if [[ ! -s $HP_JDIR/haplocheck.jar || $# == 1 && $1 == "-f" ]] ; then
   wget -N -c https://github.com/genepi/haplocheck/releases/download/v1.3.3/haplocheck.zip
   unzip -o haplocheck.zip
   cp haplocheck.jar $HP_JDIR/
 fi
 
-if [ ! -s $HP_JDIR/mutserve.jar ] ; then
+#if [ ! -s $HP_JDIR/mutserve.jar ] ; then  # 2023/04/26
+if [[ ! -s $HP_JDIR/mutserve.jar || $# == 1 && $1 == "-f" ]] ; then
   wget -N -c https://github.com/seppinho/mutserve/releases/download/v2.0.0-rc15/mutserve.zip
   unzip -o mutserve.zip
   cp mutserve.jar $HP_JDIR
 fi
 
-if [ ! -s $HP_RDIR/$HP_RNAME.fa ] ; then
+#if [ ! -s $HP_RDIR/$HP_RNAME.fa ] ; then # 2023/04/26
+if [[ ! -s $HP_RDIR/$HP_RNAME.fa.fai || $# == 1 && $1 == "-f" ]] ; then
   wget -qO- $HP_RURL | zcat -f > $HP_RDIR/$HP_RNAME.fa
   samtools faidx $HP_RDIR/$HP_RNAME.fa
 fi
 
-if [ ! -s $HP_RDIR/$HP_MT.fa ] ; then
+#if [ ! -s $HP_RDIR/$HP_MT.fa ] ; then  # 2023/04/26
+if [[ ! -s $HP_RDIR/$HP_MT.dict || $# == 1 && $1 == "-f"  ]] ; then
   samtools faidx $HP_RDIR/$HP_RNAME.fa $HP_RMT > $HP_RDIR/$HP_MT.fa
   samtools faidx $HP_RDIR/$HP_MT.fa
   java $HP_JOPT -jar $HP_JDIR/gatk.jar CreateSequenceDictionary --REFERENCE $HP_RDIR/$HP_MT.fa --OUTPUT $HP_RDIR/$HP_MT.dict
 fi
 
-if [ ! -s $HP_RDIR/$HP_NUMT.fa ] ; then
+#if [ ! -s $HP_RDIR/$HP_NUMT.fa ] ; then # 2023/04/26
+if [[ ! -s $HP_RDIR/$HP_NUMT.bwt || $# == 1 && $1 == "-f"  ]] ; then
   samtools faidx $HP_RDIR/$HP_RNAME.fa $HP_RNUMT > $HP_RDIR/$HP_NUMT.fa
   bwa index $HP_RDIR/$HP_NUMT.fa -p $HP_RDIR/$HP_NUMT
 fi
 
-if [ ! -s $HP_RDIR/$HP_MTC.fa ] ; then
+#if [ ! -s $HP_RDIR/$HP_MTC.fa ] ; then  # 2023/04/26
+if [[ ! -s $HP_RDIR/$HP_MTC.dict || $# == 1 && $1 == "-f" ]] ; then
   circFasta.sh $HP_MT $HP_RDIR/$HP_MT $HP_E $HP_RDIR/$HP_MTC
 fi
 
-if [ ! -s $HP_RDIR/$HP_MTR.fa ] ; then
+#if [ ! -s $HP_RDIR/$HP_MTR.fa ] ; then # 2023/04/26
+if [[ ! -s $HP_RDIR/$HP_MTR.dict || $# == 1 && $1 == "-f" ]] ; then
   rotateFasta.sh $HP_MT $HP_RDIR/$HP_MT $HP_E $HP_RDIR/$HP_MTR
 fi
-
