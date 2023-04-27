@@ -1,3 +1,11 @@
+# 2023/04/27 #
+
+* updated install_sysprerequisites.sh
+
+# 2023/04/26 #
+
+* updated install_prerequisites.sh
+
 # 2023/04/18 #
 
 * updated snpSort.sh, concat2merge.pl : speed up vcf sort and merge
