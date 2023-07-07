@@ -1,3 +1,7 @@
+# 2023/07/07 #
+
+* updated README.md file with information on how to use new MitoHPC docker and singularity images
+
 # 2023/04/27 #
 
 * updated install_sysprerequisites.sh
