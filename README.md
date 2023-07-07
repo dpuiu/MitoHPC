@@ -114,6 +114,37 @@
     $ $HP_SDIR/run.sh > run.all.sh               # recreate command file
 
     $ bash ./run.all.sh
+
+## DOCKERHUB IMAGE  ##
+
+    # available at
+    https://hub.docker.com/r/dpuiu1/mitohpc/tags
+
+    # note: not fully tested; uses the newest version of prerequisite software + a few other updates 
+     
+    # pull image (if necessary)
+    $ docker pull dpuiu1/mitohpc
+
+    # cd work_directory
+    
+    # run interactively; use the "PIPELINE USAGE" instructions
+    $ docker run -e  HP_SDIR="/MitoHPC/scripts/" -w  $PWD  -v $HOME:$HOME -it dpuiu1/mitohpc
+
+## SINGULARITY IMAGE  ##
+
+    # available at
+    https://cloud.sylabs.io/library/dpuiu/project-dir/mitohpc
+
+    # note: not fully tested; uses the newest version of prerequisite software + a few other updates 
+     
+    # pull image (if necessary)
+    $ singularity pull mitohpc.sif library://dpuiu/project-dir/mitohpc:latest
+    $ SINGULARITY_PATH=`pwd -P`
+
+    # cd work_directory
+    
+    # run interactively ; use the "PIPELINE USAGE" instructions
+    $ singularity shell --env HP_SDIR="/MitoHPC/scripts/" $SINGULARITY_PATH/mitohpc.sif --pwd
      
 ## OUTPUT ##
 
