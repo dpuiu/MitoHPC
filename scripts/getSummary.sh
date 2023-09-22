@@ -28,12 +28,15 @@ V=$HP_V
 awk '{print $3}' $HP_IN | sed "s|$|.cvg.stat|"  | xargs cat | uniq.pl -i 0  > $ODIR/cvg.tab
 
 #March 7th 2023
-awk '{print $3}' $HP_IN | sed "s|$|.$S.00.vcf|" | xargs cat | grep -v "^##sample="  |   uniq.pl | bedtools sort -header | eval $HP_FRULE   > $ODIR/$S.00.concat.vcf
+#awk '{print $3}' $HP_IN | sed "s|$|.$S.00.vcf|" | xargs cat | grep -v "^##sample="  |   uniq.pl | bedtools sort -header | eval $HP_FRULE   > $ODIR/$S.00.concat.vcf
+#if [ $V ] ; then awk '{print $3}' $HP_IN | sed "s|$|.$V.00.vcf|" | xargs cat | uniq.pl | bedtools sort -header  | eval $HP_FRULE > $ODIR/$V.00.concat.vcf ; fi
+
+#Sept 22nd 2023; removed " | eval $HP_FRULE"
+awk '{print $3}' $HP_IN | sed "s|$|.$S.00.vcf|" | xargs cat | grep -v "^##sample="  |   uniq.pl | bedtools sort -header   > $ODIR/$S.00.concat.vcf
+if [ $V ] ; then awk '{print $3}' $HP_IN | sed "s|$|.$V.00.vcf|" | xargs cat | uniq.pl | bedtools sort -header  > $ODIR/$V.00.concat.vcf ; fi
 
 snpSort.sh $ODIR/$S.00.concat
 cat $ODIR/$S.00.concat.vcf | grep -v "^#" | sed 's|:|\t|g'  | count.pl -i -1 -round 100| sort -n > $ODIR/$S.00.AF.histo
-
-if [ $V ] ; then awk '{print $3}' $HP_IN | sed "s|$|.$V.00.vcf|" | xargs cat | uniq.pl | bedtools sort -header  | eval $HP_FRULE > $ODIR/$V.00.concat.vcf ; fi
 
 #haplogroups
 if [ "$HP_O" == "Human" ] ; then
@@ -69,7 +72,10 @@ if [ $S == "mutserve" ] ; then exit 0 ; fi
 
 SS=$S.$S
 awk '{print $3}' $HP_IN | sed "s|$|.$S.cvg.stat|" | xargs cat | uniq.pl -i 0  > $ODIR/$S.cvg.tab
-awk '{print $3}' $HP_IN | sed "s|$|.$SS.00.vcf|"  | xargs cat |  grep -v "^##sample=" |   grep -v "^##bcftools_annotateCommand" | uniq.pl | bedtools sort -header  | eval $HP_FRULE  > $ODIR/$SS.00.concat.vcf  
+
+#Sept 22nd 2023 ; removed "| eval $HP_FRULE " 
+#awk '{print $3}' $HP_IN | sed "s|$|.$SS.00.vcf|"  | xargs cat |  grep -v "^##sample=" |   grep -v "^##bcftools_annotateCommand" | uniq.pl | bedtools sort -header  | eval $HP_FRULE  > $ODIR/$SS.00.concat.vcf  
+awk '{print $3}' $HP_IN | sed "s|$|.$SS.00.vcf|"  | xargs cat |  grep -v "^##sample=" |   grep -v "^##bcftools_annotateCommand" | uniq.pl | bedtools sort -header   > $ODIR/$SS.00.concat.vcf  
 
 snpSort.sh $ODIR/$SS.00.concat
 cat $ODIR/$SS.00.concat.vcf | grep -v "^#" | sed 's|:|\t|g'  | count.pl -i -1 -round 100| sort -n > $ODIR/$SS.00.AF.histo
