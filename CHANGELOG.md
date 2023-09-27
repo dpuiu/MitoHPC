@@ -1,3 +1,7 @@
+# 2023/09/22 #
+
+* updated SNV filtering ; moved HP_FRULE evaluation from getSummary.sh to snpCount.sh so that mutect2*.00.concat.vcf files do not exclude any SNVs
+ 
 # 2023/07/07 #
 
 * updated README.md file with information on how to use new MitoHPC docker and singularity images
