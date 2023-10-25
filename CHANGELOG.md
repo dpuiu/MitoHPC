@@ -1,3 +1,7 @@
+# 2023/10/25 #
+
+* Added LICENSE.md file : MIT license (FREE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND)
+  
 # 2023/09/22 #
 
 * Updated SNV filtering; moved HP_FRULE evaluation from getSummary.sh to snpCount.sh (only afftects the *mutect2.00.concat files)
