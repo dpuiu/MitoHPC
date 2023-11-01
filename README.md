@@ -93,7 +93,7 @@
 
        export HP_SH=bash                         # job scheduling: bash, qsub,sbatch, ..
 
-    $ rm -f HP_IN                                # delete the previous $HP_IN("in.txt") file if necessary
+    $ rm -f $HP_IN                                # delete the previous $HP_IN("in.txt") file if necessary
     $ . ./init.sh                                # source init file 
 
     $ printenv | grep HP_ | sort                 # check HP_ variables 
