@@ -117,7 +117,6 @@ fi
 
 #if [ ! -s $O.count ]  ; then samtools idxstats $O.bam  -@ $HP_P | idxstats2count.pl -sample $S -chrM $HP_MT > $O.count ; fi
 if [ ! -s $O.cvg ]    ; then cat $O.bam  | bedtools bamtobed -cigar | grep "^$HP_MT" | bedtools genomecov -i - -g $HP_RDIR/$HP_MT.fa.fai  -d | tee $O.cvg  | cut -f3 | st.pl | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{S}\t$_" }'  > $O.cvg.stat  ; fi
-#if [ ! -s $OR.cvg ]   ; then cat $OR.bam | bedtools bamtobed -cigar | grep "^$HP_MT" | bedtools genomecov -i - -g $HP_RDIR/$HP_MTR.fa.fai -d | tee $OR.cvg | cut -f3 | st.pl | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{S}\t$_" }'  > $OR.cvg.stat ; fi
 if [ ! -f $O.sa.bed ] ; then samtools view -h $O.bam  -@ $HP_P | sam2bedSA.pl | uniq.pl -i 3 | sort -k2,2n -k3,3n > $O.sa.bed ; fi
 
 #########################################################################################################################################
@@ -125,10 +124,10 @@ if [ ! -f $O.sa.bed ] ; then samtools view -h $O.bam  -@ $HP_P | sam2bedSA.pl | 
 
 if [ ! -s $OS.vcf ] ; then
   if [ "$HP_M" == "mutect2" ] ; then
-    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_MT.fa -I $O.bam       -O $OS.orig.vcf $HP_GOPT --native-pair-hmm-threads $HP_P --callable-depth 6  --max-reads-per-alignment-start 0 # --mitochondria-mode 
+    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_MT.fa -I $O.bam       -O $OS.orig.vcf $HP_GOPT --native-pair-hmm-threads $HP_P --callable-depth 6 --max-reads-per-alignment-start 0 # --mitochondria-mode 
     java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $HP_RDIR/$HP_MT.fa -V $OS.orig.vcf -O $OS.vcf --min-reads-per-strand 2
 
-    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_MTR.fa -I ${OR}.bam        -O ${OSR}.orig.vcf $HP_GOPT --native-pair-hmm-threads $HP_P  -L "chrM:285-315" # "chrM:16254-16284"  
+    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_MTR.fa -I ${OR}.bam        -O ${OSR}.orig.vcf $HP_GOPT --native-pair-hmm-threads $HP_P  --callable-depth 6 --max-reads-per-alignment-start 0 -L "chrM:285-315" # "chrM:16254-16284"  
     java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $HP_RDIR/$HP_MTR.fa -V ${OSR}.orig.vcf  -O ${OSR}.vcf --min-reads-per-strand 2
   elif [ "$HP_M" == "mutserve" ] ; then
     if [ "$HP_MT" == "chrM" ] ||  [ "$HP_MT" == "rCRS" ] ||  [ "$HP_MT" == "RSRS" ] ; then
@@ -246,17 +245,16 @@ fi
 
 #if [ ! -s $OS.count ]  ; then samtools idxstats $OS.bam  -@ $HP_P | idxstats2count.pl -sample $S -chrM $S > $OS.count ; fi
 if [ ! -s $OS.cvg ]    ; then cat $OS.bam  | bedtools bamtobed -cigar | grep "^$S" | bedtools genomecov -i - -g $OS.fa.fai -d  | tee $OS.cvg  | cut -f3 | st.pl | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{S}\t$_" }'  > $OS.cvg.stat  ; fi
-#if [ ! -s $OSR.cvg ]   ; then cat $OSR.bam | bedtools bamtobed -cigar | grep "^$S" | bedtools genomecov -i - -g $OSR.fa.fai -d | tee $OSR.cvg | cut -f3 | st.pl | perl -ane 'if($.==1) { print "Run\t$_" } else { print "$ENV{S}\t$_" }'  > $OSR.cvg.stat ; fi
 if [ ! -f $OS.sa.bed ] ; then samtools view -h $OS.bam | sam2bedSA.pl | uniq.pl -i 3 | sort -k2,2n -k3,3n > $OS.sa.bed ; fi
 
 #########################################################################################################################################
 # compute SNP/INDELs using mutect2/freebayes
 if [ ! -s $OSS.vcf ] ; then
   if [ "$HP_M" == "mutect2" ] ; then
-    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $OS.fa -I $OS.bam       -O $OSS.orig.vcf  $HP_GOPT --native-pair-hmm-threads $HP_P # --mitochondria-mode
+    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $OS.fa -I $OS.bam       -O $OSS.orig.vcf  $HP_GOPT --native-pair-hmm-threads $HP_P --callable-depth 6 --max-reads-per-alignment-start 0 # --mitochondria-mode
     java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $OS.fa -V $OSS.orig.vcf -O $OSS.vcf  --min-reads-per-strand 2
 
-    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R ${OSR}.fa -I ${OSR}.bam       -O ${OSSR}.orig.vcf  $HP_GOPT --native-pair-hmm-threads $HP_P  -L "$S:285-315" 
+    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R ${OSR}.fa -I ${OSR}.bam       -O ${OSSR}.orig.vcf  $HP_GOPT --native-pair-hmm-threads $HP_P --callable-depth 6 --max-reads-per-alignment-start 0 -L "$S:285-315" 
     java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R ${OSR}.fa -V ${OSSR}.orig.vcf -O ${OSSR}.vcf  --min-reads-per-strand 2
 
   elif [ "$HP_M" == "freebayes" ] ; then
