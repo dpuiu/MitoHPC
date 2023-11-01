@@ -12,11 +12,11 @@ set -ex
 
 #set variables
 export S=$1		# sample name
-N=`basename $2 .bam`
-export N=`basename $N .cram`
-IDIR=`dirname $2`
+N=`basename "$2" .bam`
+export N=`basename "$N" .cram`
+IDIR=`dirname "$2"`
 I=$IDIR/$N
-ODIR=`dirname $3`; mkdir -p $ODIR 
+ODIR=`dirname "$3"`; mkdir -p $ODIR 
 O=$3
 OR=${O}R
 
