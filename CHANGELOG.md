@@ -1,3 +1,8 @@
+# 2023/11/01 #
+
+* Edited scripts/filter.sh: addedd " around variables in "basename" and "dirname" commands
+* Edited README.md & CHANGELOG.md (minor corrections)
+  
 # 2023/10/25 #
 
 * Added LICENSE.md file : MIT license (FREE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND)
@@ -66,8 +71,8 @@
 
 * scripts/filter.sh                   : commented $HP_RCOUNT check; replaced 2 "join" with "join --nocheck-order"
 * scripts/intersect.pl                : added a "-header" option
-* scripts/reAnnotateVcf.sh            : added the new YEALE mito scores
-* scripts/annotateVcf.sh     	      :	added the new YEALE mito scores
+* scripts/reAnnotateVcf.sh            : added the new YALE mito scores
+* scripts/annotateVcf.sh     	        :	added the new YALE mito scores
 * scripts/init.sh                     : updated HP_FRULE
 * scripts/snpCount.sh                 : update "suspicious" samples 
 
