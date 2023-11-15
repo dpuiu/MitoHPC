@@ -2,6 +2,11 @@
 
     For Calling Mitochondrial Homoplasmies and Heteroplasmies
 
+# Citing #
+
+A bioinformatics pipeline for estimating mitochondrial DNA copy number and heteroplasmy levels from whole genome sequencing data, Battle et. al, NAR 2022
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9112767/ 
+
 ## INPUT ##
  
     * Illumina paired-end reads pre-aligned to a reference: .bam or .cram files 
