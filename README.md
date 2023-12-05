@@ -41,7 +41,7 @@ https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9112767/
 
     $ cd MitoHPC/scripts
     $ export HP_SDIR=`pwd`                           # set script directory variable 
-    $ echo "export HP_SDIR=`pwd`" > ~/.bashrc        # add variable to your ~/.bashrc so it gets initialized automatically
+    $ echo "export HP_SDIR=`pwd`" >> ~/.bashrc       # add variable to your ~/.bashrc so it gets initialized automatically
     $ . ./init.sh                                    # or one of init.{hs38DH,hg19,mm39}.sh  correponding to  a different reference
 
 ### INSTALL SYSTEM PREREQUISITES (optional) ###
