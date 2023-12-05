@@ -22,7 +22,8 @@ if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
   if [ ! -s $HP_BDIR/bwa ] ; then
     tar -xjvf bwa-0.7.17.tar.bz2
     cd bwa-0.7.17
-    make ; cp bwa $HP_BDIR/
+    make CFLAGS="-g -Wall -Wno-unused-function -O2 -fcommon"  # compiling using gcc v10.+ fails unless "-fcommon" is added
+    cp bwa $HP_BDIR/
     cd -
   fi
 fi
