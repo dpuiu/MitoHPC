@@ -11,7 +11,7 @@ set -x
 
 command -v apt-get
 if [ "$?" == 0 ] ; then
-  apt-get -y update && apt-get upgrade
+  apt-get -y update # && apt-get upgrade
   apt-get install -y git wget default-jdk default-jre zlib1g libz-dev libncurses5-dev libbz2-dev pkg-config liblzma-dev build-essential unzip  parallel # make gcc
   apt-get install -y python   # pip
   apt-get install -y python-is-python3
