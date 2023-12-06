@@ -446,7 +446,8 @@ https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9112767/
 
 ## Using HiFi reads(experimental) ##
 
-* Update the git: download scripts/filterHiFi.sh; make it executable
+* Update the git: download scripts/{filterHiFi.sh,fixbcftoolsVcf.pl,bcftools.vcf} ; make the *.pl scripts executable
+  
 * Run replacing the default(mutect2) snvcaller with bcftools , filter.sh with filterHiFi.sh, minimum coverage 25
     $ run.sh | sed 's|mutect2|bcftools|g' | sed 's|filter.sh|filterHiFi.sh|' |  sed 's|100|25|g' > run.all.sh
  
