@@ -444,6 +444,12 @@ https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9112767/
 
 * By default, suspicious samples are not removed; The users should check these files and maually remove the samples
 
+## Using HiFi reads(experimental) ##
+
+* Update the git: download scripts/filterHiFi.sh; make it executable
+* Run replacing the default(mutect2) snvcaller with bcftools , filter.sh with filterHiFi.sh, minimum coverage 25
+    $ run.sh | sed 's|mutect2|bcftools|g' | sed 's|filter.sh|filterHiFi.sh|' |  sed 's|100|25|g' > run.all.sh
+ 
       
 
  
