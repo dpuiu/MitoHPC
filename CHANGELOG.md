@@ -1,3 +1,7 @@
+# 2023/12/07 #
+
+* Add long read alignment (minimap2) and SNV call (bcftools) functionallity ; experimental
+  
 # 2023/11/01 #
 
 * Edited scripts/filter.sh: addedd " around variables in "basename" and "dirname" commands
