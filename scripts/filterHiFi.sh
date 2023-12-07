@@ -60,7 +60,7 @@ fi
 
 # count aligned reads; compute cvg; get coverage stats; get split alignments
 
-if [ ! -s $O.cvg ]    ; then cat $O.bam | bedtools bamtobed -cigar  | bedtools genomecov -i - -g $HP_RDIR/$HP_MT.fa.fai -d | tee $O.cvg  | cut -f3 | st.pl -r $S  > $O.cvg.stat ; fi
+if [ ! -s $O.cvg ]    ; then cat $O.bam | bedtools bamtobed -cigar  | bedtools genomecov -i - -g $HP_RDIR/$HP_MT.fa.fai -d | tee $O.cvg  | cut -f3 | st.pl  > $O.cvg.stat ; fi
 if [ ! -f $O.sa.bed ] ; then samtools view -h $O.bam | sam2bedSA.pl | uniq.pl -i 3 | sort -k2,2n -k3,3n > $O.sa.bed ; fi
 
 if [ ! -s $OS.00.vcf ] ; then
