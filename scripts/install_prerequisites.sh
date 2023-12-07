@@ -112,6 +112,15 @@ if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
   cp gridss-2.13.2-gridss-jar-with-dependencies.jar $HP_JDIR/gridss.jar
 fi
 
+which minimap2
+if [[ $? != 0 || $# == 1 && $1 == "-f" ]] ; then
+  wget -N -c https://github.com/lh3/minimap2/releases/download/v2.26/minimap2-2.26.tar.bz2
+  tar -xjvf minimap2-2.26.tar.bz2
+  cd minimap2-2.26/
+  make;  cp minimap2 $HP_BDIR
+  cd -
+fi
+
 #if [ ! -s $HP_JDIR/gatk.jar ] ; then # 2023/04/26
 if [[ ! -s $HP_JDIR/gatk.jar || $# == 1 && $1 == "-f" ]] ; then
   wget -N -c https://github.com/broadinstitute/gatk/releases/download/4.3.0.0/gatk-4.3.0.0.zip
