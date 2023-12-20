@@ -135,6 +135,13 @@ https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9112767/
     # run interactively; use the "PIPELINE USAGE" instructions
     $ docker run -e  HP_SDIR="/MitoHPC/scripts/" -w  $PWD  -v $HOME:$HOME -it dpuiu1/mitohpc
 
+    # run using the "mitohpc.sh" script
+    docker run -e HP_ADIR="bams" -e HP_ODIR="out" -e HP_IN="in.txt"  -w  $PWD  -v $HOME:$HOME -u "$(id -u):$(id -g)"  dpuiu1/mitohpc  mitohpc.sh
+    # or
+    docker run -e HP_ADIR="bams" -e HP_ODIR="out" -e HP_IN="in.txt"  -w  $PWD  -v $HOME:$HOME -u "$(id -u):$(id -g)"  dpuiu1/mitohpc  cat /MitoHPC/scripts//mitohpc.sh > ./mitohpc.sh
+    # edit ./mitohpc.sh ; chmod u+x ./mitohpc.sh
+    docker run -e HP_ADIR="bams" -e HP_ODIR="out" -e HP_IN="in.txt"  -w  $PWD  -v $HOME:$HOME -u "$(id -u):$(id -g)"  dpuiu1/mitohpc ./mitohpc.sh 
+    
 ## SINGULARITY IMAGE  ##
 
     # available at
