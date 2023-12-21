@@ -1,6 +1,11 @@
+# 2023/12/21 #
+
+* Added Dockerfile, scripts/mitohpc.sh
+* Updated README.md
+  
 # 2023/12/07 #
 
-* Add long read alignment (minimap2) and SNV call (bcftools) functionallity ; experimental
+* Added long read alignment (minimap2) and SNV call (bcftools) functionallity ; experimental
   
 # 2023/11/01 #
 
