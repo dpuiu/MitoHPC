@@ -137,9 +137,11 @@ MAIN:
 				$F[3]=substr($MT,$F[1]-1,length($F[3]));
 			}
 
-			print join "\t",@F;
-			print "\n";
-			
+			if($F[3] ne $F[4])
+   			{
+				print join "\t",@F;
+				print "\n";
+			}
 		}
 	}
 }
