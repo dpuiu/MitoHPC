@@ -1,3 +1,7 @@
+# 2024/01/05 #
+
+* updated fixsnpPos.pl; delete SNV which have REF=ALT
+ 
 # 2023/12/21 #
 
 * Added Dockerfile, scripts/mitohpc.sh
