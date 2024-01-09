@@ -1,28 +1,34 @@
+# 2024/01/09 #
+
+* updated RefSeq/MLC.vcf.gz*          to include the RSRS SNVs
+* updated RefSeq/{STOP,NONSYN}.vcf.gz to include the rCRS/RSRS SNVs
+
 # 2024/01/05 #
 
 * updated fixsnpPos.pl; delete SNV which have REF=ALT
+* extended the RefSeq/NUMT.fa chr1 NUMT interval sequence by 1Kbp wither side
  
 # 2023/12/21 #
 
-* Added Dockerfile, scripts/mitohpc.sh
-* Updated README.md
+* added Dockerfile, scripts/mitohpc.sh
+* updated README.md
   
 # 2023/12/07 #
 
-* Added long read alignment (minimap2) and SNV call (bcftools) functionallity ; experimental
+* added long read alignment (minimap2) and SNV call (bcftools) functionallity ; experimental
   
 # 2023/11/01 #
 
-* Edited scripts/filter.sh: addedd " around variables in "basename" and "dirname" commands
-* Edited README.md & CHANGELOG.md (minor corrections)
+* edited scripts/filter.sh: addedd " around variables in "basename" and "dirname" commands
+* edited README.md & CHANGELOG.md (minor corrections)
   
 # 2023/10/25 #
 
-* Added LICENSE.md file : MIT license (FREE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND)
+* added LICENSE.md file : MIT license (FREE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND)
   
 # 2023/09/22 #
 
-* Updated SNV filtering; moved HP_FRULE evaluation from getSummary.sh to snpCount.sh (only afftects the *mutect2.00.concat files)
+* updated SNV filtering; moved HP_FRULE evaluation from getSummary.sh to snpCount.sh (only afftects the *mutect2.00.concat files)
 
 # 2023/07/07 #
 
