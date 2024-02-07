@@ -127,7 +127,7 @@ if [ ! -s $OS.vcf ] ; then
     java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_MT.fa -I $O.bam       -O $OS.orig.vcf $HP_GOPT --native-pair-hmm-threads $HP_P --callable-depth 6 --max-reads-per-alignment-start 0 # --mitochondria-mode 
     java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $HP_RDIR/$HP_MT.fa -V $OS.orig.vcf -O $OS.vcf --min-reads-per-strand 2
 
-    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_MTR.fa -I ${OR}.bam        -O ${OSR}.orig.vcf $HP_GOPT --native-pair-hmm-threads $HP_P  --callable-depth 6 --max-reads-per-alignment-start 0 -L "chrM:285-315" # "chrM:16254-16284"  
+    java $HP_JOPT -jar $HP_JDIR/gatk.jar Mutect2           -R $HP_RDIR/$HP_MTR.fa -I ${OR}.bam        -O ${OSR}.orig.vcf $HP_GOPT --native-pair-hmm-threads $HP_P  --callable-depth 6 --max-reads-per-alignment-start 0 -L "$HP_MT:285-315" # "$HP_MT:16254-16284"  
     java $HP_JOPT -jar $HP_JDIR/gatk.jar FilterMutectCalls -R $HP_RDIR/$HP_MTR.fa -V ${OSR}.orig.vcf  -O ${OSR}.vcf --min-reads-per-strand 2
   elif [ "$HP_M" == "mutserve" ] ; then
     if [ "$HP_MT" == "chrM" ] ||  [ "$HP_MT" == "rCRS" ] ||  [ "$HP_MT" == "RSRS" ] ; then
