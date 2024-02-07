@@ -1,3 +1,7 @@
+# 2024/02/07 #
+
+* updated filter.sh; fixed bug which appears when ($HP_MT ne "chrM")
+  
 # 2024/01/09 #
 
 * updated RefSeq/MLC.vcf.gz*          to include the RSRS SNVs
