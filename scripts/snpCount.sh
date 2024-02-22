@@ -48,9 +48,11 @@ fi
 
 ########################################################
 
-#Sep 22nd 2023; added "| eval $HP_FRULE"
+#Sep 22nd 2023; added "| eval $HP_FRULE" 
+#Feb 22 2024 removed "filterVcf.pl -suspicious ..." and "| eval $HP_FRULE"
 #if [ -s $HP_ODIR/$S.00.concat.vcf ] ; then cat $HP_ODIR/$S.00.concat.vcf | filterVcf.pl -p 0.$T -suspicious $HP_ODIR/$HP_M.$T.suspicious.ids > $HP_ODIR/$S.$T.concat.vcf ; fi
-if [ -s $HP_ODIR/$S.00.concat.vcf ] ; then cat $HP_ODIR/$S.00.concat.vcf | filterVcf.pl -p 0.$T -suspicious $HP_ODIR/$HP_M.$T.suspicious.ids | eval $HP_FRULE > $HP_ODIR/$S.$T.concat.vcf ; fi
+#if [ -s $HP_ODIR/$S.00.concat.vcf ] ; then cat $HP_ODIR/$S.00.concat.vcf | filterVcf.pl -p 0.$T -suspicious $HP_ODIR/$HP_M.$T.suspicious.ids | eval $HP_FRULE > $HP_ODIR/$S.$T.concat.vcf ; fi
+if [ -s $HP_ODIR/$S.00.concat.vcf ] ; then cat $HP_ODIR/$S.00.concat.vcf | filterVcf.pl -p 0.$T -suspicious /dev/null > $HP_ODIR/$S.$T.concat.vcf ; fi
 
 test -s $HP_ODIR/$S.$T.concat.vcf
 
