@@ -1,3 +1,8 @@
+# 2024/02/22 #
+
+* updated snpCount.sh; removed the suspicious sample and Mutect2 tag filtering
+* updated init.sh; decreased the minimum coverage (HP_DP) from 100 to 50
+
 # 2024/02/07 #
 
 * updated filter.sh; fixed bug which appears when ($HP_MT ne "chrM")
