@@ -105,7 +105,7 @@ export HP_T1=03                  # heteroplasmy tholds
 export HP_T2=05
 export HP_T3=10
 
-export HP_DP=100
+export HP_DP=50                  # minimum coverage; lowered from 100 to 50
 export HP_V=                     # SV caller: gridssexport HP_DP=100                 # minimum coverage: Ex 100
 
 export HP_FRULE="perl -ane 'print unless(/strict_strand|strand_bias|base_qual|map_qual|weak_evidence|slippage|position|Homopolymer/ and /:0\.[01234]\d+$/);' |  bcftools filter -e 'DP<$HP_DP'"   # filter rule (or just "tee")
