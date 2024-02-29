@@ -1,7 +1,5 @@
 ##fileformat=VCFv4.2
 ##source=freebayes
-##INFO=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
-##INFO=<ID=AF,Number=A,Type=Float,Description="Allele Frequency">
 ##INFO=<ID=SNP,Number=0,Type=Flag,Description="SNP">
 ##INFO=<ID=INDEL,Number=0,Type=Flag,Description="INDEL">
 ##INFO=<ID=SM,Number=1,Type=String,Description="Sample">
